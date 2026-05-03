@@ -1,0 +1,4179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LyricsEncoder" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#f472b6" />
+  <meta name="application-name" content="LyricsEncoder" />
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-9941503878196676">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9941503878196676" crossorigin="anonymous"></script>
+  <title>Lyrics Encoder for Alight Motion</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.svg" />
+  <!-- iOS home screen icon -->
+  <link rel="apple-touch-icon" href="icon-192.svg" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.svg" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icon-512.svg" />
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Fredoka:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --bg:       #080808;
+      --surface:  rgba(255,255,255,0.04);
+      --card:     rgba(255,255,255,0.05);
+      --card2:    rgba(255,255,255,0.03);
+      --border:   rgba(255,255,255,0.08);
+      --border2:  rgba(255,255,255,0.14);
+      --accent:   #ffffff;
+      --accent2:  rgba(255,255,255,0.7);
+      --text:     #f5f5f5;
+      --muted:    rgba(255,255,255,0.38);
+      --success:  #86efac;
+      --error:    #fca5a5;
+      --warn:     #fde68a;
+      --highlight:#ffffff;
+      --r:        18px;
+      --rs:       10px;
+    }
+    body {
+      background: #080808;
+      color:var(--text);
+      font-family:'Nunito',system-ui,sans-serif;
+      min-height:100vh;
+      padding: 28px 16px 80px;
+      padding-top: calc(28px + env(safe-area-inset-top));
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+      padding-left: calc(16px + env(safe-area-inset-left));
+      padding-right: calc(16px + env(safe-area-inset-right));
+      line-height:1.6;
+    }
+
+    /* ── HEADER ── */
+    header { text-align:center; margin-bottom:32px; }
+    @keyframes gradientFlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    header h1 {
+      font-size:1.9rem; font-weight:700; font-family:'Fredoka',sans-serif;
+      color:#ffffff;
+    }
+    header p { color:var(--muted); margin-top:8px; font-size:.88rem; font-weight:500; }
+
+    /* ── GUIDE MODAL ── */
+    .guide-btn {
+      display:inline-flex; align-items:center; gap:5px;
+      margin-top:12px; padding:6px 16px;
+      background:rgba(244,114,182,.08); border:1px solid rgba(244,114,182,.25);
+      border-radius:999px; color:var(--highlight); font-family:inherit;
+      font-size:.72rem; font-weight:700; cursor:pointer; letter-spacing:.04em;
+      transition:all .15s; -webkit-tap-highlight-color:transparent;
+    }
+    .guide-btn:hover { background:rgba(244,114,182,.18); border-color:var(--accent); color:var(--accent); }
+    .guide-overlay {
+      display:none; position:fixed; inset:0; z-index:999;
+      background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px); align-items:flex-end;
+      justify-content:center;
+    }
+    .guide-overlay.open { display:flex; }
+    .guide-sheet {
+      background:linear-gradient(160deg,#1a0826,#110620);
+      border:1px solid rgba(244,114,182,.18);
+      border-bottom:none;
+      border-radius:24px 24px 0 0;
+      width:100%; max-width:560px;
+      max-height:88vh; overflow-y:auto;
+      padding:24px 20px 40px;
+    }
+    .guide-sheet h2 {
+      font-size:1.1rem; font-weight:800; color:var(--text);
+      margin-bottom:18px; display:flex; align-items:center; gap:8px;
+    }
+    .guide-close {
+      margin-left:auto; background:rgba(244,114,182,.08);
+      border:1px solid rgba(244,114,182,.2); border-radius:999px;
+      color:var(--highlight); cursor:pointer; font-size:.75rem;
+      font-family:inherit; font-weight:700; padding:4px 12px;
+      -webkit-tap-highlight-color:transparent;
+      transition:all .15s;
+    }
+    .guide-close:hover { background:rgba(244,114,182,.18); border-color:var(--accent); }
+    .guide-step {
+      background:rgba(244,114,182,.04); border:1px solid rgba(244,114,182,.1);
+      border-radius:14px; padding:14px 16px; margin-bottom:10px;
+    }
+    .guide-step-title {
+      display:flex; align-items:center; gap:8px;
+      font-size:1.05rem; font-weight:800; color:var(--highlight);
+      margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em;
+    }
+    .guide-step-num {
+      width:22px; height:22px; border-radius:50%;
+      background:linear-gradient(135deg,#f472b6,#c084fc);
+      color:#fff; font-size:.7rem; font-weight:900;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+      box-shadow:0 2px 10px rgba(244,114,182,.5);
+    }
+    .guide-step p, .guide-step li {
+      font-size:.93rem; color:rgba(253,242,255,.72);
+      line-height:1.75; font-family:'Nunito',sans-serif;
+    }
+    .guide-step ul { padding-left:16px; margin-top:4px; }
+    .guide-step li { margin-bottom:4px; }
+    .guide-about {
+      background:linear-gradient(135deg,rgba(244,114,182,.08),rgba(192,132,252,.06));
+      border:1px solid rgba(244,114,182,.2);
+      border-radius:14px; padding:14px 16px; margin-bottom:16px;
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .guide-about-icon {
+      font-size:1.4rem; margin-bottom:2px;
+    }
+    .guide-about p {
+      font-size:.93rem; color:rgba(253,242,255,.78);
+      line-height:1.75; margin:0; font-family:'Nunito',sans-serif;
+    }
+    .guide-about b { color:#f472b6; }
+    .am-text { color:#4ade80; font-weight:700; }
+    .guide-tip {
+      background:rgba(244,114,182,.07); border:1px solid rgba(244,114,182,.2);
+      border-radius:12px; padding:10px 14px; margin-top:12px;
+      font-size:.8rem; color:rgba(249,168,212,.9); line-height:1.6;
+    }
+    header p strong { color:var(--text); }
+
+    /* ── LAYOUT ── */
+    .container { max-width:600px; margin:0 auto; display:grid; gap:12px; width:100%; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    @media(max-width:560px){ .row{ grid-template-columns:1fr; } }
+
+    /* ── CARDS ── */
+    .card {
+      background: rgba(28,8,42,0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(244,114,182,0.15);
+      border-top: 1px solid rgba(244,114,182,0.25);
+      border-radius:var(--r);
+      padding:20px;
+      box-shadow:0 4px 32px rgba(244,114,182,.08), 0 1px 0 rgba(244,114,182,.1) inset;
+      transition:box-shadow .25s;
+      overflow:hidden;
+      min-width:0;
+    }
+    .card h2 {
+      font-size:.95rem; font-weight:700; font-family:'Nunito',sans-serif;
+      color:var(--text); margin-bottom:16px;
+      display:flex; align-items:center; gap:10px;
+      letter-spacing:.01em;
+    }
+    .step-icon {
+      display:inline-flex; align-items:center; justify-content:center;
+      width:34px; height:34px; border-radius:12px; flex-shrink:0;
+      background:linear-gradient(135deg,#f472b6,#c084fc);
+      box-shadow:0 3px 12px rgba(244,114,182,.35);
+    }
+    .step-icon svg { width:14px; height:14px; color:#fff; stroke:#fff; }
+
+    /* ── LABELS ── */
+    label { display:block; font-size:.7rem; font-weight:700; color:var(--muted); margin-bottom:5px; letter-spacing:.07em; text-transform:uppercase; }
+
+    /* ── INPUTS ── */
+    input[type="text"],input[type="number"],select,textarea {
+      width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--rs); color:var(--text); font-family:inherit;
+      font-size:.88rem; font-weight:500; padding:9px 12px; outline:none;
+      transition:border-color .2s, box-shadow .2s, background .2s;
+    }
+    input[type="color"]{ padding:4px 6px; height:40px; cursor:pointer; border-radius:var(--rs); }
+    input:focus,select:focus,textarea:focus{
+      border-color:rgba(244,114,182,.5);
+      background:rgba(244,114,182,.05);
+      box-shadow:0 0 0 3px rgba(244,114,182,.12);
+    }
+    select { cursor:pointer; }
+    /* Force readable colors inside native dropdown popup */
+    select option, select optgroup {
+      background: #1a1a2e;
+      color: #f0e6ff;
+    }
+    select option:checked, select option:focus {
+      background: #f472b6;
+      color: #fff;
+    }
+    textarea { font-family:'JetBrains Mono',monospace; font-size:.82rem; resize:vertical; min-height:140px; }
+
+    /* ── ZONES ── */
+    .zone-icon { display:block; flex-shrink:0; color:var(--muted); }
+    .upload-zone {
+      border:2px dashed var(--border2); border-radius:var(--rs);
+      padding:32px 20px; text-align:center; cursor:pointer;
+      background:var(--surface); transition:border-color .2s,background .2s;
+    }
+    .upload-zone:hover,.upload-zone.over { border-color:var(--accent); background:rgba(244,114,182,.06); }
+    .upload-zone p { color:var(--muted); font-size:.85rem; margin-top:6px; }
+    .upload-zone strong { font-size:.9rem; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      border:none; border-radius:999px; cursor:pointer;
+      font-family:inherit; font-size:.85rem; font-weight:700;
+      padding:10px 20px; transition:all .18s;
+      display:inline-flex; align-items:center; gap:7px; white-space:nowrap;
+    }
+    .btn svg { width:15px; height:15px; flex-shrink:0; }
+    .btn-primary {
+      background:linear-gradient(135deg,#f472b6,#c084fc);
+      color:#fff; box-shadow:0 4px 16px rgba(244,114,182,.4);
+    }
+    .btn-primary:hover { opacity:.9; box-shadow:0 4px 22px rgba(244,114,182,.55); transform:translateY(-1px); }
+    .btn-primary:active { transform:translateY(0); }
+    .btn-primary:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; transform:none; }
+    .btn-ghost {
+      background:rgba(244,114,182,.07); border:1.5px solid rgba(244,114,182,.2);
+      color:var(--text); font-weight:600;
+    }
+    .btn-ghost:hover { border-color:var(--accent); color:var(--accent); background:rgba(244,114,182,.12); }
+    .btn-ghost.active { background:linear-gradient(135deg,#f472b6,#c084fc); border-color:#f472b6; color:#fff; box-shadow:0 2px 10px rgba(244,114,182,.35); }
+    .btn-danger {
+      background:rgba(248,113,113,.12); border:1.5px solid rgba(248,113,113,.3);
+      color:var(--error); font-weight:600;
+    }
+    .btn-danger:hover { background:rgba(248,113,113,.22); }
+    .btn-sm { padding:5px 12px; font-size:.76rem; border-radius:8px; }
+    .btn-sm svg { width:13px; height:13px; }
+
+    /* ── FETCH ROW ── */
+    .fetch-row { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+    .fetch-status {
+      flex:1; min-width:160px; border-radius:var(--rs);
+      font-size:.82rem; font-weight:500; padding:9px 13px;
+      display:none; align-items:center; gap:7px;
+    }
+    .fetch-status svg { width:14px; height:14px; flex-shrink:0; }
+    .fetch-status.loading { display:flex; color:var(--muted); background:var(--surface); border:1.5px solid var(--border2); }
+    .fetch-status.ok   { display:flex; color:var(--success); background:rgba(74,222,128,.1);  border:1.5px solid rgba(74,222,128,.25); }
+    .fetch-status.err  { display:flex; color:var(--error);   background:rgba(248,113,113,.1); border:1.5px solid rgba(248,113,113,.25); }
+    .fetch-status.warn { display:flex; color:var(--warn);    background:rgba(251,191,36,.1);  border:1.5px solid rgba(251,191,36,.25); }
+
+    .spin { display:inline-block; width:14px; height:14px; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation:spin .7s linear infinite; }
+    @keyframes spin{ to{ transform:rotate(360deg); } }
+
+    /* ── TABS ── */
+    .tabs { display:flex; gap:6px; margin-bottom:14px; }
+    .tab-btn {
+      background:rgba(244,114,182,.06); border:1.5px solid rgba(244,114,182,.18);
+      border-radius:999px; color:var(--muted); cursor:pointer;
+      font-family:inherit; font-size:.82rem; font-weight:700;
+      padding:7px 18px; transition:all .15s;
+    }
+    .tab-btn:hover { border-color:rgba(244,114,182,.4); color:var(--highlight); }
+    .tab-btn.active { background:linear-gradient(135deg,#f472b6,#c084fc); border-color:transparent; color:#fff; box-shadow:0 3px 12px rgba(244,114,182,.35); }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+
+    /* ── LRC HINT ── */
+    .lrc-hint {
+      background:var(--surface); border:1px solid var(--border2); border-radius:var(--rs);
+      font-size:.78rem; color:var(--muted); padding:10px 14px;
+      margin-bottom:12px; font-family:'JetBrains Mono',monospace; line-height:1.8;
+    }
+    .lrc-hint strong { color:var(--text); }
+
+    /* ── PREVIEW ── */
+    #previewSection { display:none; }
+    #previewSection.visible { display:block; }
+
+    .player-bar {
+      background:var(--surface); border-radius:var(--rs);
+      border:1px solid var(--border2);
+      padding:12px 16px; display:flex; align-items:center; gap:12px; margin-bottom:14px;
+    }
+    .play-btn {
+      width:38px; height:38px; border-radius:50%; border:none;
+      background:linear-gradient(135deg,#f472b6,#c084fc);
+      color:#fff; cursor:pointer; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 2px 10px rgba(244,114,182,.5); transition:all .15s;
+    }
+    .play-btn:hover { transform:scale(1.07); box-shadow:0 4px 16px rgba(244,114,182,.6); }
+    .play-btn svg { width:16px; height:16px; }
+    .player-time { color:var(--muted); font-size:.75rem; font-family:'JetBrains Mono',monospace; white-space:nowrap; }
+    .seek-wrap { flex:1; position:relative; height:44px; display:flex; align-items:center; }
+    .seek-track { width:100%; height:3px; background:var(--border2); border-radius:9999px; cursor:pointer; position:relative; }
+    .seek-fill  { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:9999px; pointer-events:none; width:0%; transition:width .1s linear; }
+    .seek-thumb { width:11px; height:11px; border-radius:50%; background:#fff; box-shadow:0 0 6px rgba(157,125,252,.7); position:absolute; top:50%; transform:translate(-50%,-50%); pointer-events:none; left:0%; }
+    .seek-marker-end   { position:absolute; top:50%; transform:translate(-50%,-50%); width:3px; border-radius:2px; background:var(--warn); pointer-events:none; box-shadow:0 0 6px rgba(251,191,36,.7); transition:height .15s; }
+    .marker-size-btn { background:var(--surface); border:1.5px solid var(--border2); border-radius:6px; color:var(--muted); cursor:pointer; font-family:inherit; font-size:.7rem; font-weight:700; padding:3px 7px; transition:all .12s; }
+    .marker-size-btn.active { background:linear-gradient(135deg,#f472b6,#c084fc); border-color:#f472b6; color:#fff; }
+
+    /* tap sync */
+    .tap-banner {
+      background:linear-gradient(135deg,rgba(157,125,252,.15),rgba(232,121,249,.1));
+      border:1px solid rgba(157,125,252,.3); border-radius:var(--rs);
+      padding:14px 18px; margin-bottom:14px; display:none; align-items:center; gap:12px;
+    }
+    .tap-banner.visible { display:flex; }
+    .tap-banner .tap-text { flex:1; font-size:.86rem; }
+    .tap-banner .tap-text strong { color:var(--accent2); }
+    .tap-banner .tap-text span { color:var(--muted); font-size:.76rem; }
+    .tap-current-line {
+      background:var(--surface); border:1px solid rgba(240,171,252,.2);
+      border-radius:var(--rs); padding:8px 14px; font-size:.95rem;
+      color:var(--highlight); font-weight:700; margin-bottom:12px;
+      display:none; text-align:center;
+    }
+    .tap-current-line.visible { display:block; }
+
+    /* lyric rows */
+    .lyric-rows { max-height:380px; overflow-y:auto; border-radius:var(--rs); background:var(--surface); border:1px solid var(--border); }
+    .lyric-row {
+      display:flex; align-items:center; gap:8px;
+      padding:9px 13px; border-bottom:1px solid var(--border);
+      transition:background .15s; cursor:default;
+    }
+    .lyric-row:last-child { border-bottom:none; }
+    .lyric-row:hover { background:rgba(244,114,182,.07); }
+    .lyric-row.active { background:rgba(240,171,252,.1) !important; border-left:3px solid var(--highlight); }
+    .lyric-row.tap-next { background:rgba(157,125,252,.13) !important; }
+
+    .lr-num { color:var(--muted); font-size:.7rem; min-width:22px; text-align:right; flex-shrink:0; font-family:'JetBrains Mono',monospace; }
+    .lr-time {
+      font-family:'JetBrains Mono',monospace; font-size:.75rem;
+      color:var(--accent); min-width:64px; flex-shrink:0; cursor:pointer;
+      padding:2px 6px; border-radius:6px; transition:background .15s; font-weight:500;
+    }
+    .lr-time:hover { background:rgba(244,114,182,.16); }
+    .lr-text { flex:1; font-size:.88rem; font-weight:500; color:var(--text); line-height:1.45; }
+    .lr-nudge { display:flex; gap:3px; flex-shrink:0; }
+    .nudge-btn {
+      background:var(--card); border:1px solid var(--border2); border-radius:5px;
+      color:var(--muted); cursor:pointer; font-size:.62rem; font-family:inherit;
+      font-weight:600; padding:2px 5px; transition:all .12s; white-space:nowrap;
+    }
+    .nudge-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(244,114,182,.1); }
+    .tap-dot { width:8px; height:8px; border-radius:50%; background:var(--border2); flex-shrink:0; transition:background .15s; }
+    .tap-dot.done { background:var(--success); }
+    .tap-dot.next { background:var(--accent2); box-shadow:0 0 6px var(--accent2); }
+    .lr-endtime { font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--warn); flex-shrink:0; min-width:68px; }
+    .lyric-row.end-next { background:rgba(251,191,36,.1) !important; border-left:3px solid var(--warn); }
+
+    .no-audio-note {
+      background:var(--surface); border:1px solid var(--border2); border-radius:var(--rs);
+      padding:14px; text-align:center; color:var(--muted); font-size:.83rem; font-weight:500;
+    }
+
+    /* style grid */
+    .style-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:14px; }
+    .color-row { display:flex; align-items:center; gap:8px; }
+    .color-row input[type="color"] { width:44px; flex-shrink:0; }
+    .color-row input[type="text"] { flex:1; }
+
+    /* generate btn */
+    .generate-btn {
+      width:100%; background:linear-gradient(135deg,#f472b6,#c084fc);
+      border:none; border-radius:999px; color:#fff; cursor:pointer;
+      font-family:inherit; font-size:.95rem; font-weight:800;
+      padding:15px; letter-spacing:.02em;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      box-shadow:0 4px 24px rgba(244,114,182,.45);
+      transition:opacity .2s, transform .1s, box-shadow .2s;
+    }
+    .generate-btn svg { width:18px; height:18px; }
+    .generate-btn:hover { opacity:.92; transform:translateY(-1px); box-shadow:0 8px 32px rgba(244,114,182,.6); }
+    .generate-btn:active { transform:scale(.99); }
+
+    .status { border-radius:var(--rs); font-size:.86rem; font-weight:500; padding:11px 14px; display:none; margin-top:12px; }
+    .status.success { background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.28); color:var(--success); display:block; }
+    .status.error   { background:rgba(248,113,113,.1); border:1px solid rgba(248,113,113,.28); color:var(--error);   display:block; }
+
+    /* badges */
+    .badge {
+      display:inline-block; border-radius:9999px; font-size:.72rem; font-weight:700;
+      padding:2px 10px; margin-left:8px; vertical-align:middle; letter-spacing:.03em;
+      background:rgba(244,114,182,.15); border:1px solid rgba(244,114,182,.3); color:var(--accent);
+    }
+    .badge.auto { background:rgba(74,222,128,.12); border-color:rgba(74,222,128,.3); color:var(--success); }
+
+    /* divider */
+    .divider { display:flex; align-items:center; gap:10px; color:var(--highlight); font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin:14px 0; opacity:.65; }
+    .divider::before,.divider::after { content:''; flex:1; height:1px; background:rgba(244,114,182,.15); }
+
+    .footer { text-align:center; margin-top:36px; color:var(--muted); font-size:.75rem; font-weight:500; opacity:.8; }
+    #fileInput,#fontFileInput { display:none; }
+
+    /* ── FONT PICKER ── */
+    .myanmar-font-list {
+      width:100%; background:var(--surface); border:1.5px solid var(--border);
+      border-radius:var(--rs); color:var(--text); font-family:inherit;
+      font-size:.9rem; font-weight:500; padding:9px 13px; outline:none;
+      cursor:pointer; transition:border-color .2s, box-shadow .2s;
+    }
+    .myanmar-font-list:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(244,114,182,.15); }
+    .font-status { font-size:.73rem; margin-top:4px; min-height:14px; color:var(--muted); }
+    .font-status.ok  { color:var(--success); }
+    .font-status.err { color:var(--error); }
+    .mm-font-preview {
+      margin-top:10px; padding:14px 12px; border-radius:10px;
+      background:#000; border:1px solid var(--border2);
+      font-size:24px; line-height:1.8; color:#fff; /* updated dynamically by updatePosCanvas() */
+      min-height:56px; outline:none; word-break:break-word;
+      display:none; text-align:center;
+      transition:border-color .15s;
+    }
+    @media(max-width:600px) {
+      .mm-font-preview { padding:8px 10px; min-height:38px; line-height:1.6; }
+      .mm-font-preview-hint { font-size:.6rem; }
+    }
+    .mm-font-preview:focus { border-color:var(--accent); }
+    .mm-font-preview.visible { display:block; }
+    .mm-font-preview-hint { font-size:.67rem; color:var(--muted); text-align:center; margin-top:4px; display:none; }
+    .mm-font-preview-hint.visible { display:block; }
+    .active-font-badge {
+      display:none; background:rgba(244,114,182,.15); border:1px solid rgba(244,114,182,.35);
+      color:var(--accent); font-size:.7rem; font-weight:700; padding:1px 9px;
+      border-radius:9999px; margin-left:8px; vertical-align:middle;
+      max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+      font-family:'Nunito',sans-serif; text-transform:none; letter-spacing:0;
+    }
+    .upload-font-zone {
+      border:2px dashed var(--border2); border-radius:var(--rs);
+      padding:13px 16px; text-align:center; cursor:pointer;
+      background:var(--surface); transition:border-color .2s, background .2s;
+      color:var(--muted); font-size:.82rem;
+      display:flex; align-items:center; gap:10px;
+    }
+    .upload-font-zone:hover { border-color:var(--accent); background:rgba(244,114,182,.06); }
+    .upload-font-zone svg { flex-shrink:0; }
+
+    /* ══════════════════════════════════════════
+       MOBILE RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media(max-width:640px){ .kb-hint { display:none; } }
+    @media(max-width:640px){
+      body { padding:16px 12px 60px; }
+      header { margin-bottom:24px; }
+      header h1 { font-size:1.7rem; }
+      header p  { font-size:.88rem; }
+      .container { gap:14px; }
+      .card { padding:20px 16px; border-radius:14px; }
+      .card h2 { font-size:1.1rem; margin-bottom:14px; }
+      .step-icon { width:32px; height:32px; border-radius:9px; }
+      .step-icon svg { width:16px; height:16px; }
+
+      /* inputs */
+      input[type="text"],input[type="number"],select,textarea {
+        font-size:1rem; padding:11px 13px;
+      }
+      input[type="color"]{ height:42px; }
+      label { font-size:.88rem; }
+
+      /* audio zone */
+      .audio-zone { padding:10px 12px; gap:10px; }
+      .audio-zone strong { font-size:.92rem; }
+      .audio-zone p { font-size:.78rem; }
+
+      /* fetch row */
+      .fetch-row { flex-direction:column; }
+      .fetch-status { min-width:unset; font-size:.88rem; }
+
+      /* all buttons bigger on mobile */
+      .btn { font-size:.95rem; padding:11px 20px; }
+      .btn-sm { font-size:.85rem; padding:8px 14px; border-radius:9px; }
+      .btn-sm svg { width:15px; height:15px; }
+
+      /* tabs */
+      .tabs { gap:8px; }
+      .tab-btn { padding:9px 16px; font-size:.9rem; }
+
+      /* card accordion header */
+      .card-header h2 { font-size:1.1rem; }
+      .card-chevron { width:26px; height:26px; }
+      .card-done-badge { font-size:.78rem; padding:3px 10px; }
+
+      /* player bar */
+      .play-btn { width:44px; height:44px; }
+      .play-btn svg { width:20px; height:20px; }
+      .player-bar { padding:12px 14px; gap:10px; }
+      .player-time { font-size:.82rem; }
+
+      /* mode bar */
+      #modeBar { gap:5px; flex-wrap:nowrap; }
+      #modeBar .btn-sm { font-size:.72rem; padding:9px 0; flex:1; justify-content:center; min-width:0; white-space:nowrap; overflow:hidden; }
+      #modeBar .btn-sm svg { width:13px; height:13px; flex-shrink:0; }
+
+      /* lyric rows — two-row layout on mobile */
+      .lyric-rows { max-height:360px; }
+      .lyric-row {
+        flex-wrap:wrap;
+        padding:10px 12px;
+        gap:0;
+        align-items:center;
+      }
+      /* text goes full-width on the top row */
+      .lr-text {
+        order:0;
+        flex:0 0 100%;
+        font-size:1rem;
+        line-height:1.55;
+        padding-bottom:6px;
+        margin-bottom:5px;
+        border-bottom:1px solid rgba(255,255,255,.06);
+        white-space:normal;
+        word-break:break-word;
+      }
+      /* meta row below */
+      .lr-num     { order:1; font-size:.76rem; min-width:20px; margin-right:5px; }
+      .tap-dot    { order:2; margin-right:5px; width:10px; height:10px; }
+      .lr-time    { order:3; font-size:.82rem; min-width:60px; }
+      .lr-endtime { order:4; font-size:.78rem; }
+      .lr-nudge   { order:5; margin-left:auto; display:flex; gap:5px; }
+      .nudge-btn { padding:4px 8px; font-size:.72rem; min-height:28px; }
+      /* hide ±0.1 on mobile */
+      .nudge-fine { display:none; }
+
+      /* tap sync */
+      .tap-banner { padding:14px 14px; gap:10px; flex-wrap:wrap; }
+      .tap-banner .tap-text { font-size:.92rem; }
+      .tap-current-line { font-size:.95rem; padding:9px 12px; }
+
+      /* style grid */
+      .style-grid { grid-template-columns:1fr 1fr; gap:12px; }
+
+      /* color row */
+      .color-row input[type="color"]{ width:42px; }
+
+      /* pos editor */
+      .pos-snap-row { gap:5px; }
+      .pos-snap-row .btn-sm { font-size:.78rem; padding:7px 8px; }
+      .pos-coords { font-size:.78rem; }
+
+      /* generate btn */
+      .generate-btn { font-size:1.05rem; padding:17px; }
+
+      /* badge */
+      .badge { font-size:.76rem; padding:2px 9px; }
+
+      /* swipe zone */
+      .swipe-zone { height:110px; }
+      .swipe-coord-val { font-size:.78rem; }
+      .swipe-reset-btn { padding:6px; font-size:.74rem; }
+    }
+
+    @media(max-width:380px){
+      header h1 { font-size:1.4rem; }
+      .style-grid { grid-template-columns:1fr; }
+      .lr-nudge { display:none; }
+    }
+
+    /* ── POS EDITOR ── */
+    .pos-canvas-wrap {
+      position:relative; border-radius:10px; overflow:hidden;
+      border:2px solid var(--border); cursor:crosshair;
+      user-select:none; touch-action:none; margin:0 auto; display:block;
+      transition:border-color .2s;
+    }
+    .pos-canvas-wrap:hover { border-color:var(--accent); }
+    .drag-text-el {
+      position:absolute; transform:translate(-50%,-50%);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      max-width:88%; padding:3px 10px;
+      border:1.5px dashed rgba(124,92,252,.85); border-radius:4px;
+      pointer-events:none; line-height:1.3;
+      text-shadow:0 1px 4px rgba(0,0,0,.8);
+    }
+    .pos-guide-h,.pos-guide-v { position:absolute; pointer-events:none; opacity:.3; }
+    .pos-guide-h { left:0; right:0; height:1px; background:rgba(255,255,255,.7); top:50%; }
+    .pos-guide-v { top:0; bottom:0; width:1px; background:rgba(255,255,255,.7); left:50%; }
+    .pos-coords { font-family:'Courier New',monospace; font-size:.75rem; color:var(--muted); text-align:center; margin-top:6px; }
+    .pos-snap-row { display:flex; gap:6px; flex-wrap:nowrap; justify-content:center; margin-top:8px; align-items:center; overflow:hidden; }
+    .pos-snap-row .btn-sm { flex:1; min-width:0; justify-content:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .drag-text-trans { border-color:rgba(253,230,138,.85) !important; pointer-events:all !important; cursor:grab; }
+    .drag-text-trans:active { cursor:grabbing; }
+    .drag-text-label { position:absolute; font-size:7px; top:-13px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.7); white-space:nowrap; font-family:sans-serif; background:rgba(0,0,0,.5); padding:1px 5px; border-radius:3px; pointer-events:none; }
+    .trans-dropdown-header {
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      cursor:pointer; padding:12px 14px; border-radius:var(--rs); margin-top:4px;
+      background:rgba(244,114,182,.06); border:1.5px solid rgba(244,114,182,.18);
+      transition:all .18s; user-select:none; -webkit-tap-highlight-color:transparent;
+    }
+    .trans-dropdown-header:hover { background:rgba(244,114,182,.12); border-color:rgba(244,114,182,.35); }
+    .trans-dropdown-header.open { border-color:rgba(244,114,182,.4); background:rgba(244,114,182,.1); border-bottom-left-radius:0; border-bottom-right-radius:0; }
+    .trans-dropdown-header.open #transChevron { transform:rotate(180deg); }
+
+    /* ── SWIPE POSITION PANEL ── */
+    /* Desktop: canvas editor visible, swipe panel hidden */
+    #canvasPosEditor { display:block; }
+    .swipe-panel { display:none; }
+    /* Mobile: both visible — canvas as preview, swipe panel for finger control */
+    @media(max-width:600px) {
+      #canvasPosEditor { display:block; }
+      .swipe-panel { display:block; }
+    }
+    .swipe-panel { margin-top:12px; }
+    .swipe-layer-row { display:flex; gap:5px; margin-bottom:8px; }
+    .swipe-layer-btn {
+      flex:1; padding:5px 0; border-radius:7px; font-size:.76rem; font-weight:700;
+      font-family:inherit; cursor:pointer; border:2px solid var(--border2);
+      background:var(--card2); color:var(--muted); transition:all .15s;
+    }
+    .swipe-layer-btn.active { background:rgba(244,114,182,.16); border-color:var(--accent); color:var(--accent); }
+    .swipe-coords-row {
+      display:flex; gap:5px; margin-bottom:6px;
+    }
+    .swipe-coord-box {
+      flex:1; background:var(--surface); border:1px solid var(--border2);
+      border-radius:7px; padding:5px 5px 3px;
+      display:flex; flex-direction:column; align-items:center; gap:1px;
+    }
+    .swipe-coord-val {
+      font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:700;
+      color:var(--success); letter-spacing:.3px;
+    }
+    .swipe-coord-val.z { color:var(--muted); }
+    .swipe-coord-label { font-size:.56rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+    .swipe-zone {
+      position:relative; width:100%; height:110px;
+      background:var(--surface); border:2px solid var(--border2);
+      border-radius:12px; cursor:grab; touch-action:none;
+      user-select:none; -webkit-tap-highlight-color:transparent;
+      transition:border-color .15s;
+    }
+    .swipe-zone:active, .swipe-zone.swiping { border-color:var(--accent); cursor:grabbing; }
+    /* corner brackets */
+    .swipe-zone::before, .swipe-zone::after,
+    .swipe-zone-br::before, .swipe-zone-br::after {
+      content:''; position:absolute; width:16px; height:16px;
+      border-color:var(--muted); border-style:solid; opacity:.5;
+    }
+    .swipe-zone::before  { top:8px;  left:8px;  border-width:2px 0 0 2px; }
+    .swipe-zone::after   { top:8px;  right:8px; border-width:2px 2px 0 0; }
+    .swipe-zone-br::before { bottom:8px; left:8px;  border-width:0 0 2px 2px; }
+    .swipe-zone-br::after  { bottom:8px; right:8px; border-width:0 2px 2px 0; }
+    .swipe-hint {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      font-size:.82rem; color:var(--muted); pointer-events:none;
+      white-space:nowrap; transition:opacity .2s;
+    }
+    .swipe-zone.swiping .swipe-hint { opacity:0; }
+    .swipe-reset-btn {
+      display:block; width:100%; margin-top:6px;
+      padding:6px; border-radius:7px; font-size:.74rem; font-weight:700;
+      font-family:inherit; cursor:pointer; border:1px solid var(--border2);
+      background:var(--card2); color:var(--muted); transition:all .15s;
+    }
+    .swipe-reset-btn:active { background:rgba(248,113,113,.15); border-color:var(--error); color:var(--error); }
+
+    /* ── STYLE SECTIONS ── */
+    .style-section {
+      background:rgba(244,114,182,.04); border:1px solid rgba(244,114,182,.12);
+      border-radius:14px; padding:14px; margin-bottom:12px;
+    }
+    .style-section-title {
+      display:flex; align-items:center; gap:6px;
+      font-size:.78rem; font-weight:700; color:var(--highlight);
+      text-transform:uppercase; letter-spacing:.06em;
+      margin-bottom:12px; opacity:.8;
+    }
+    .style-row-2 {
+      display:grid; grid-template-columns:1fr 1fr; gap:12px;
+    }
+    .style-check-row {
+      display:flex; align-items:center; gap:8px; cursor:pointer;
+      font-size:.88rem; color:var(--text); margin-top:10px;
+      text-transform:none; letter-spacing:0;
+    }
+    @media(max-width:640px) {
+      .style-section { padding:12px; }
+      .style-row-2 { gap:10px; }
+    }
+
+    /* ── VIDEO SETTINGS DETAILS ── */
+    details summary:hover { border-color:var(--accent) !important; background:rgba(244,114,182,.07) !important; }
+    details[open] summary { border-color:var(--accent) !important; }
+    details[open] summary #videoSettingsChevron { transform:rotate(180deg); }
+
+    /* ── ACCORDION CARDS ── */
+    .card-header {
+      display:flex; align-items:center; justify-content:space-between;
+      cursor:pointer; user-select:none; -webkit-tap-highlight-color:transparent;
+      margin-bottom:0; padding-bottom:0; gap:10px;
+    }
+    .card-header h2 { margin-bottom:0; flex:1; }
+    .card-chevron {
+      width:18px; height:18px; color:var(--muted); flex-shrink:0;
+      transition:transform .25s; opacity:.6;
+    }
+    .card.collapsed .card-chevron { transform:rotate(-90deg); }
+    .card-body { overflow:hidden; transition:max-height .3s ease; }
+    .card.collapsed .card-body { display:none; }
+    .card-done-badge {
+      font-size:.62rem; font-weight:700; padding:2px 7px; border-radius:20px;
+      background:rgba(74,222,128,.12); color:var(--success); border:1px solid rgba(74,222,128,.2);
+      flex-shrink:0; display:none; letter-spacing:.04em;
+    }
+    .card-done-badge.visible { display:inline-block; }
+
+    /* resolution buttons */
+    .res-btn {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:1px; padding:8px 6px;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+      border-radius:8px; color:var(--text); cursor:pointer; font-family:inherit;
+      transition:all .15s; -webkit-tap-highlight-color:transparent; line-height:1.2;
+    }
+    .res-btn:hover { background:rgba(244,114,182,.1); border-color:rgba(244,114,182,.3); }
+    .res-btn.active {
+      background:rgba(244,114,182,.15); border-color:var(--accent);
+      box-shadow:0 0 0 2px rgba(244,114,182,.15);
+      color:#fff;
+    }
+    .res-btn.active span:first-child { color:var(--accent); }
+
+
+    /* ── AUTH ── */
+    .auth-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      margin-top:10px; padding:6px 16px;
+      background:rgba(244,114,182,.08); border:1.5px solid rgba(244,114,182,.25);
+      border-radius:999px; color:var(--highlight); font-family:inherit;
+      font-size:.75rem; font-weight:700; cursor:pointer; letter-spacing:.04em;
+      transition:all .15s; -webkit-tap-highlight-color:transparent;
+    }
+    .auth-btn:hover { background:rgba(244,114,182,.18); border-color:var(--accent); }
+    .auth-btn.logged-in { background:rgba(244,114,182,.12); border-color:rgba(244,114,182,.4); }
+
+    /* modal overlay */
+    .modal-overlay {
+      display:none; position:fixed; inset:0; z-index:1000;
+      background:rgba(0,0,0,.75); backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      align-items:center; justify-content:center; padding:16px;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal-box {
+      background:linear-gradient(160deg,#1a0826,#110620);
+      border:1px solid rgba(244,114,182,.2); border-radius:20px;
+      width:100%; max-width:400px; padding:24px 20px;
+      max-height:90vh; overflow-y:auto;
+    }
+    .modal-title {
+      font-size:1rem; font-weight:800; color:var(--text);
+      margin-bottom:18px; display:flex; align-items:center; gap:8px;
+    }
+    .modal-close {
+      margin-left:auto; background:rgba(244,114,182,.08);
+      border:1px solid rgba(244,114,182,.2); border-radius:999px;
+      color:var(--highlight); cursor:pointer; font-size:.75rem;
+      font-family:inherit; font-weight:700; padding:4px 12px;
+      transition:all .15s;
+    }
+    .modal-close:hover { background:rgba(244,114,182,.18); }
+    .modal-tabs { display:flex; gap:6px; margin-bottom:18px; }
+    .modal-tab {
+      flex:1; padding:8px; border-radius:999px; font-size:.82rem; font-weight:700;
+      font-family:inherit; cursor:pointer; border:1.5px solid rgba(244,114,182,.18);
+      background:rgba(244,114,182,.06); color:var(--muted); transition:all .15s;
+    }
+    .modal-tab.active { background:linear-gradient(135deg,#f472b6,#c084fc); border-color:transparent; color:#fff; }
+    .modal-field { margin-bottom:12px; }
+    .modal-field label { display:block; font-size:.7rem; font-weight:700; color:var(--muted); margin-bottom:5px; letter-spacing:.07em; text-transform:uppercase; }
+    .modal-field input {
+      width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+      border-radius:10px; color:var(--text); font-family:inherit;
+      font-size:.88rem; font-weight:500; padding:10px 12px; outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .modal-field input:focus { border-color:rgba(244,114,182,.5); box-shadow:0 0 0 3px rgba(244,114,182,.12); }
+    .modal-submit {
+      width:100%; background:linear-gradient(135deg,#f472b6,#c084fc);
+      border:none; border-radius:999px; color:#fff; cursor:pointer;
+      font-family:inherit; font-size:.9rem; font-weight:800;
+      padding:12px; margin-top:6px; transition:opacity .2s, transform .1s;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+    }
+    .modal-submit:hover { opacity:.9; transform:translateY(-1px); }
+    .modal-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    /* ── Spinner ── */
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .btn-spinner {
+      width:15px; height:15px; border-radius:50%; flex-shrink:0;
+      border:2.5px solid rgba(255,255,255,.35);
+      border-top-color:#fff;
+      animation:spin .7s linear infinite;
+      display:inline-block;
+    }
+    .modal-msg { font-size:.8rem; font-weight:600; padding:8px 12px; border-radius:8px; margin-top:10px; display:none; }
+    .modal-msg.ok  { display:block; background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.3); color:var(--success); }
+    .modal-msg.err { display:block; background:rgba(248,113,113,.1); border:1px solid rgba(248,113,113,.3); color:var(--error); }
+    .modal-divider { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin:16px 0; opacity:.6; }
+    .modal-divider::before,.modal-divider::after { content:''; flex:1; height:1px; background:rgba(244,114,182,.15); }
+
+    /* account section inside account modal */
+    .account-section { background:rgba(244,114,182,.04); border:1px solid rgba(244,114,182,.12); border-radius:14px; margin-bottom:8px; overflow:hidden; }
+    .account-section-title { font-size:.72rem; font-weight:700; color:var(--highlight); text-transform:uppercase; letter-spacing:.06em; opacity:.8; }
+    /* static (non-dropdown) section header */
+    .account-section-static { padding:14px; }
+    .account-section-static .account-section-title { margin-bottom:10px; }
+    /* dropdown header */
+    .account-section-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:13px 14px; cursor:pointer; user-select:none;
+      transition:background .15s;
+    }
+    .account-section-header:hover { background:rgba(244,114,182,.07); }
+    .account-section-header.open { border-bottom:1px solid rgba(244,114,182,.15); }
+    .account-section-chevron { color:var(--muted); transition:transform .22s cubic-bezier(.4,0,.2,1); flex-shrink:0; }
+    .account-section-header.open .account-section-chevron { transform:rotate(180deg); }
+    .account-section-body { padding:14px; display:none; }
+    .account-section-body.open { display:block; }
+    .danger-btn {
+      width:100%; background:rgba(248,113,113,.1); border:1.5px solid rgba(248,113,113,.3);
+      border-radius:999px; color:var(--error); cursor:pointer; font-family:inherit;
+      font-size:.85rem; font-weight:700; padding:10px; transition:all .18s;
+      display:flex; align-items:center; justify-content:center; gap:6px;
+    }
+    .danger-btn:hover { background:rgba(248,113,113,.2); }
+    .danger-btn:disabled { opacity:.5; cursor:not-allowed; }
+
+    /* ── Custom Confirm Dialog ── */
+    .confirm-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
+      z-index:9999; display:flex; align-items:center; justify-content:center;
+      padding:20px; opacity:0; pointer-events:none; transition:opacity .2s;
+    }
+    .confirm-overlay.open { opacity:1; pointer-events:all; }
+    .confirm-box {
+      background:#111118; border:1.5px solid rgba(248,113,113,.25);
+      border-radius:20px; padding:24px; width:100%; max-width:320px;
+      box-shadow:0 20px 60px rgba(0,0,0,.6);
+      transform:scale(.94) translateY(8px); transition:transform .22s cubic-bezier(.34,1.56,.64,1);
+    }
+    .confirm-overlay.open .confirm-box { transform:scale(1) translateY(0); }
+    .confirm-icon {
+      width:44px; height:44px; border-radius:50%; margin:0 auto 14px;
+      background:rgba(248,113,113,.12); border:1.5px solid rgba(248,113,113,.3);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .confirm-title { font-size:1rem; font-weight:800; color:var(--text); text-align:center; margin-bottom:6px; }
+    .confirm-msg   { font-size:.82rem; color:var(--muted); text-align:center; line-height:1.6; margin-bottom:18px; }
+    .confirm-actions { display:flex; gap:8px; }
+    .confirm-cancel {
+      flex:1; padding:11px; border-radius:999px; border:1.5px solid var(--border2);
+      background:transparent; color:var(--muted); font-family:inherit;
+      font-size:.88rem; font-weight:700; cursor:pointer; transition:all .15s;
+    }
+    .confirm-cancel:hover { border-color:rgba(255,255,255,.2); color:var(--text); }
+    .confirm-ok {
+      flex:1; padding:11px; border-radius:999px; border:none;
+      background:linear-gradient(135deg,#f87171,#ef4444);
+      color:#fff; font-family:inherit; font-size:.88rem; font-weight:700;
+      cursor:pointer; transition:all .15s;
+      display:flex; align-items:center; justify-content:center; gap:6px;
+    }
+    .confirm-ok:hover { opacity:.88; }
+    .confirm-ok:disabled { opacity:.5; cursor:not-allowed; }
+
+    /* my files list */
+    .my-files-list { display:grid; gap:8px; margin-top:10px; }
+    .my-file-item {
+      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+      border-radius:10px; padding:10px 12px;
+    }
+    .my-file-name { flex:1; min-width:0; font-size:.85rem; font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .my-file-date { font-size:.72rem; color:var(--muted); flex-shrink:0; }
+    .my-file-actions { display:flex; gap:6px; flex-shrink:0; margin-left:auto; }
+    .my-file-btn {
+      background:none; border:1px solid rgba(255,255,255,.12); border-radius:8px;
+      color:var(--muted); cursor:pointer; font-size:.72rem; font-weight:700;
+      font-family:inherit; padding:4px 10px; transition:all .15s;
+      display:flex; align-items:center; gap:4px; white-space:nowrap;
+    }
+    .my-file-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .my-file-btn.del:hover { border-color:var(--error); color:var(--error); }
+    @media(max-width:400px) {
+      .my-file-date { display:none; }
+      .my-file-actions { width:100%; justify-content:flex-end; margin-top:4px; }
+    }
+    .files-empty { text-align:center; color:var(--muted); font-size:.84rem; padding:20px 0; }
+
+    /* toast */
+    .toast {
+      position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+      background:rgba(28,8,42,.95); border:1px solid rgba(244,114,182,.3);
+      border-radius:999px; padding:10px 20px; font-size:.83rem; font-weight:700;
+      color:var(--text); z-index:2000; opacity:0; transition:all .3s; pointer-events:none;
+      white-space:nowrap;
+    }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    .toast.ok  { border-color:rgba(74,222,128,.4); color:var(--success); }
+    .toast.err { border-color:rgba(248,113,113,.4); color:var(--error); }
+  </style>
+</head>
+<body>
+<header>
+  <!-- Logo (matches favicon) -->
+  <div style="display:flex;justify-content:center;margin-bottom:14px;">
+    <svg width="80" height="80" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a1a2e"/>
+          <stop offset="100%" stop-color="#16213e"/>
+        </linearGradient>
+        <linearGradient id="logoPink" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f472b6"/>
+          <stop offset="100%" stop-color="#c084fc"/>
+        </linearGradient>
+        <filter id="logoGlow">
+          <feGaussianBlur stdDeviation="1.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- background -->
+      <rect width="64" height="64" rx="14" fill="url(#logoBg)"/>
+      <!-- subtle inner border -->
+      <rect width="64" height="64" rx="14" fill="none" stroke="rgba(244,114,182,0.25)" stroke-width="1"/>
+      <!-- icon -->
+      <g fill="url(#logoPink)" filter="url(#logoGlow)">
+        <ellipse cx="22" cy="46" rx="7" ry="5" transform="rotate(-15 22 46)"/>
+        <rect x="27.5" y="16" width="3.5" height="31" rx="1.75"/>
+        <path d="M31 16 Q48 20 46 32 Q44 24 31 22 Z"/>
+        <rect x="36" y="38" width="14" height="2.5" rx="1.25" opacity=".9"/>
+        <rect x="36" y="43" width="10" height="2.5" rx="1.25" opacity=".7"/>
+        <rect x="36" y="48" width="12" height="2.5" rx="1.25" opacity=".5"/>
+      </g>
+    </svg>
+  </div>
+  <h1 style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+    <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:.82rem;background:linear-gradient(270deg,#f472b6,#c084fc,#f9a8d4,#f472b6);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:.12em;animation:gradientFlow 4s ease infinite;">Twenty35</span>
+    <span style="font-size:1.1rem;">Lyrics Encoder for Alight Motion</span>
+  </h1>
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
+    <button class="guide-btn" onclick="openGuide()">
+      <i data-lucide="book-open" style="width:13px;height:13px;"></i>
+      User Guide
+    </button>
+    <button class="auth-btn" id="authBtn" onclick="openAuthModal()">
+      <i data-lucide="user" style="width:13px;height:13px;"></i>
+      <span id="authBtnLabel">Login / Register</span>
+    </button>
+  </div>
+</header>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── Custom Confirm Dialog ── -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">
+      <i data-lucide="trash-2" style="width:20px;height:20px;color:#f87171;"></i>
+    </div>
+    <div class="confirm-title" id="confirmTitle">Are you sure?</div>
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div id="confirmExtra"></div>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" id="confirmCancel">Cancel</button>
+      <button class="confirm-ok" id="confirmOk">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Auth Modal (Login / Register) ── -->
+<div class="modal-overlay" id="authModal" onclick="if(event.target===this)closeAuthModal()">
+  <div class="modal-box">
+    <div class="modal-title">
+      <i data-lucide="user-circle-2" style="width:18px;height:18px;color:var(--accent);flex-shrink:0;"></i>
+      Account
+      <button class="modal-close" onclick="closeAuthModal()">✕ Close</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Login</button>
+      <button class="modal-tab" id="authTabRegister" onclick="switchAuthTab('register')">Register</button>
+    </div>
+
+    <!-- Login -->
+    <div id="authPanelLogin">
+      <div class="modal-field"><label>Gmail</label><input type="email" id="loginUsername" placeholder="your@gmail.com" /></div>
+      <div class="modal-field"><label>Password</label><input type="password" id="loginPassword" placeholder="Your password" onkeydown="if(event.key==='Enter')handleLogin()" /></div>
+      <button class="modal-submit" id="loginBtn" onclick="handleLogin()">
+        <i data-lucide="log-in" style="width:15px;height:15px;"></i> Login
+      </button>
+      <div class="modal-msg" id="loginMsg"></div>
+    </div>
+
+    <!-- Register -->
+    <div id="authPanelRegister" style="display:none;">
+      <div class="modal-field"><label>Username</label><input type="text" id="regUsername" placeholder="Choose a username" /></div>
+      <div class="modal-field"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com" /></div>
+      <div class="modal-field"><label>Password</label><input type="password" id="regPassword" placeholder="Create a password" /></div>
+      <button class="modal-submit" id="registerBtn" onclick="handleRegister()">
+        <i data-lucide="user-plus" style="width:15px;height:15px;"></i> Create Account
+      </button>
+      <div class="modal-msg" id="registerMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Account Modal ── -->
+<div class="modal-overlay" id="accountModal" onclick="if(event.target===this)closeAccountModal()">
+  <div class="modal-box">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <div id="accountModalAvatar"></div>
+      <div style="flex:1;min-width:0;">
+        <div id="accountModalTitle" style="font-size:1rem;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+        <div style="font-size:.72rem;color:var(--muted);">Manage your account</div>
+      </div>
+      <button class="modal-close" onclick="closeAccountModal()">✕</button>
+    </div>
+
+    <!-- My Files -->
+    <div class="account-section">
+      <div class="account-section-static">
+        <div class="account-section-title" style="margin-bottom:10px;">
+          <i data-lucide="folder" style="width:13px;height:13px;"></i> My Saved Files
+        </div>
+        <div id="myFilesList"><div class="files-empty">Loading...</div></div>
+      </div>
+    </div>
+
+    <!-- Change Username (dropdown) -->
+    <div class="account-section">
+      <div class="account-section-header" id="usernameDropdownHeader" onclick="toggleAccountSection('username')">
+        <div class="account-section-title" style="display:flex;align-items:center;gap:6px;">
+          <i data-lucide="pencil" style="width:13px;height:13px;"></i> Change Username
+        </div>
+        <i data-lucide="chevron-down" class="account-section-chevron" style="width:15px;height:15px;"></i>
+      </div>
+      <div class="account-section-body" id="usernameDropdownBody">
+        <div class="modal-field"><label>New Username</label><input type="text" id="newUsername" placeholder="New username" /></div>
+        <div class="modal-field"><label>Confirm Password</label><input type="password" id="changeUsernamePassword" placeholder="Your current password" /></div>
+        <button class="modal-submit" onclick="handleChangeUsername()">
+          <i data-lucide="check" style="width:15px;height:15px;"></i> Update Username
+        </button>
+        <div class="modal-msg" id="changeUsernameMsg"></div>
+      </div>
+    </div>
+
+    <!-- Change Password (dropdown) -->
+    <div class="account-section">
+      <div class="account-section-header" id="passwordDropdownHeader" onclick="toggleAccountSection('password')">
+        <div class="account-section-title" style="display:flex;align-items:center;gap:6px;">
+          <i data-lucide="lock" style="width:13px;height:13px;"></i> Change Password
+        </div>
+        <i data-lucide="chevron-down" class="account-section-chevron" style="width:15px;height:15px;"></i>
+      </div>
+      <div class="account-section-body" id="passwordDropdownBody">
+        <div class="modal-field"><label>Old Password</label><input type="password" id="oldPassword" placeholder="Current password" /></div>
+        <div class="modal-field"><label>New Password</label><input type="password" id="newPassword" placeholder="New password" /></div>
+        <button class="modal-submit" onclick="handleChangePassword()">
+          <i data-lucide="check" style="width:15px;height:15px;"></i> Update Password
+        </button>
+        <div class="modal-msg" id="changePasswordMsg"></div>
+      </div>
+    </div>
+
+    <!-- Logout + Delete -->
+    <div class="modal-divider">account actions</div>
+    <button class="modal-submit" onclick="handleLogout()" style="background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);margin-bottom:8px;">
+      <i data-lucide="log-out" style="width:15px;height:15px;"></i> Logout
+    </button>
+    <button class="danger-btn" onclick="handleDeleteAccount()">
+      <i data-lucide="trash-2" style="width:14px;height:14px;display:inline;vertical-align:middle;margin-right:6px;"></i> Delete Account
+    </button>
+    <div class="modal-msg" id="deleteAccountMsg"></div>
+  </div>
+</div>
+
+<!-- ── User Guide Modal ── -->
+<div class="guide-overlay" id="guideOverlay" onclick="if(event.target===this)closeGuide()">
+  <div class="guide-sheet">
+    <h2>
+      <i data-lucide="book-open" style="width:18px;height:18px;color:var(--accent);flex-shrink:0;"></i>
+      User Guide
+      <button class="guide-close" onclick="closeGuide()">✕ Close</button>
+    </h2>
+
+    <div class="guide-about">
+      <p style="font-size:.9rem;font-weight:700;color:#f472b6;margin-bottom:4px;">ဒီ Web App လေးက ဘာလဲ?</p>
+      <p>အားလုံးပဲ မင်္ဂလာပါ။ ဒီ Web App လေးကတော့ သီချင်းဘာသာပြန်ရတာ ဝါသနာပါပေမယ့် Encoding လုပ်ရမှာ ပျင်းတဲ့သူတွေအတွက် ရည်ရွယ်ပြီး ဖန်တီးထားတာပါ။ <span class="am-text">Alight Motion</span> မှာ တိုက်ရိုက်ထည့်သွင်းအသုံးပြုနိုင်တဲ့ XML File ကို အလိုအလျောက် ထုတ်ပေးမှာ ဖြစ်လို့ သင့်ရဲ့ Editing အချိန်တွေကို အများကြီး သက်သာစေမှာပါ။</p>
+      <p style="font-size:.9rem;font-weight:700;color:#f472b6;margin-top:6px;margin-bottom:4px;">ဘယ်လို အလုပ်လုပ်သလဲ?</p>
+      <p>သင် ဘာသာပြန်ချင်တဲ့ သီချင်းရဲ့ ခေါင်းစဉ် (Song Title) နဲ့ အဆိုတော်အမည် (Artist Name) ကို ရိုက်ရှာလိုက်ရုံပါပဲ။ <a href="https://lrclib.net" target="_blank" rel="noopener" style="color:#f472b6;text-decoration:underline;">lrclib.net</a> ကနေ Timing ကိုက်ထားပြီးသား Lyrics တွေကို ရယူပေးပြီး သင့်အတွက် အဆင်သင့်သုံးလို့ ရမယ့် XML File အဖြစ် ပြောင်းလဲပေးမှာပါ။</p>
+      <div style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);border-radius:10px;padding:10px 12px;margin-top:8px;">
+        <p style="font-size:.78rem;font-weight:700;color:#f472b6;margin-bottom:4px;">⚠ သတိပြုရန်</p>
+        <p style="font-size:.82rem;color:rgba(253,242,255,.72);margin:0;">ဒီ App က Video တစ်ပုဒ်လုံးကို ဖန်တီးပေးတာ မဟုတ်ဘဲ စာတန်းထိုး XML ကိုပဲ ထုတ်ပေးတာပါ။ ဒါကြောင့် Background Photo၊ Text Animation နဲ့ သီချင်းတွေကိုတော့ <span class="am-text">Alight Motion</span> ထဲမှာ မိမိ စိတ်ကြိုက် ပြန်လည်ပြင်ဆင်ပေးဖို့ လိုအပ်ပါတယ်။</p>
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="guide-step">
+      <div class="guide-step-title"><span class="guide-step-num">1</span> သီချင်းဖိုင် ထည့်သွင်းခြင်း</div>
+      <ul>
+        <li><b>Song Section</b> ကိုဖွင့်ပြီး <b>Upload Song</b> ကို နှိပ်ပါ</li>
+        <li>MP3, WAV, M4A ဖိုင်များကို အသုံးပြုနိုင်ပါသည်</li>
+        <li>သင်ရှာလိုသော <b>Song Title</b> နှင့် <b>Artist Name</b> ကို မှန်ကန်အောင် ရိုက်ထည့်ပါ</li>
+      </ul>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="guide-step">
+      <div class="guide-step-title"><span class="guide-step-num">2</span> Lyrics ရယူခြင်း</div>
+      <ul>
+        <li><b>Get Synced Lyrics</b> ကို နှိပ်ပါက <a href="https://lrclib.net" target="_blank" rel="noopener" style="color:#f472b6;">lrclib.net</a> မှ Timing ကိုက်ပြီးသား စာသားများကို အလိုအလျောက် Fetch လုပ်ပေးပါမည်</li>
+        <li><b>Manual Lyrics:</b> ရှာမတွေ့ပါက <code>[mm:ss.xx] စာသား</code> ဆိုသည့် LRC Format ဖြင့် ကိုယ်တိုင် ရိုက်ထည့်နိုင်ပါသည်</li>
+        <li><b>Translation:</b> မြန်မာဘာသာပြန် ထည့်လိုပါက <b>Translation / Caption</b> တွင် ထည့်သွင်းပါ</li>
+      </ul>
+      <div class="guide-tip" style="margin-top:10px;">
+        <i data-lucide="lightbulb" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;color:#fde68a;"></i>
+        ဘာသာပြန်စာသားကို မူရင်းစာသားရဲ့ Format အတိုင်း (Timing အပိုင်းအခြားတူအောင်) ထည့်ပေးခြင်းက Sync ဖြစ်ဖို့ အကောင်းဆုံးနည်းလမ်းပါ။
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="guide-step">
+      <div class="guide-step-title"><span class="guide-step-num">3</span> Style နှင့် Position ချိန်ညှိခြင်း</div>
+      <ul>
+        <li><b>Styling:</b> Font အမျိုးအစား၊ အရွယ်အစားနှင့် အရောင်များကို စိတ်ကြိုက် ရွေးချယ်ပါ</li>
+        <li><b>Position:</b> Canvas ပေါ်တွင် စာသားကို နှိပ်ဆွဲပြီး နေရာချနိုင်ပါသည်</li>
+        <li><b>Resolution & FPS:</b> <span class="am-text">Alight Motion</span> Project setting နှင့် တူအောင် ချိန်ညှိပေးပါ</li>
+      </ul>
+      <div class="guide-tip" style="margin-top:10px;margin-bottom:12px;">
+        <i data-lucide="alert-circle" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;color:#f472b6;"></i>
+        <b>သတိပြုရန်:</b> ဒီမှာသုံးတဲ့ Font သည် သင့်ဖုန်း <span class="am-text">Alight Motion</span> ထဲတွင်လည်း ရှိနေရန် လိုအပ်ပါသည်။ အောက်မှ Font Package ကို Download ရယူပြီး Import လုပ်ထားပါ။
+      </div>
+
+      <!-- Font Downloads -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.75rem;font-weight:700;color:var(--highlight);margin-bottom:6px;display:flex;align-items:center;gap:5px;">
+          <i data-lucide="type" style="width:12px;height:12px;"></i> Myanmar Fonts
+        </div>
+        <input type="text" id="guideMyanmarFontSearch" placeholder="Font ရှာပါ…" oninput="filterGuideMyanmarFonts()" style="margin-bottom:4px;padding:6px 10px;font-size:.82rem;width:100%;" />
+        <select class="myanmar-font-list" id="guideMyanmarFontList">
+          <option disabled selected>— font ရွေးပါ —</option>
+        </select>
+        <div class="font-status" id="guideMyanmarFontStatus"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <button onclick="downloadSelectedMyanmarFont('guide')" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;"><i data-lucide="download"></i> Download</button>
+          <button onclick="downloadMyanmarFontPack()" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;color:var(--accent2);border-color:rgba(232,121,249,.3);"><i data-lucide="package"></i> Full Pack</button>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:.75rem;font-weight:700;color:var(--highlight);margin-bottom:6px;display:flex;align-items:center;gap:5px;">
+          <i data-lucide="type" style="width:12px;height:12px;"></i> Japanese / English Fonts
+        </div>
+        <select id="guideJapaneseFontFamily" style="width:100%;margin-bottom:6px;">
+          <optgroup label="── Japanese ──">
+            <option value="DotGothic16" data-gf="DotGothic16">DotGothic16</option>
+            <option value="Kaisei Decol" data-gf="Kaisei Decol">Kaisei Decol</option>
+            <option value="M PLUS 1p Light" data-gf="M PLUS 1p">M PLUS 1p Light</option>
+            <option value="M PLUS 1p Medium" data-gf="M PLUS 1p">M PLUS 1p Medium</option>
+            <option value="Stick" data-gf="Stick">Stick</option>
+            <option value="Yuji Mai" data-gf="Yuji Mai">Yuji Mai</option>
+          </optgroup>
+          <optgroup label="── English ──">
+            <option value="Akaya Kanadaka" data-gf="Akaya Kanadaka">Akaya Kanadaka</option>
+            <option value="AlfaqixServo SemiBold" data-gf="">AlfaqixServo SemiBold</option>
+            <option value="Coolvetica" data-gf="">Coolvetica</option>
+            <option value="DS-DIGIB" data-gf="">DS-DIGIB</option>
+            <option value="Groovy Clouds" data-gf="">Groovy Clouds</option>
+            <option value="Nostalgic Letter" data-gf="">Nostalgic Letter</option>
+            <option value="Minecraft Bold" data-gf="">mac's Minecraft Bold</option>
+            <option value="Minecraft Italic" data-gf="">mac's Minecraft Italic</option>
+          </optgroup>
+        </select>
+        <div class="font-status" id="guideJapaneseFontStatus"></div>
+        <div style="display:flex;gap:6px;margin-top:4px;">
+          <button onclick="downloadGuideJapaneseFont()" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;"><i data-lucide="download"></i> Download</button>
+          <button onclick="downloadJapaneseFontPack()" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;color:var(--accent2);border-color:rgba(232,121,249,.3);"><i data-lucide="package"></i> Full Pack</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="guide-step">
+      <div class="guide-step-title"><span class="guide-step-num">4</span> Timing တိကျအောင် ညှိခြင်း</div>
+      <ul>
+        <li><b>Preview:</b> Player တွင် သီချင်းဖွင့်ပြီး စာသားများ အချိန်ကိုက်၊ မကိုက် စစ်ဆေးပါ</li>
+        <li><b>Adjustments:</b> စာသား စောနေ/နောက်ကျနေပါက <b>−0.5s / +0.5s</b> ခလုတ်များဖြင့် ညှိနိုင်ပါသည်</li>
+        <li><b>Trimming Mode (အကြံပြုချက်):</b> LRC Format သည် စာသားစဆိုချိန်ကိုသာ သိပြီး အဆုံးသတ်ချိန် မပါဝင်ပါ။ Trimming Mode ကိုဖွင့်ကာ စာသားတစ်ကြောင်းဆုံးတိုင်း <b>Tap to Trim</b> ကို နှိပ်ပေးခြင်းဖြင့် ပိုမိုသေသပ်သော XML ကို ရရှိပါမည်</li>
+      </ul>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="guide-step">
+      <div class="guide-step-title"><span class="guide-step-num">5</span> Export လုပ်ခြင်း</div>
+      <ul>
+        <li>အားလုံးပြီးပါက <b>Export Section</b> မှ <b>Export XML</b> ကို နှိပ်ပါ</li>
+        <li>ရရှိလာသော <b>.xml</b> ဖိုင်ကို <span class="am-text">Alight Motion</span> တွင် <b>Import Project</b> လုပ်ပြီး အသင့်အသုံးပြုနိုင်ပါပြီ</li>
+        <li><b>Cloud Sync:</b> ဖိုင်တွေကို Cloud ပေါ်မှာ သိမ်းထားချင်ရင်တော့ Account ဖွင့်ထားဖို့ အကြံပြုပါတယ် — ဘယ်အချိန်မဆို ပြန်လည် Download ဆွဲနိုင်မှာပါ</li>
+      </ul>
+    </div>
+
+    <!-- Creator's Note -->
+    <div class="guide-tip">
+      <b>Creator's Note</b> — ဒီ App လေးကို Vibe Coding နဲ့ ဖန်တီးထားတာဖြစ်လို့ အဆင်မပြေတာလေးတွေ ရှိရင် သည်းခံပေးဖို့ တောင်းဆိုချင်ပါတယ်။ အားလုံးပဲ အချိန်ကုန်သက်သာစွာနဲ့ Lyric Video လှလှလေးတွေ ဖန်တီးနိုင်ကြပါစေ!
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ① Song -->
+<div class="card collapsed" id="card1">
+  <div class="card-header" onclick="toggleCard('card1')">
+    <span class="card-done-badge" id="card1Done">✓ Done</span>
+    <h2><span class="step-icon"><i data-lucide="music"></i></span> Song</h2>
+    <i data-lucide="chevron-down" class="card-chevron"></i>
+  </div>
+  <div class="card-body" style="margin-top:16px;">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <button class="btn btn-ghost" id="audioUploadBtn" onclick="document.getElementById('audioFileInput').click()" style="gap:8px;">
+      <i data-lucide="music" style="width:15px;height:15px;"></i> Upload Song
+    </button>
+    <span id="audioFileName" style="font-size:.8rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;display:none;"></span>
+    <button id="audioClearBtn" onclick="clearAudioFile()" title="Remove song"
+      style="display:none;background:none;border:none;cursor:pointer;color:var(--muted);
+             padding:3px;display:none;align-items:center;transition:color .15s;flex-shrink:0;"
+      onmouseenter="this.style.color='var(--error)'" onmouseleave="this.style.color='var(--muted)'">
+      <i data-lucide="x-circle" style="width:17px;height:17px;"></i>
+    </button>
+    <input type="file" id="audioFileInput"
+           accept="audio/*,audio/mpeg,audio/mp4,audio/m4a,audio/wav,audio/aac,.mp3,.m4a,.wav,.aac,.ogg"
+           onchange="handleAudioUpload(event)" style="display:none;" />
+  </div>
+  <div class="divider">please enter the song title &amp; artist below</div>
+  <div class="row">
+    <div><label>Song Title</label><input type="text" id="songTitle" placeholder="e.g. Blinding Lights" /></div>
+    <div><label>Artist</label><input type="text" id="songArtist" placeholder="e.g. The Weeknd" /></div>
+  </div>
+  </div><!-- end card-body -->
+</div>
+
+<!-- ② Lyrics -->
+<div class="card collapsed" id="card2">
+  <div class="card-header" onclick="toggleCard('card2')">
+    <span class="card-done-badge" id="card2Done">✓ Done</span>
+    <h2><span class="step-icon"><i data-lucide="file-text"></i></span> Lyrics</h2>
+    <i data-lucide="chevron-down" class="card-chevron"></i>
+  </div>
+  <div class="card-body" style="margin-top:16px;">
+  <label style="font-size:.82rem;color:var(--text);margin-bottom:6px;text-transform:none;letter-spacing:0;">Get synced lyrics automatically</label>
+  <div class="fetch-row">
+    <button class="btn btn-primary" id="fetchBtn" onclick="fetchLyrics()"><i data-lucide="sparkles"></i> Get Synced Lyrics</button>
+    <div class="fetch-status" id="fetchStatus"></div>
+  </div>
+  <!-- Search override (shown after a not-found error) -->
+  <div id="searchOverride" style="display:none; margin-top:10px;">
+    <label style="font-size:.8rem;color:var(--muted);margin-bottom:4px;">Try a different search (use English/romanized title for Japanese/Korean songs):</label>
+    <div style="display:flex;gap:8px;">
+      <input type="text" id="searchQuery" placeholder='e.g. "Shion" or "Saucy Dog Shion"' style="flex:1;" onkeydown="if(event.key==='Enter')fetchLyricsCustom()" />
+      <button class="btn btn-ghost" onclick="fetchLyricsCustom()" style="white-space:nowrap;"><i data-lucide="search"></i> Search</button>
+    </div>
+    <p style="font-size:.75rem;color:var(--muted);margin-top:4px;">Tips: try romanized name · try title only · try English translation · try alternate spellings</p>
+  </div>
+
+  <!-- Enter manually toggle — right under fetch -->
+  <div style="margin-top:10px;">
+    <button class="btn btn-ghost btn-sm" onclick="toggleManualLRC()" id="manualLRCToggle" style="width:100%;justify-content:center;">
+      <i data-lucide="chevron-down" id="manualLRCChevron"></i> Enter lyrics manually
+    </button>
+    <div id="manualLRCSection" style="display:none; margin-top:10px;">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('paste')">Paste LRC</button>
+        <button class="tab-btn" onclick="switchTab('upload')">Upload .lrc File</button>
+      </div>
+      <div id="tab-paste" class="tab-panel active">
+        <div class="lrc-hint"><strong>LRC format:</strong> [mm:ss.xx] Lyric line<br>[00:12.34] First line of lyrics<br>[00:16.80] Second line here</div>
+        <div style="position:relative;">
+          <textarea id="lrcText" placeholder="[00:12.34] Paste your LRC lyrics here&#10;[00:16.80] Each line with a timestamp" oninput="onLrcInput()" style="min-height:260px;padding-top:34px;"></textarea>
+          <button onclick="copyLRC()" id="copyLRCBtn" title="Copy LRC"
+            style="position:absolute;top:6px;right:6px;
+                   background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.25);
+                   border-radius:6px;color:var(--muted);cursor:pointer;font-family:inherit;
+                   font-size:.68rem;font-weight:700;padding:3px 8px;
+                   display:flex;align-items:center;gap:4px;transition:all .15s;z-index:1;
+                   -webkit-tap-highlight-color:transparent;line-height:1;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy
+          </button>
+        </div>
+      </div>
+      <div id="tab-upload" class="tab-panel">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()"
+             ondragover="event.preventDefault();this.classList.add('over')"
+             ondragleave="this.classList.remove('over')"
+             ondrop="handleLrcDrop(event)">
+          <i data-lucide="folder-open" class="zone-icon" style="width:34px;height:34px;"></i>
+          <strong>Click or drag &amp; drop .lrc / .txt</strong>
+          <p>Any LRC file from the web works</p>
+        </div>
+        <input type="file" id="fileInput" accept=".lrc,.txt" onchange="handleFileUpload(event)" />
+      </div>
+    </div>
+  </div>
+
+  <div class="divider" style="margin-top:18px;">translation / caption (optional)</div>
+  <input type="checkbox" id="enableTranslation" style="display:none;" />
+  <div class="trans-dropdown-header" id="transDropdownHeader" onclick="toggleTranslation()">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <span style="font-size:.88rem;font-weight:700;color:var(--text);">Translation / Caption</span>
+      <span style="font-size:.74rem;color:var(--muted);">Add a second text layer — subtitles, romanization, etc.</span>
+    </div>
+    <i data-lucide="chevron-down" id="transChevron" style="width:18px;height:18px;color:var(--muted);flex-shrink:0;transition:transform .25s;"></i>
+  </div>
+  <div id="translationSection" style="display:none; margin-top:0; padding:14px; background:rgba(244,114,182,.04); border:1.5px solid rgba(244,114,182,.4); border-top:none; border-bottom-left-radius:var(--rs); border-bottom-right-radius:var(--rs);">
+    <div class="tabs" style="margin-bottom:10px;">
+      <button class="tab-btn active" id="transTabBtn0" onclick="switchTransTab('plain')">Plain Text</button>
+      <button class="tab-btn" id="transTabBtn1" onclick="switchTransTab('lrc')">LRC Format</button>
+    </div>
+    <div id="trans-tab-plain" class="tab-panel active">
+      <textarea id="translationText" style="min-height:100px;"
+        placeholder="Translation for line 1&#10;Translation for line 2&#10;&#10;(blank line = skip this lyric)&#10;Translation for line 4"
+        oninput="onTransInput()"></textarea>
+    </div>
+    <div id="trans-tab-lrc" class="tab-panel">
+      <div class="lrc-hint"><strong>LRC format:</strong> [mm:ss.xx] Translation line</div>
+      <textarea id="translationLRC" style="min-height:100px;"
+        placeholder="[00:12.34] Translation line 1&#10;[00:16.80] Translation line 2"
+        oninput="onTransLRCInput()"></textarea>
+    </div>
+  </div>
+  </div><!-- end card-body -->
+</div>
+
+<!-- ③ Preview & Adjust -->
+<div class="card collapsed" id="previewSection">
+  <div class="card-header" onclick="toggleCard('previewSection')">
+    <span class="card-done-badge" id="previewSectionDone" style="display:none;"></span>
+    <h2><span class="step-icon"><i data-lucide="clapperboard"></i></span> Preview &amp; Timing</h2>
+    <i data-lucide="chevron-down" class="card-chevron"></i>
+  </div>
+  <div class="card-body" style="margin-top:16px;">
+
+  <!-- No audio warning -->
+  <div class="no-audio-note" id="noAudioNote" style="display:none;">
+    ⚠ Upload a song in Step 1 to enable playback.
+  </div>
+
+  <!-- Player -->
+  <div class="player-bar" id="playerBar" style="display:none;">
+    <button class="play-btn" id="playBtn" onclick="togglePlay()"><i data-lucide="play"></i></button>
+    <span class="player-time" id="currentTime">0:00</span>
+    <div class="seek-wrap">
+      <div class="seek-track" id="seekTrack" onclick="seekClick(event)">
+        <div class="seek-fill" id="seekFill"></div>
+        <div id="seekMarkers"></div>
+        <div class="seek-thumb" id="seekThumb"></div>
+      </div>
+    </div>
+    <span class="player-time" id="totalTime">0:00</span>
+    <div id="markerSizeHint" style="font-size:.65rem;color:var(--muted);flex-shrink:0;margin-left:2px;white-space:nowrap;display:none;">
+      <i data-lucide="zoom-in" style="width:11px;height:11px;vertical-align:middle;"></i>
+      <span id="markerSizeVal">22</span>px
+    </div>
+  </div>
+
+  <!-- Tap sync controls -->
+  <div style="display:flex;gap:6px;margin-bottom:12px;margin-top:14px;flex-wrap:nowrap;overflow:hidden;" id="modeBar">
+    <button class="btn btn-ghost btn-sm" id="endTapBtn" onclick="toggleEndTap()"><i data-lucide="flag" style="color:#fbbf24;"></i> Trimming</button>
+    <button class="btn btn-ghost btn-sm" onclick="nudgeAll(-0.5)"><i data-lucide="rewind" style="color:#60a5fa;"></i> −0.5s</button>
+    <button class="btn btn-ghost btn-sm" onclick="nudgeAll(0.5)"><i data-lucide="fast-forward" style="color:#34d399;"></i> +0.5s</button>
+    <button class="btn btn-ghost btn-sm" onclick="resetToOriginal()"><i data-lucide="rotate-ccw" style="color:#f472b6;"></i> Reset</button>
+    <button class="btn btn-ghost btn-sm" id="clearEndBtn" onclick="clearEndTimes()" style="display:none;"><i data-lucide="rotate-ccw" style="color:#f472b6;"></i> Reset Trims</button>
+  </div>
+
+  <!-- Tap start banner -->
+  <div class="tap-banner" id="tapBanner" style="flex-direction:column;align-items:stretch;gap:10px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <i data-lucide="crosshair" style="width:20px;height:20px;flex-shrink:0;color:var(--accent2);"></i>
+      <span style="flex:1;font-size:.85rem;font-weight:700;color:var(--highlight);">Tap Start Mode</span>
+      <button class="btn btn-danger btn-sm" onclick="toggleTapSync()">Stop</button>
+    </div>
+    <div style="background:rgba(0,0,0,.3);border-radius:8px;padding:8px 14px;">
+      <div style="font-size:.72rem;color:rgba(240,171,252,.6);margin-bottom:4px;font-weight:600;letter-spacing:.05em;">NEXT LINE TO TIME:</div>
+      <div id="tapCurrentLine" style="font-size:1rem;font-weight:700;color:#fff;line-height:1.4;">—</div>
+    </div>
+    <button onclick="tapLine()"
+      style="background:rgba(244,114,182,.15);border:2px solid rgba(244,114,182,.5);
+             border-radius:14px;color:var(--accent);font-family:inherit;font-weight:800;
+             font-size:1.05rem;padding:18px 10px;cursor:pointer;
+             -webkit-tap-highlight-color:transparent;user-select:none;">
+      TAP — line just started
+    </button>
+    <div class="kb-hint" style="font-size:.68rem;color:rgba(244,114,182,.4);text-align:center;">
+      keyboard: Space = tap &nbsp;·&nbsp; Esc = stop
+    </div>
+  </div>
+
+  <!-- Tap end banner -->
+  <div class="tap-banner" id="endTapBanner" style="border-color:rgba(251,191,36,.3);background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(251,191,36,.05));flex-direction:column;align-items:stretch;gap:10px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <i data-lucide="flag" style="width:20px;height:20px;flex-shrink:0;color:var(--warn);"></i>
+      <span style="flex:1;font-size:.85rem;font-weight:700;color:var(--warn);">Trimming Mode</span>
+      <span id="endTapClock" style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--warn);opacity:.8;">0:00.000</span>
+      <button class="btn btn-sm" style="background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.4);color:var(--warn);" onclick="toggleEndTap()">Stop</button>
+    </div>
+    <div style="background:rgba(0,0,0,.3);border-radius:8px;padding:10px 14px;">
+      <div style="font-size:.72rem;color:rgba(251,191,36,.6);margin-bottom:4px;font-weight:600;letter-spacing:.05em;">NOW TIMING LINE <span id="endTapIdxLabel">1</span> / <span id="endTapTotalLabel">?</span> — press SPACE when singer stops</div>
+      <div id="endTapLineText" style="font-size:1rem;font-weight:700;color:#fff;line-height:1.4;">—</div>
+      <div id="endTapNextPreview" style="font-size:.78rem;color:rgba(255,255,255,.35);margin-top:4px;">next: —</div>
+    </div>
+    <!-- Big tap buttons for touch / mobile -->
+    <div style="display:flex;gap:8px;">
+      <button onclick="goBackEndTap()"
+        style="background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);
+               border-radius:10px;color:var(--muted);font-family:inherit;font-weight:700;
+               font-size:.8rem;padding:10px 12px;cursor:pointer;
+               -webkit-tap-highlight-color:transparent;user-select:none;">
+        ← Back
+      </button>
+      <button onclick="tapEndTime()"
+        style="flex:1;background:rgba(251,191,36,.2);border:2px solid rgba(251,191,36,.5);
+               border-radius:10px;color:var(--warn);font-family:inherit;font-weight:800;
+               font-size:.95rem;padding:10px 10px;cursor:pointer;
+               -webkit-tap-highlight-color:transparent;user-select:none;">
+        Tap to Trim
+      </button>
+      <button onclick="skipEndTap()"
+        style="background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);
+               border-radius:10px;color:var(--muted);font-family:inherit;font-weight:700;
+               font-size:.8rem;padding:10px 12px;cursor:pointer;
+               -webkit-tap-highlight-color:transparent;user-select:none;">
+        Skip
+      </button>
+    </div>
+    <div class="kb-hint" style="font-size:.68rem;color:rgba(251,191,36,.4);text-align:center;">
+      keyboard: Space = tap &nbsp;·&nbsp; S = skip &nbsp;·&nbsp; B = back &nbsp;·&nbsp; Esc = stop
+    </div>
+  </div>
+
+
+  <!-- Lyric rows -->
+  <div class="lyric-rows" id="lyricRows"></div>
+
+  </div><!-- end card-body -->
+</div>
+
+<!-- ④ Style -->
+<div class="card collapsed" id="card4">
+  <div class="card-header" onclick="toggleCard('card4')">
+    <span class="card-done-badge" id="card4Done" style="display:none;"></span>
+    <h2><span class="step-icon"><i data-lucide="palette"></i></span> Style</h2>
+    <i data-lucide="chevron-down" class="card-chevron"></i>
+  </div>
+  <div class="card-body" style="margin-top:16px;">
+  <input type="hidden" id="fontFamily" value="Roboto" />
+  <input type="hidden" id="transFontFamily" value="Roboto" />
+
+  <!-- ── Section: Text ── -->
+  <div class="style-section">
+    <div class="style-section-title"><i data-lucide="type" style="width:13px;height:13px;"></i> Text</div>
+    <div>
+      <label>Font Size (pt)</label>
+      <input type="number" id="fontSize" value="18" min="8" max="500" oninput="updatePosCanvas()" />
+    </div>
+  </div>
+
+  <!-- ── Section: Colors ── -->
+  <div class="style-section">
+    <div class="style-section-title"><i data-lucide="droplets" style="width:13px;height:13px;"></i> Colors</div>
+    <div class="style-row-2">
+      <div>
+        <label>Text</label>
+        <div class="color-row">
+          <input type="color" id="textColor" value="#ffffff" oninput="syncColor('textColor','textColorHex');updatePosCanvas()" />
+          <input type="text" id="textColorHex" value="#ffffff" maxlength="7" oninput="syncHex('textColor','textColorHex');updatePosCanvas()" />
+        </div>
+      </div>
+      <div>
+        <label>Background</label>
+        <div class="color-row">
+          <input type="color" id="bgColor" value="#000000" oninput="syncColor('bgColor','bgColorHex');updatePosCanvas()" />
+          <input type="text" id="bgColorHex" value="#000000" maxlength="7" oninput="syncHex('bgColor','bgColorHex');updatePosCanvas()" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section: Font ── -->
+  <div class="style-section">
+    <div class="style-section-title">
+      <i data-lucide="a-large-small" style="width:13px;height:13px;"></i> Font
+      <span class="active-font-badge" id="activeFontIndicator"></span>
+    </div>
+    <select id="japaneseFontFamily" onchange="selectJapaneseFont()" style="margin-bottom:6px;">
+      <optgroup label="── Japanese ──">
+        <option value="DotGothic16">DotGothic16</option>
+        <option value="Kaisei Decol">Kaisei Decol</option>
+        <option value="M PLUS 1p">M PLUS 1p Light</option>
+        <option value="M PLUS 1p">M PLUS 1p Medium</option>
+        <option value="Stick">Stick</option>
+        <option value="Yuji Mai">Yuji Mai</option>
+      </optgroup>
+      <optgroup label="── English ──">
+        <option value="Akaya Kanadaka">Akaya Kanadaka</option>
+        <option value="AlfaqixServo SemiBold">AlfaqixServo SemiBold</option>
+        <option value="Coolvetica">Coolvetica</option>
+        <option value="DS-DIGIB">DS-DIGIB</option>
+        <option value="Groovy Clouds">Groovy Clouds</option>
+        <option value="Nostalgic Letter">Nostalgic Letter</option>
+        <option value="Minecraft Bold">mac's Minecraft Bold</option>
+        <option value="Minecraft Italic">mac's Minecraft Italic</option>
+      </optgroup>
+    </select>
+    <div class="font-status" id="japaneseFontStatus"></div>
+    <div contenteditable="true" id="japaneseFontPreview" class="mm-font-preview visible" spellcheck="false"
+         style="font-family:'Noto Sans JP',sans-serif;">君の声が 聞こえる夜に</div>
+    <p class="mm-font-preview-hint visible">Tap above to type your own text</p>
+    <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+      <button onclick="document.getElementById('fontFileInput').click()" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;"><i data-lucide="upload"></i> Upload TTF</button>
+      <button onclick="openGuide()" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;color:var(--muted);font-size:.75rem;"><i data-lucide="download" style="width:13px;height:13px;"></i> Download → Guide</button>
+    </div>
+    <input type="file" id="fontFileInput" accept=".ttf,.otf" onchange="handleFontUpload(event)" />
+    <div class="font-status" id="uploadFontStatus"></div>
+  </div>
+
+  <!-- ── Section: Video Settings ── -->
+  <details>
+    <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;
+      background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;
+      padding:10px 14px;font-size:.92rem;font-weight:700;color:var(--text);
+      transition:border-color .2s,background .2s;user-select:none;-webkit-tap-highlight-color:transparent;">
+      <i data-lucide="settings-2" style="width:16px;height:16px;color:var(--accent);flex-shrink:0;"></i>
+      Video Settings
+      <i data-lucide="chevron-down" style="width:16px;height:16px;color:var(--muted);margin-left:auto;transition:transform .25s;" id="videoSettingsChevron"></i>
+    </summary>
+    <div style="margin-top:10px;">
+      <div class="style-row-2">
+        <div><label>Resolution</label>
+          <select id="resolution" onchange="updatePosCanvas()" style="font-size:.72rem;">
+            <option value="1080x1920">1080×1920 (9:16)</option>
+            <option value="1920x1080">1920×1080 (16:9)</option>
+            <option value="1080x1080">1080×1080 (1:1)</option>
+            <option value="1080x1350">1080×1350 (4:5)</option>
+            <option value="2160x3840">2160×3840 (2K 9:16)</option>
+            <option value="3840x2160">3840×2160 (2K 16:9)</option>
+            <option value="2160x2160">2160×2160 (2K 1:1)</option>
+          </select>
+        </div>
+        <div><label>Frame Rate</label>
+          <select id="fps">
+            <option value="30" selected>30 fps</option>
+            <option value="60">60 fps</option>
+            <option value="24">24 fps</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- Translation style controls (shown only when translation is enabled) -->
+  <div id="transStyleSection" style="display:none; margin-top:14px;">
+    <div class="divider" style="margin:0 0 14px;">Caption Style</div>
+
+    <!-- Caption Text + Color -->
+    <div class="style-row-2" style="margin-bottom:14px;">
+      <div>
+        <label>Font Size (pt)</label>
+        <input type="number" id="transFontSize" value="45" min="8" max="300" oninput="updatePosCanvas()" />
+      </div>
+      <div>
+        <label>Color</label>
+        <div class="color-row">
+          <input type="color" id="transColor" value="#aaaaaa" oninput="syncColor('transColor','transColorHex');updatePosCanvas()" />
+          <input type="text" id="transColorHex" value="#aaaaaa" maxlength="7" oninput="syncHex('transColor','transColorHex');updatePosCanvas()" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Caption Font -->
+    <div class="style-section">
+      <div class="style-section-title">
+        <i data-lucide="a-large-small" style="width:13px;height:13px;"></i> Caption Font
+        <span class="active-font-badge" id="transActiveFontIndicator"></span>
+      </div>
+      <input type="text" id="transMyanmarFontSearch" placeholder="Search fonts…" oninput="filterTransMyanmarFonts()" style="margin-bottom:4px;padding:6px 10px;font-size:.82rem;" />
+      <select class="myanmar-font-list" id="transMyanmarFontList" onchange="selectTransMyanmarFont()">
+        <option disabled selected>— select a font —</option>
+      </select>
+      <div class="font-status" id="transMyanmarFontStatus"></div>
+      <div contenteditable="true" id="transMmFontPreview" class="mm-font-preview" spellcheck="false"></div>
+      <p class="mm-font-preview-hint" id="transMmFontPreviewHint">Tap above to type your own text</p>
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <button onclick="document.getElementById('transFontFileInput').click()" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;"><i data-lucide="upload"></i> Upload TTF</button>
+        <button onclick="openGuide()" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;color:var(--muted);font-size:.75rem;"><i data-lucide="download" style="width:13px;height:13px;"></i> Download → Guide</button>
+      </div>
+      <input type="file" id="transFontFileInput" accept=".ttf,.otf" onchange="handleTransFontUpload(event)" style="display:none;" />
+      <div class="font-status" id="transUploadFontStatus"></div>
+    </div>
+  </div>
+
+  <!-- Visual Text Position Editor (desktop only — hidden on mobile, use swipe panel instead) -->
+  <div style="margin-top:18px;" id="canvasPosEditor">
+    <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted);margin-bottom:8px;text-transform:none;letter-spacing:0;">
+      <i data-lucide="mouse-pointer-2" style="width:13px;height:13px;"></i>
+      Text Position — click or drag on canvas to reposition
+    </label>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <div class="pos-canvas-wrap" id="posCanvas"
+           onmousedown="canvasPtrDown(event)"
+           onmousemove="canvasPtrMove(event)"
+           onmouseup="canvasPtrUp()"
+           onmouseleave="canvasPtrUp()"
+           ontouchstart="canvasPtrDown(event)"
+           ontouchmove="canvasPtrMove(event)"
+           ontouchend="canvasPtrUp()">
+        <div class="pos-guide-h"></div>
+        <div class="pos-guide-v"></div>
+        <div class="drag-text-el" id="dragText">
+          <span class="drag-text-label">Lyrics</span>
+          Your Lyric Here
+        </div>
+        <div class="drag-text-el drag-text-trans" id="dragTransText" style="display:none;"
+             onmousedown="startTransDrag(event)"
+             ontouchstart="startTransDrag(event)">
+          <span class="drag-text-label">Translation</span>
+          Translation Here
+        </div>
+      </div>
+      <div class="pos-coords" id="posCoords">x: 540  y: 1440</div>
+      <div class="pos-snap-row">
+        <button class="btn btn-ghost btn-sm" onclick="snapPos(50,null,'main')"><i data-lucide="move-horizontal"></i> Center X</button>
+        <button class="btn btn-ghost btn-sm" onclick="snapPos(null,50,'main')"><i data-lucide="move-vertical"></i> Center Y</button>
+        <button class="btn btn-ghost btn-sm" onclick="snapPos(50,75,'main')"><i data-lucide="rotate-ccw"></i> Reset</button>
+      </div>
+      <div class="pos-snap-row" id="transSnapRow" style="display:none;">
+        <button class="btn btn-ghost btn-sm" onclick="snapPos(50,null,'trans')"><i data-lucide="move-horizontal"></i> Center X</button>
+        <button class="btn btn-ghost btn-sm" onclick="snapPos(null,50,'trans')"><i data-lucide="move-vertical"></i> Center Y</button>
+        <button class="btn btn-ghost btn-sm" onclick="snapPos(50,87,'trans')"><i data-lucide="rotate-ccw"></i> Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Swipe Position Control -->
+  <div class="swipe-panel">
+    <label style="margin-bottom:6px;display:block;font-size:.72rem;">Position Control</label>
+    <div class="swipe-layer-row" id="swipeLayerRow" style="display:none;">
+      <button class="swipe-layer-btn active" id="dpadLyricsBtn" onclick="setDpadLayer('lyrics')">Lyrics</button>
+      <button class="swipe-layer-btn" id="dpadTransBtn" onclick="setDpadLayer('trans')">Translation</button>
+    </div>
+    <div class="swipe-coords-row">
+      <div class="swipe-coord-box">
+        <span class="swipe-coord-val" id="swipeValX">540.00</span>
+        <span class="swipe-coord-label">x</span>
+      </div>
+      <div class="swipe-coord-box">
+        <span class="swipe-coord-val" id="swipeValY">1440.00</span>
+        <span class="swipe-coord-label">y</span>
+      </div>
+    </div>
+    <div class="swipe-zone" id="swipeZone"
+         onmousedown="swipeStart(event)" onmousemove="swipeMove(event)" onmouseup="swipeEnd()" onmouseleave="swipeEnd()"
+         ontouchstart="swipeStart(event)" ontouchmove="swipeMove(event)" ontouchend="swipeEnd()" ontouchcancel="swipeEnd()">
+      <div class="swipe-zone-br"></div>
+      <span class="swipe-hint">Swipe here to move layer</span>
+    </div>
+    <button class="swipe-reset-btn" onclick="resetDpadLayer()">↺ Reset Position</button>
+  </div>
+  </div><!-- end card-body -->
+</div>
+
+<!-- ⑤ Generate -->
+<div class="card collapsed" id="card5">
+  <div class="card-header" onclick="toggleCard('card5')">
+    <span class="card-done-badge" id="card5Done" style="display:none;"></span>
+    <h2><span class="step-icon"><i data-lucide="download"></i></span> Export</h2>
+    <i data-lucide="chevron-down" class="card-chevron"></i>
+  </div>
+  <div class="card-body" style="margin-top:16px;">
+  <button class="generate-btn" onclick="generate()"><i data-lucide="download"></i> Export .xml for Alight Motion</button>
+  <div id="status" class="status"></div>
+  <!-- Save to account (shown after export) -->
+  <div id="saveToAccountRow" style="display:none;margin-top:12px;padding:12px 14px;background:rgba(244,114,182,.06);border:1.5px solid rgba(244,114,182,.2);border-radius:12px;">
+    <div style="font-size:.82rem;font-weight:700;color:var(--highlight);margin-bottom:8px;display:flex;align-items:center;gap:6px;"><i data-lucide="cloud" style="width:13px;height:13px;"></i> Save this XML to your account?</div>
+    <div id="saveLoggedIn" style="display:none;">
+      <button class="modal-submit" id="saveToAccountBtn" onclick="saveXMLToAccount()" style="margin-top:0;">
+        <i data-lucide="cloud-upload" style="width:15px;height:15px;"></i> Save to My Account
+      </button>
+    </div>
+    <div id="saveNotLoggedIn" style="display:none;">
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:8px;">Create a free account to save and access your XMLs anytime.</p>
+      <div style="display:flex;gap:8px;">
+        <button class="modal-submit" onclick="openAuthModal('register')" style="margin-top:0;">
+          <i data-lucide="user-plus" style="width:15px;height:15px;"></i> Register Free
+        </button>
+        <button class="modal-submit" onclick="openAuthModal('login')" style="margin-top:0;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);">
+          <i data-lucide="log-in" style="width:15px;height:15px;"></i> Login
+        </button>
+      </div>
+    </div>
+  </div>
+  </div><!-- end card-body -->
+</div>
+
+</div>
+<div class="footer">
+  Lyrics Encoder for Alight Motion<br>
+  <span style="margin-top:6px;display:inline-block;">&copy; 2026 <a href="https://www.youtube.com/@twenty_35" target="_blank" rel="noopener" style="color:var(--text);font-weight:700;text-decoration:none;transition:color .15s;" onmouseenter="this.style.color='#f472b6'" onmouseleave="this.style.color='var(--text)'">Twenty35</a>. All rights reserved.</span>
+</div>
+
+<audio id="audioEl" preload="auto" playsinline webkit-playsinline x-webkit-airplay="allow"></audio>
+
+<script>
+// ══════════════════════════════════════════════
+// ACCORDION CARD HELPERS
+function openGuide() {
+  document.getElementById('guideOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (window.lucide) lucide.createIcons();
+  // Populate guide Myanmar font list if not done yet
+  const guideList = document.getElementById('guideMyanmarFontList');
+  if (guideList && myanmarFonts.length) {
+    filterGuideMyanmarFonts();
+  } else if (guideList && !myanmarFonts.length) {
+    const statusEl = document.getElementById('guideMyanmarFontStatus');
+    if (statusEl) {
+      statusEl.className = 'font-status';
+      statusEl.innerHTML = '<span style="color:var(--accent);">⟳ Loading font list…</span>';
+    }
+    initGuideMyanmarFonts();
+  }
+}
+
+async function initGuideMyanmarFonts() {
+  const statusEl = document.getElementById('guideMyanmarFontStatus');
+  try {
+    if (!myanmarFonts.length) {
+      const res  = await fetch(MYANMAR_FONTS_API);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      myanmarFonts = data.tree
+        .filter(f => f.type === 'blob' && f.path.toLowerCase().endsWith('.ttf'))
+        .map(f => {
+          const parts = f.path.split('/');
+          const file  = parts[parts.length - 1];
+          const name  = file.replace(/\.ttf$/i, '').replace(/[-_]/g, ' ');
+          return { name, file, path: f.path };
+        })
+        .filter(f => !isMyanmarFontBlocked(f.name))
+        .sort((a, b) => a.name.localeCompare(b.name));
+    }
+    filterGuideMyanmarFonts();
+    if (statusEl) {
+      statusEl.className = 'font-status ok';
+      statusEl.textContent = `✓ ${myanmarFonts.length} fonts loaded`;
+    }
+  } catch(e) {
+    if (statusEl) {
+      statusEl.className = 'font-status err';
+      statusEl.textContent = '✗ Could not load font list.';
+    }
+  }
+}
+function closeGuide() {
+  document.getElementById('guideOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ══════════════════════════════════════════════
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  if (card) card.classList.toggle('collapsed');
+  if (window.lucide) lucide.createIcons();
+  if ((id === 'card4' || id === 'previewSection') && !card.classList.contains('collapsed'))
+    setTimeout(updatePosCanvas, 60);
+}
+function openCard(id) {
+  const card = document.getElementById(id);
+  if (card) card.classList.remove('collapsed');
+  if (window.lucide) lucide.createIcons();
+  if (id === 'card4' || id === 'previewSection')
+    setTimeout(updatePosCanvas, 60);
+}
+const CARD_NEXT = { card1: 'card2', card2: 'card4', card4: 'card5' };
+
+function canProceedFrom(id) {
+  if (id === 'card1') {
+    const title  = document.getElementById('songTitle')?.value.trim();
+    const artist = document.getElementById('songArtist')?.value.trim();
+    return !!(title && artist);
+  }
+  if (id === 'card2') {
+    const transOn   = document.getElementById('enableTranslation')?.checked;
+    if (!transOn) return false; // wait until user enables translation
+    const plainText = document.getElementById('translationText')?.value.trim();
+    const lrcText   = document.getElementById('transLrcText')?.value.trim();
+    return !!(plainText || lrcText);
+  }
+  return true;
+}
+
+function autoOpenNext(id) {
+  const nextId = CARD_NEXT[id];
+  if (!nextId) return;
+  const next = document.getElementById(nextId);
+  if (!next) return;
+  setTimeout(() => {
+    next.classList.remove('collapsed');
+    if (window.lucide) lucide.createIcons();
+    setTimeout(() => next.scrollIntoView({ behavior:'smooth', block:'start' }), 80);
+  }, 400);
+}
+
+function markCardDone(id) {
+  document.getElementById(id+'Done')?.classList.add('visible');
+  if (canProceedFrom(id)) autoOpenNext(id);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // card1: open Lyrics once both title + artist are filled (debounced)
+  let card1Timer = null;
+  ['songTitle','songArtist'].forEach(fieldId => {
+    document.getElementById(fieldId)?.addEventListener('input', () => {
+      clearTimeout(card1Timer);
+      card1Timer = setTimeout(() => {
+        const badge = document.getElementById('card1Done');
+        if (badge?.classList.contains('visible') && canProceedFrom('card1')) {
+          const next = document.getElementById('card2');
+          if (next?.classList.contains('collapsed')) autoOpenNext('card1');
+        }
+      }, 900); // wait 900ms after user stops typing
+    });
+  });
+
+  // card2: open Style once translation is ON and text is filled
+  function checkTransDone() {
+    const badge = document.getElementById('card2Done');
+    if (badge?.classList.contains('visible') && canProceedFrom('card2')) {
+      const next = document.getElementById('card4');
+      if (next?.classList.contains('collapsed')) autoOpenNext('card2');
+    }
+  }
+  document.getElementById('enableTranslation')?.addEventListener('change', checkTransDone);
+  document.getElementById('translationText')?.addEventListener('input', checkTransDone);
+  document.getElementById('transLrcText')?.addEventListener('input', checkTransDone);
+});
+
+// ── MANUAL LRC TOGGLE ──
+function copyLRC() {
+  const ta = document.getElementById('lrcText');
+  const text = ta.value;
+  if (!text) return;
+
+  function onCopied() {
+    const btn = document.getElementById('copyLRCBtn');
+    btn.textContent = '✓ Copied!';
+    btn.style.background  = 'rgba(74,222,128,.18)';
+    btn.style.borderColor = 'rgba(74,222,128,.5)';
+    btn.style.color       = 'var(--success)';
+    setTimeout(() => {
+      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy';
+      btn.style.background  = '';
+      btn.style.borderColor = '';
+      btn.style.color       = '';
+    }, 2000);
+  }
+
+  // Try modern clipboard API first, fall back to execCommand
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(onCopied).catch(() => fallbackCopy());
+  } else { fallbackCopy(); }
+
+  function fallbackCopy() {
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    try { document.execCommand('copy'); onCopied(); } catch(e) {}
+    window.getSelection()?.removeAllRanges();
+  }
+}
+
+function toggleManualLRC() {
+  const sec = document.getElementById('manualLRCSection');
+  const chevron = document.getElementById('manualLRCChevron');
+  const open = sec.style.display === 'none';
+  sec.style.display = open ? 'block' : 'none';
+  chevron.setAttribute('data-lucide', open ? 'chevron-up' : 'chevron-down');
+  if (window.lucide) lucide.createIcons({ nodes: [chevron] });
+}
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let parsedLines   = [];   // [{time, text}]
+let originalTimes = [];   // backup for reset
+let audioBlob     = null;
+let tapSyncMode   = false;
+let tapSyncIdx    = 0;
+let rafId         = null;
+let activeLine    = -1;
+
+// Smart timing analysis result (array of end times per lyric line, or null)
+let analyzedEndTimes = null;
+// Manual end-time tap
+let tappedEndTimes = [];   // sparse array — tappedEndTimes[i] = end time in seconds
+let endTapMode     = false;
+let endTapIdx      = 0;
+// Pinch state (legacy vars kept for _pinchDist helper)
+let _pinchDist0    = null;
+
+// Custom font state — Lyrics
+let customFontFamily = null; // CSS font-family name for canvas preview
+let customFontFile   = null; // filename for AM XML: imported?name=X
+// Custom font state — Translation / Caption
+let transCustomFontFamily = null;
+let transCustomFontFile   = null;
+let myanmarFonts = [];   // [{name, file, path}] loaded from GitHub API (shared)
+
+// Main lyrics position (% of canvas)
+let textXPct  = 50, textYPct  = 75;
+// Translation position (% of canvas)
+let transXPct = 50, transYPct = 87;
+// Translation state
+let translationLines = [];
+let _posDragging = null; // null | 'main' | 'trans'
+
+const audioEl = document.getElementById('audioEl');
+
+// ── iOS PWA: unlock AudioContext on first user touch ──────────────────────
+// Without this, audio stays frozen in standalone (home-screen) mode on iPhone.
+(function() {
+  function unlockAudio() {
+    // Dummy silent buffer wakes the iOS audio system
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ctx = new AC();
+    const buf = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+    ctx.resume().catch(() => {});
+    // Also tap the audio element itself
+    audioEl.load();
+    document.removeEventListener('touchstart', unlockAudio, true);
+    document.removeEventListener('touchend',   unlockAudio, true);
+    document.removeEventListener('click',      unlockAudio, true);
+  }
+  document.addEventListener('touchstart', unlockAudio, { once: true, capture: true });
+  document.addEventListener('touchend',   unlockAudio, { once: true, capture: true });
+  document.addEventListener('click',      unlockAudio, { once: true, capture: true });
+})();
+
+// Init on load
+window.addEventListener('load', () => {
+  if (window.lucide) lucide.createIcons();
+  updatePosCanvas();
+
+  // Pinch on seekbar = zoom timeline (markers spread apart, duration unchanged)
+  const seekTrack = document.getElementById('seekTrack');
+  if (seekTrack) {
+    let _pz0 = null, _zoom0 = 1, _pan0 = 0, _pinchCenterFrac = 0;
+
+    seekTrack.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        _pz0 = _pinchDist(e);
+        _zoom0 = seekZoom;
+        _pan0  = seekPan;
+        // Pinch center as fraction of seekTrack width → map to song fraction
+        const rect  = seekTrack.getBoundingClientRect();
+        const cx    = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const cFrac = (cx - rect.left) / rect.width;
+        const { start, size } = _seekWindow();
+        _pinchCenterFrac = start + cFrac * size; // song fraction at pinch center
+      }
+    }, { passive: false });
+
+    seekTrack.addEventListener('touchmove', e => {
+      if (e.touches.length === 2 && _pz0) {
+        e.preventDefault();
+        const ratio  = _pinchDist(e) / _pz0;
+        seekZoom = Math.max(1, Math.min(20, _zoom0 * ratio));
+        // Keep the pinch center song position fixed on screen
+        const rect  = seekTrack.getBoundingClientRect();
+        const cx    = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const cFrac = (cx - rect.left) / rect.width; // screen fraction of pinch center
+        seekPan = _pinchCenterFrac - cFrac / seekZoom;
+        _clampPan();
+        updateSeekMarkers();
+        updateSeek();
+      }
+    }, { passive: false });
+
+    seekTrack.addEventListener('touchend', e => {
+      if (e.touches.length < 2) _pz0 = null;
+    }, { passive: true });
+  }
+});
+window.addEventListener('resize', () => updatePosCanvas());
+
+// ══════════════════════════════════════════════
+// AUDIO PLAYER
+// ══════════════════════════════════════════════
+// ── RAF-based sync loop (much smoother on iOS PWA than timeupdate) ──
+let _syncRaf = null;
+function _syncTick() {
+  updateSeek();
+  updateActiveLine();
+  if (!audioEl.paused && !audioEl.ended) {
+    _syncRaf = requestAnimationFrame(_syncTick);
+  } else {
+    _syncRaf = null;
+  }
+}
+function startSyncLoop() {
+  if (_syncRaf) cancelAnimationFrame(_syncRaf);
+  _syncRaf = requestAnimationFrame(_syncTick);
+}
+audioEl.addEventListener('play',  startSyncLoop);
+audioEl.addEventListener('seeking', () => { updateSeek(); updateActiveLine(); });
+audioEl.addEventListener('ended', () => { setPlayIcon(false); _syncRaf = null; });
+audioEl.addEventListener('loadedmetadata', () => {
+  document.getElementById('totalTime').textContent = fmtSec(audioEl.duration);
+  updateSeekMarkers();
+});
+// Fallback for browsers that don't fire 'play' reliably
+audioEl.addEventListener('timeupdate', () => { updateSeek(); updateActiveLine(); });
+
+function setPlayIcon(playing) {
+  const btn = document.getElementById('playBtn');
+  btn.innerHTML = `<i data-lucide="${playing ? 'pause' : 'play'}"></i>`;
+  if (window.lucide) lucide.createIcons({ nodes: [btn] });
+}
+// Safe play — handles iOS promise rejection gracefully
+function safePlay() {
+  const p = audioEl.play();
+  if (p && p.catch) p.catch(e => console.warn('Audio play blocked:', e));
+}
+
+function togglePlay() {
+  if (!audioEl.src) return;
+  if (audioEl.paused) { safePlay(); setPlayIcon(true); }
+  else                { audioEl.pause(); setPlayIcon(false); }
+}
+
+// ── Seekbar zoom state ────────────────────────────────────────────────
+let seekZoom = 1.0;   // 1 = full song visible, 10 = very zoomed in
+let seekPan  = 0.0;   // visible window start as fraction of total duration (0–1)
+
+function _seekWindow() {
+  const size  = 1 / seekZoom;
+  const start = Math.max(0, Math.min(seekPan, 1 - size));
+  return { start, end: start + size, size };
+}
+
+function _clampPan() {
+  const size = 1 / seekZoom;
+  seekPan = Math.max(0, Math.min(seekPan, 1 - size));
+}
+
+// Auto-pan so playhead stays in view while playing
+function _autoPan() {
+  if (!audioEl.duration) return;
+  const frac = audioEl.currentTime / audioEl.duration;
+  const { start, end, size } = _seekWindow();
+  // If playhead is outside visible window, re-center on it
+  if (frac < start || frac > end) {
+    seekPan = Math.max(0, frac - size * 0.25);
+    _clampPan();
+  }
+}
+
+function updateSeek() {
+  if (!audioEl.duration) return;
+  _autoPan();
+  const frac = audioEl.currentTime / audioEl.duration;
+  const { start, size } = _seekWindow();
+  const pct = ((frac - start) / size) * 100;
+  document.getElementById('seekFill').style.width = Math.max(0, Math.min(100, pct)) + '%';
+  document.getElementById('seekThumb').style.left = Math.max(0, Math.min(100, pct)) + '%';
+  document.getElementById('currentTime').textContent = fmtSec(audioEl.currentTime);
+  updateSeekMarkers();
+}
+
+function seekClick(e) {
+  if (!audioEl.duration) return;
+  const rect  = e.currentTarget.getBoundingClientRect();
+  const pct   = (e.clientX - rect.left) / rect.width;
+  const { start, size } = _seekWindow();
+  audioEl.currentTime = (start + pct * size) * audioEl.duration;
+}
+
+function seekToTime(t) {
+  if (!audioEl.src) return;
+  audioEl.currentTime = Math.max(0, t);
+  if (audioEl.paused) { safePlay(); document.getElementById('playBtn').textContent = '⏸'; }
+}
+
+function fmtSec(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60).toString().padStart(2,'0');
+  return `${m}:${sec}`;
+}
+
+function fmtLRC(s) {
+  const m = Math.floor(s / 60).toString().padStart(2,'0');
+  const sec = (s % 60).toFixed(2).padStart(5,'0');
+  return `${m}:${sec}`;
+}
+
+// ══════════════════════════════════════════════
+// ACTIVE LINE TRACKING
+// ══════════════════════════════════════════════
+function updateActiveLine() {
+  const t = audioEl.currentTime;
+  let idx = -1;
+  for (let i = 0; i < parsedLines.length; i++) {
+    if (t >= parsedLines[i].time) idx = i;
+  }
+  if (idx === activeLine) return;
+  activeLine = idx;
+
+  const rows = document.querySelectorAll('.lyric-row');
+  rows.forEach((r, i) => r.classList.toggle('active', i === idx));
+
+  // Auto-scroll to active line
+  if (idx >= 0 && rows[idx]) {
+    rows[idx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+// ══════════════════════════════════════════════
+// TAP SYNC
+// ══════════════════════════════════════════════
+function toggleTapSync() {
+  tapSyncMode = !tapSyncMode;
+  tapSyncIdx  = 0;
+  const btn    = document.getElementById('tapSyncBtn');
+  const banner = document.getElementById('tapBanner');
+  const curLine= document.getElementById('tapCurrentLine');
+
+  if (tapSyncMode) {
+    btn.classList.add('active');
+    banner.classList.add('visible');
+    curLine.classList.add('visible');
+    updateTapSyncUI();
+    // Start playing if paused
+    if (audioEl.src && audioEl.paused) {
+      safePlay();
+      setPlayIcon(true);
+    }
+  } else {
+    btn.classList.remove('active');
+    banner.classList.remove('visible');
+    curLine.classList.remove('visible');
+    document.querySelectorAll('.tap-dot').forEach(d => d.classList.remove('next'));
+    renderRows(); // refresh
+  }
+}
+
+function updateTapSyncUI() {
+  const curLine = document.getElementById('tapCurrentLine');
+  if (tapSyncIdx < parsedLines.length) {
+    curLine.textContent = parsedLines[tapSyncIdx].text;
+  } else {
+    tapSyncMode = false;
+    document.getElementById('tapSyncBtn').classList.remove('active');
+    document.getElementById('tapBanner').classList.remove('visible');
+    renderRows();
+  }
+  // Highlight dots
+  document.querySelectorAll('.tap-dot').forEach((d, i) => {
+    d.classList.toggle('done', i < tapSyncIdx);
+    d.classList.toggle('next', i === tapSyncIdx);
+  });
+  // Highlight next row
+  document.querySelectorAll('.lyric-row').forEach((r, i) => {
+    r.classList.toggle('tap-next', tapSyncMode && i === tapSyncIdx);
+  });
+}
+
+function tapLine() {
+  if (!tapSyncMode || tapSyncIdx >= parsedLines.length) return;
+  parsedLines[tapSyncIdx].time = parseFloat(audioEl.currentTime.toFixed(2));
+  updateRowTime(tapSyncIdx);
+  tapSyncIdx++;
+  updateTapSyncUI();
+}
+
+// Global tap handler (space or click on lyric area)
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (tapSyncMode) toggleTapSync();
+    if (endTapMode)  toggleEndTap();
+    return;
+  }
+  if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+  if (e.key === ' ') {
+    e.preventDefault();
+    if (tapSyncMode) tapLine();
+    else if (endTapMode) tapEndTime();
+  }
+  if ((e.key === 's' || e.key === 'S') && endTapMode) {
+    e.preventDefault();
+    skipEndTap();
+  }
+});
+
+// ══════════════════════════════════════════════
+// LYRIC ROWS RENDERER
+// ══════════════════════════════════════════════
+function renderRows() {
+  const container = document.getElementById('lyricRows');
+  if (!parsedLines.length) { container.innerHTML = ''; return; }
+
+  const hasEndTimes = tappedEndTimes.some(t => t != null);
+  container.innerHTML = parsedLines.map((l, i) => `
+    <div class="lyric-row" id="row-${i}" onclick="rowClick(event,${i})">
+      <span class="lr-num">${i+1}</span>
+      <span class="tap-dot" id="dot-${i}"></span>
+      <span class="lr-time" id="time-${i}" title="Click to seek">${fmtLRC(l.time)}</span>
+      <span class="lr-text">${escHtml(l.text)}</span>
+      ${hasEndTimes || endTapMode ? `<span class="lr-endtime" id="endtime-${i}">
+        ${tappedEndTimes[i] != null
+          ? `→${fmtLRC(tappedEndTimes[i])} <button onclick="event.stopPropagation();removeEndTime(${i})" title="Remove" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:0 2px;line-height:1;vertical-align:middle;">✕</button>`
+          : ''}
+        ${endTapMode ? `<button onclick="event.stopPropagation();markLineNow(${i})" title="Mark this line now" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.35);border-radius:5px;color:var(--warn);cursor:pointer;font-size:.68rem;font-weight:700;padding:1px 6px;font-family:inherit;margin-left:2px;">Trim</button>` : ''}
+      </span>` : ''}
+      <span class="lr-nudge">
+        <button class="nudge-btn" onclick="event.stopPropagation();nudge(${i},-0.5)">−0.5</button>
+        <button class="nudge-btn nudge-fine" onclick="event.stopPropagation();nudge(${i},-0.1)">−0.1</button>
+        <button class="nudge-btn nudge-fine" onclick="event.stopPropagation();nudge(${i},+0.1)">+0.1</button>
+        <button class="nudge-btn" onclick="event.stopPropagation();nudge(${i},+0.5)">+0.5</button>
+      </span>
+    </div>
+  `).join('');
+}
+
+function rowClick(e, i) {
+  if (tapSyncMode) { tapLine(); return; }
+  // Click on timestamp → seek
+  seekToTime(parsedLines[i].time);
+}
+
+function updateRowTime(i) {
+  const el = document.getElementById(`time-${i}`);
+  if (el) el.textContent = fmtLRC(parsedLines[i].time);
+  // also update lrcText textarea
+  rebuildLrcText();
+}
+
+function rebuildLrcText() {
+  const lrc = parsedLines.map(l => `[${fmtLRC(l.time)}] ${l.text}`).join('\n');
+  document.getElementById('lrcText').value = lrc;
+}
+
+// ══════════════════════════════════════════════
+// NUDGE
+// ══════════════════════════════════════════════
+function nudge(i, delta) {
+  parsedLines[i].time = Math.max(0, parseFloat((parsedLines[i].time + delta).toFixed(2)));
+  updateRowTime(i);
+}
+
+function nudgeAll(delta) {
+  parsedLines.forEach((l, i) => {
+    l.time = Math.max(0, parseFloat((l.time + delta).toFixed(2)));
+  });
+  renderRows();
+  rebuildLrcText();
+}
+
+function resetToOriginal() {
+  if (!originalTimes.length) return;
+  parsedLines.forEach((l, i) => { l.time = originalTimes[i]; });
+  renderRows();
+  rebuildLrcText();
+}
+
+// ══════════════════════════════════════════════
+// AUDIO FILE HANDLING
+// ══════════════════════════════════════════════
+function handleAudioUpload(e) {
+  const file = e.target.files[0];
+  if (file) loadAudioFile(file);
+}
+function handleAudioDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('audio/')) loadAudioFile(file);
+}
+function clearAudioFile() {
+  audioBlob = null;
+  audioEl.src = '';
+  document.getElementById('audioFileInput').value = '';
+  document.getElementById('audioUploadBtn').style.display = '';
+  document.getElementById('audioFileName').style.display = 'none';
+  document.getElementById('audioClearBtn').style.display = 'none';
+  document.getElementById('playerBar').style.display = 'none';
+  document.getElementById('noAudioNote').style.display = '';
+  document.getElementById('card1Done')?.classList.remove('visible');
+}
+
+function loadAudioFile(file) {
+  audioBlob = file;
+  const url = URL.createObjectURL(file);
+  audioEl.src = url;
+
+  document.getElementById('audioUploadBtn').style.display = 'none';
+  const nameEl = document.getElementById('audioFileName');
+  nameEl.textContent = file.name;
+  nameEl.style.display = 'inline';
+  const clearBtn = document.getElementById('audioClearBtn');
+  clearBtn.style.display = 'flex';
+  if (window.lucide) lucide.createIcons();
+
+  document.getElementById('playerBar').style.display = 'flex';
+  document.getElementById('noAudioNote').style.display = 'none';
+  markCardDone('card1');
+
+  // Read ID3 tags
+  if (typeof jsmediatags !== 'undefined') {
+    jsmediatags.read(file, {
+      onSuccess(tag) {
+        const t = tag.tags;
+        if (t.title)  document.getElementById('songTitle').value  = t.title;
+        if (t.artist) document.getElementById('songArtist').value = t.artist;
+        if (t.title || t.artist)
+          showFetchStatus('ok', `✓ Tags: "${t.title||'?'}" by ${t.artist||'?'}`);
+      },
+      onError() {}
+    });
+  }
+
+  if (parsedLines.length) showPreview();
+  updateSeekMarkers();
+}
+
+// ══════════════════════════════════════════════
+// LRC INPUT
+// ══════════════════════════════════════════════
+function onLrcInput() {
+  parsedLines      = parseLRC(document.getElementById('lrcText').value);
+  originalTimes    = parsedLines.map(l => l.time);
+  analyzedEndTimes = null; // invalidate analysis when lyrics change
+  tappedEndTimes   = [];
+  clearAnalysis(true);
+  clearEndTimes(true);
+  renderRows();
+  showPreview();
+}
+
+function parseLRC(text) {
+  const lines = [];
+  const re = /\[(\d{1,2}):(\d{2})(?:[.:](\d{1,3}))?\]\s*(.*)/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    const min = parseInt(m[1],10), sec = parseInt(m[2],10);
+    const frac = m[3] ? parseFloat('0.'+m[3]) : 0;
+    // Strip any remaining [mm:ss.xx] or <mm:ss.xx> timestamps left in the text
+    const txt = m[4]
+      .replace(/\[\d{1,2}:\d{2}(?:[.:]\d{1,3})?\]\s*/g, '')
+      .replace(/<\d{1,2}:\d{2}(?:[.:]\d{1,3})?>/g, '')
+      .trim();
+    if (txt) lines.push({ time: min*60+sec+frac, text: txt });
+  }
+  return lines.sort((a,b) => a.time - b.time);
+}
+
+function showPreview() {
+  const sec = document.getElementById('previewSection');
+  sec.classList.add('visible');
+  openCard('previewSection');
+  markCardDone('card2');
+  if (!audioBlob) document.getElementById('noAudioNote').style.display = 'block';
+  renderRows();
+  updatePosCanvas(); // refresh sample text in position editor
+}
+
+// ══════════════════════════════════════════════
+// FILE UPLOAD (LRC)
+// ══════════════════════════════════════════════
+function handleFileUpload(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => { document.getElementById('lrcText').value = ev.target.result; switchTab('paste'); onLrcInput(); };
+  r.readAsText(file,'utf-8');
+}
+function handleLrcDrop(e) {
+  e.preventDefault(); document.getElementById('uploadZone').classList.remove('over');
+  const file = e.dataTransfer.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => { document.getElementById('lrcText').value = ev.target.result; switchTab('paste'); onLrcInput(); };
+  r.readAsText(file,'utf-8');
+}
+
+// ══════════════════════════════════════════════
+// AUTO-FETCH LRCLIB
+// ══════════════════════════════════════════════
+async function fetchLyrics() {
+  const title  = document.getElementById('songTitle').value.trim();
+  const artist = document.getElementById('songArtist').value.trim();
+  if (!title) { showFetchStatus('err','✗ Enter song title first.'); return; }
+
+  // Build a list of search attempts: exact → title-only → artist-only word variations
+  const attempts = [];
+  attempts.push({ track_name: title, artist_name: artist });           // exact
+  if (artist) attempts.push({ track_name: title });                    // title only
+  // Try splitting CamelCase artist ("Saucydog" → "Saucy Dog")
+  const spacedArtist = artist.replace(/([a-z])([A-Z])/g,'$1 $2');
+  if (spacedArtist !== artist) attempts.push({ track_name: title, artist_name: spacedArtist });
+
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true;
+  document.getElementById('searchOverride').style.display = 'none';
+  showFetchStatus('loading','<span class="spin"></span> Searching LRCLIB…');
+
+  try {
+    for (const attempt of attempts) {
+      const result = await tryFetchLRCLIB(attempt);
+      if (result === 'found') return;
+      if (result === 'unsynced') return;
+    }
+    // All attempts failed
+    showFetchStatus('err','✗ Not found in LRCLIB. Try the search box below (use English/romanized title for Japanese/Korean songs).');
+    document.getElementById('searchOverride').style.display = 'block';
+    // Pre-fill search box with a hint
+    if (!document.getElementById('searchQuery').value)
+      document.getElementById('searchQuery').value = title + (artist ? ' ' + artist : '');
+  } catch(err) {
+    showFetchStatus('err','✗ Network error: '+err.message);
+  } finally { btn.disabled = false; }
+}
+
+// Manual search override (user typed their own query)
+async function fetchLyricsCustom() {
+  const q = document.getElementById('searchQuery').value.trim();
+  if (!q) return;
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true;
+  showFetchStatus('loading','<span class="spin"></span> Searching for "'+q+'"…');
+  try {
+    const params = new URLSearchParams({ q });
+    const res = await fetch(`https://lrclib.net/api/search?${params}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const results = await res.json();
+    const match = results.find(r => r.syncedLyrics) || results.find(r => r.plainLyrics) || results[0];
+    if (!match) { showFetchStatus('err','✗ No results for that query.'); return; }
+    if (match.syncedLyrics) {
+      setLRC(match.syncedLyrics, match.trackName, match.artistName);
+      showFetchStatus('ok', `✓ Found: "${match.trackName}" by ${match.artistName}`);
+      document.getElementById('searchOverride').style.display = 'none';
+    } else if (match.plainLyrics) {
+      setPlainLyrics(match.plainLyrics);
+      showFetchStatus('warn', `⚠ Only unsynced lyrics for "${match.trackName}" — use Tap Sync to fix timing.`);
+    } else {
+      showFetchStatus('err','✗ No lyrics available for that result.');
+    }
+  } catch(err) {
+    showFetchStatus('err','✗ Network error: '+err.message);
+  } finally { btn.disabled = false; }
+}
+
+// Helper: try one set of params, returns 'found' | 'unsynced' | 'notfound'
+async function tryFetchLRCLIB(params) {
+  // Try exact match first
+  const getParams = new URLSearchParams(params);
+  const res = await fetch(`https://lrclib.net/api/get?${getParams}`);
+  if (res.ok) {
+    const data = await res.json();
+    if (data.syncedLyrics) {
+      setLRC(data.syncedLyrics, data.trackName, data.artistName);
+      showFetchStatus('ok', `✓ ${parsedLines.length} synced lines loaded!`);
+      return 'found';
+    }
+    if (data.plainLyrics) {
+      setPlainLyrics(data.plainLyrics);
+      showFetchStatus('warn','⚠ Only unsynced lyrics — use Tap Sync to set timing.');
+      return 'unsynced';
+    }
+  }
+  // Fall back to search endpoint
+  const sParams = new URLSearchParams();
+  sParams.set('q', [params.track_name, params.artist_name].filter(Boolean).join(' '));
+  const sRes = await fetch(`https://lrclib.net/api/search?${sParams}`);
+  if (sRes.ok) {
+    const results = await sRes.json();
+    const match = results.find(r => r.syncedLyrics) || results.find(r => r.plainLyrics);
+    if (match?.syncedLyrics) {
+      setLRC(match.syncedLyrics, match.trackName, match.artistName);
+      showFetchStatus('ok', `✓ Found: "${match.trackName}" by ${match.artistName}`);
+      return 'found';
+    }
+    if (match?.plainLyrics) {
+      setPlainLyrics(match.plainLyrics);
+      showFetchStatus('warn', `⚠ Only unsynced lyrics — use Tap Sync to set timing.`);
+      return 'unsynced';
+    }
+  }
+  return 'notfound';
+}
+
+function setLRC(lrcText, trackName, artistName) {
+  document.getElementById('lrcText').value = lrcText;
+  if (trackName  && !document.getElementById('songTitle').value)  document.getElementById('songTitle').value  = trackName;
+  if (artistName && !document.getElementById('songArtist').value) document.getElementById('songArtist').value = artistName;
+  switchTab('paste');
+  // Auto-open the manual LRC section so user can see the fetched lyrics
+  const sec = document.getElementById('manualLRCSection');
+  const chevron = document.getElementById('manualLRCChevron');
+  if (sec && sec.style.display === 'none') {
+    sec.style.display = 'block';
+    if (chevron) { chevron.setAttribute('data-lucide','chevron-up'); if (window.lucide) lucide.createIcons({ nodes:[chevron] }); }
+  }
+  onLrcInput();
+}
+
+function setPlainLyrics(plain) {
+  const lines = plain.split('\n').map(l=>l.trim()).filter(Boolean);
+  let t = 0;
+  const lrc = lines.map(l => { const out=`[${fmtLRC(t)}] ${l}`; t+=3; return out; }).join('\n');
+  setLRC(lrc,'','');
+}
+
+function showFetchStatus(type, html) {
+  const el = document.getElementById('fetchStatus');
+  el.className = 'fetch-status '+type;
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+// TABS / COLOR SYNC / UTILS
+// ══════════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active',(i===0&&tab==='paste')||(i===1&&tab==='upload')));
+  document.getElementById('tab-paste').classList.toggle('active',tab==='paste');
+  document.getElementById('tab-upload').classList.toggle('active',tab==='upload');
+}
+
+// ── TRANSLATION ──
+function toggleTranslation() {
+  const header = document.getElementById('transDropdownHeader');
+  const isOpen = header.classList.toggle('open');
+  // sync hidden checkbox so existing logic still works
+  document.getElementById('enableTranslation').checked = isOpen;
+  document.getElementById('translationSection').style.display = isOpen ? 'block' : 'none';
+  document.getElementById('transSnapRow').style.display       = isOpen ? 'flex'  : 'none';
+  document.getElementById('transStyleSection').style.display  = isOpen ? 'block' : 'none';
+  showDpadTransBtn(isOpen);
+  if (window.lucide) lucide.createIcons();
+  updatePosCanvas();
+  if (isOpen && !myanmarFonts.length) initTransMyanmarFonts();
+  else if (isOpen) filterTransMyanmarFonts();
+  // trigger auto-next card check
+  checkTransDone && checkTransDone();
+}
+
+function switchTransTab(tab) {
+  document.getElementById('transTabBtn0').classList.toggle('active', tab === 'plain');
+  document.getElementById('transTabBtn1').classList.toggle('active', tab === 'lrc');
+  document.getElementById('trans-tab-plain').classList.toggle('active', tab === 'plain');
+  document.getElementById('trans-tab-lrc').classList.toggle('active', tab === 'lrc');
+}
+
+function onTransInput() {
+  // Plain text: auto-sync timestamps from parsedLines (blank line = skip that lyric)
+  const raw = document.getElementById('translationText').value.split('\n');
+  translationLines = [];
+  raw.forEach((txt, i) => {
+    // Strip any accidental LRC timestamps if user pasted LRC into plain text box
+    const trimmed = txt
+      .replace(/\[\d{1,2}:\d{2}(?:[.:]\d{1,3})?\]\s*/g, '')
+      .replace(/<\d{1,2}:\d{2}(?:[.:]\d{1,3})?>/g, '')
+      .trim();
+    if (trimmed && parsedLines[i]) {
+      translationLines.push({ time: parsedLines[i].time, text: trimmed });
+    }
+  });
+  updatePosCanvas();
+}
+
+function onTransLRCInput() {
+  translationLines = parseLRC(document.getElementById('translationLRC').value);
+  updatePosCanvas();
+}
+function syncColor(cId,hId){ document.getElementById(hId).value=document.getElementById(cId).value; }
+function syncHex(cId,hId){ const v=document.getElementById(hId).value; if(/^#[0-9a-fA-F]{6}$/.test(v)) document.getElementById(cId).value=v; }
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ══════════════════════════════════════════════
+// POS EDITOR
+// ══════════════════════════════════════════════
+function getPosScale() {
+  const [w, h] = document.getElementById('resolution').value.split('x').map(Number);
+  // Fill the card width — gives an accurate AM-like preview on every screen size
+  const editor = document.getElementById('canvasPosEditor');
+  const availW = editor ? Math.max(120, editor.offsetWidth - 16) : Math.round(window.innerWidth * 0.88);
+  const maxH   = Math.round(window.innerHeight * 0.72); // don't exceed 72 % of viewport height
+  const s = Math.min(availW / w, maxH / h);
+  return { w, h, dispW: Math.round(w * s), dispH: Math.round(h * s), s };
+}
+
+function updatePosCanvas() {
+  const canvas = document.getElementById('posCanvas');
+  if (!canvas) return;
+  const { w, h, dispW, dispH, s } = getPosScale();
+  canvas.style.width  = dispW + 'px';
+  canvas.style.height = dispH + 'px';
+  canvas.style.background = document.getElementById('bgColorHex').value || '#000000';
+
+  // Main lyrics element
+  const dt = document.getElementById('dragText');
+  const fs = (parseInt(document.getElementById('fontSize').value) || 18) * s;
+  dt.style.fontSize   = Math.max(8, fs) + 'px';
+  dt.style.color      = document.getElementById('textColorHex').value || '#ffffff';
+  dt.style.textAlign  = 'center';
+  dt.style.fontFamily = customFontFamily ? `'${customFontFamily}', sans-serif` : '';
+  // keep the label span, update only text node
+  dt.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = parsedLines.length ? '\n'+parsedLines[0].text : '\nYour Lyric Here'; });
+  dt.style.left = (textXPct / 100 * dispW) + 'px';
+  dt.style.top  = (textYPct / 100 * dispH) + 'px';
+
+  // Translation element
+  const transEnabled = document.getElementById('enableTranslation')?.checked;
+  const dtTrans = document.getElementById('dragTransText');
+  if (dtTrans) {
+    dtTrans.style.display = transEnabled ? 'block' : 'none';
+    if (transEnabled) {
+      const tfs = (parseInt(document.getElementById('transFontSize').value) || 45) * s;
+      dtTrans.style.fontSize   = Math.max(6, tfs) + 'px';
+      dtTrans.style.color      = document.getElementById('transColorHex').value || '#aaaaaa';
+      dtTrans.style.textAlign  = 'center';
+      dtTrans.style.fontFamily = transCustomFontFamily ? `'${transCustomFontFamily}', sans-serif` : '';
+      dtTrans.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = translationLines.length ? '\n'+translationLines[0].text : '\nTranslation Here'; });
+      dtTrans.style.left = (transXPct / 100 * dispW) + 'px';
+      dtTrans.style.top  = (transYPct / 100 * dispH) + 'px';
+    }
+  }
+
+  const coordEl = document.getElementById('posCoords');
+  if (coordEl) {
+    const ax = Math.round(textXPct / 100 * w), ay = Math.round(textYPct / 100 * h);
+    const tx = Math.round(transXPct / 100 * w), ty = Math.round(transYPct / 100 * h);
+    coordEl.textContent = transEnabled
+      ? `Lyrics x:${ax} y:${ay}  ·  Trans x:${tx} y:${ty}`
+      : `x: ${ax}  y: ${ay}  (${textXPct.toFixed(1)}%, ${textYPct.toFixed(1)}%)`;
+  }
+  updateSwipeCoords();
+
+  // ── Sync font picker previews to match the canvas scale ──────────────────
+  // Japanese/lyrics font preview uses the lyrics font size × canvas scale
+  const jpPrev = document.getElementById('japaneseFontPreview');
+  if (jpPrev) jpPrev.style.fontSize = Math.max(10, Math.round(fs)) + 'px';
+
+  // MM font / translation preview uses the translation font size × canvas scale
+  const tfs2   = (parseInt(document.getElementById('transFontSize').value) || 45) * s;
+  const mmPrev = document.getElementById('transMmFontPreview');
+  if (mmPrev) mmPrev.style.fontSize = Math.max(10, Math.round(tfs2)) + 'px';
+}
+
+function canvasPtrDown(e) {
+  _posDragging = 'main';
+  _movePosToEvent(e);
+  e.preventDefault();
+}
+function startTransDrag(e) {
+  _posDragging = 'trans';
+  e.stopPropagation();
+  e.preventDefault();
+}
+function canvasPtrMove(e) {
+  if (!_posDragging) return;
+  _movePosToEvent(e);
+  e.preventDefault();
+}
+function canvasPtrUp() { _posDragging = null; }
+
+function _movePosToEvent(e) {
+  const canvas = document.getElementById('posCanvas');
+  const rect   = canvas.getBoundingClientRect();
+  const cx = e.touches ? e.touches[0].clientX : e.clientX;
+  const cy = e.touches ? e.touches[0].clientY : e.clientY;
+  const xp = Math.max(2, Math.min(98, (cx - rect.left) / rect.width  * 100));
+  const yp = Math.max(2, Math.min(98, (cy - rect.top)  / rect.height * 100));
+  if (_posDragging === 'main')  { textXPct  = xp; textYPct  = yp; }
+  if (_posDragging === 'trans') { transXPct = xp; transYPct = yp; }
+  updatePosCanvas();
+}
+
+function snapPos(x, y, target = 'main') {
+  if (target === 'main')  { if (x !== null) textXPct  = x; if (y !== null) textYPct  = y; }
+  if (target === 'trans') { if (x !== null) transXPct = x; if (y !== null) transYPct = y; }
+  updatePosCanvas();
+}
+
+// ══════════════════════════════════════════════
+// SWIPE POSITION PANEL
+// ══════════════════════════════════════════════
+let _dpadLayer    = 'lyrics';  // 'lyrics' | 'trans'
+let _swipeSens    = 0.3;       // % per px dragged
+let _swipeActive  = false;
+let _swipeLastX   = 0;
+let _swipeLastY   = 0;
+
+function setDpadLayer(layer) {
+  _dpadLayer = layer;
+  document.getElementById('dpadLyricsBtn').classList.toggle('active', layer === 'lyrics');
+  document.getElementById('dpadTransBtn').classList.toggle('active', layer === 'trans');
+  updateSwipeCoords();
+}
+
+function setSwipeSens(s) {
+  _swipeSens = s;
+  document.querySelectorAll('.swipe-sens-btn').forEach(b => {
+    const map = { Slow: 0.1, Normal: 0.3, Fast: 0.8 };
+    b.classList.toggle('active', map[b.textContent] === s);
+  });
+}
+
+function _swipeGetXY(e) {
+  if (e.touches && e.touches.length > 0)
+    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  return { x: e.clientX, y: e.clientY };
+}
+
+function swipeStart(e) {
+  _swipeActive = true;
+  const p = _swipeGetXY(e);
+  _swipeLastX = p.x;
+  _swipeLastY = p.y;
+  document.getElementById('swipeZone').classList.add('swiping');
+  e.preventDefault();
+}
+
+function swipeMove(e) {
+  if (!_swipeActive) return;
+  const p  = _swipeGetXY(e);
+  const dx = (p.x - _swipeLastX) * _swipeSens;
+  const dy = (p.y - _swipeLastY) * _swipeSens;
+  _swipeLastX = p.x;
+  _swipeLastY = p.y;
+
+  if (_dpadLayer === 'lyrics') {
+    textXPct  = Math.max(0, Math.min(100, textXPct  + dx));
+    textYPct  = Math.max(0, Math.min(100, textYPct  + dy));
+  } else {
+    transXPct = Math.max(0, Math.min(100, transXPct + dx));
+    transYPct = Math.max(0, Math.min(100, transYPct + dy));
+  }
+  updatePosCanvas();
+  updateSwipeCoords();
+  e.preventDefault();
+}
+
+function swipeEnd() {
+  _swipeActive = false;
+  document.getElementById('swipeZone').classList.remove('swiping');
+}
+
+function resetDpadLayer() {
+  if (_dpadLayer === 'lyrics') { textXPct  = 50; textYPct  = 75; }
+  else                         { transXPct = 50; transYPct = 87; }
+  updatePosCanvas();
+  updateSwipeCoords();
+}
+
+function updateSwipeCoords() {
+  const xp  = _dpadLayer === 'lyrics' ? textXPct  : transXPct;
+  const yp  = _dpadLayer === 'lyrics' ? textYPct  : transYPct;
+  const res = getResolution();
+  const xpx = (xp / 100 * res.width).toFixed(2);
+  const ypx = (yp / 100 * res.height).toFixed(2);
+  const xEl = document.getElementById('swipeValX');
+  const yEl = document.getElementById('swipeValY');
+  if (xEl) xEl.textContent = xpx;
+  if (yEl) yEl.textContent = ypx;
+}
+
+function showDpadTransBtn(show) {
+  const row = document.getElementById('swipeLayerRow');
+  if (row) row.style.display = show ? 'flex' : 'none';
+  if (!show && _dpadLayer === 'trans') setDpadLayer('lyrics');
+}
+
+// ══════════════════════════════════════════════
+// AMPROJ BUILDER  (real Alight Motion format)
+// reverse-engineered from actual .amproj files
+// ══════════════════════════════════════════════
+function uuid(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16);}); }
+function getResolution(){ const [w,h]=document.getElementById('resolution').value.split('x').map(Number); return{width:w,height:h}; }
+function setResolution(btn, val) {
+  document.getElementById('resolution').value = val;
+  document.querySelectorAll('.res-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updatePosCanvas();
+}
+
+function xmlEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// #rrggbb  →  #ffrrggbb  (Alight Motion ARGB hex — used for bgcolor AND fillColor)
+function hexToARGB(hex){ return '#ff'+hex.replace('#','').toLowerCase(); }
+
+// font name  →  Alight Motion Google Fonts URI
+function toAMFont(name){
+  const map={
+    'Roboto':       'googlefonts?name=Roboto&weight=400',
+    'Roboto Bold':  'googlefonts?name=Roboto&weight=700',
+    'Poppins':      'googlefonts?name=Poppins&weight=400',
+    'Montserrat':   'googlefonts?name=Montserrat&weight=400',
+    'Inter':        'googlefonts?name=Inter&weight=400',
+    'Open Sans':    'googlefonts?name=Open+Sans&weight=400',
+    'Lato':         'googlefonts?name=Lato&weight=400',
+    'Nunito':       'googlefonts?name=Nunito&weight=400',
+    'Ubuntu':       'googlefonts?name=Ubuntu&weight=400',
+    // Japanese
+    'Noto Sans JP':         'googlefonts?name=Noto+Sans+JP&weight=400',
+    'Noto Serif JP':        'googlefonts?name=Noto+Serif+JP&weight=400',
+    'M PLUS 1p':            'googlefonts?name=M+PLUS+1p&weight=400',
+    'M PLUS Rounded 1c':    'googlefonts?name=M+PLUS+Rounded+1c&weight=400',
+    'Zen Kaku Gothic New':  'googlefonts?name=Zen+Kaku+Gothic+New&weight=400',
+    'BIZ UDPGothic':        'googlefonts?name=BIZ+UDPGothic&weight=400',
+    'Zen Maru Gothic':      'googlefonts?name=Zen+Maru+Gothic&weight=400',
+    'DotGothic16':          'googlefonts?name=DotGothic16&weight=400',
+    'Yomogi':               'googlefonts?name=Yomogi&weight=400',
+    'Sawarabi Mincho':      'googlefonts?name=Sawarabi+Mincho&weight=400',
+    'Shippori Mincho':      'googlefonts?name=Shippori+Mincho&weight=400',
+    'Zen Old Mincho':       'googlefonts?name=Zen+Old+Mincho&weight=400',
+    'Klee One':             'googlefonts?name=Klee+One&weight=400',
+    'New Tegomin':          'googlefonts?name=New+Tegomin&weight=400',
+    'Kaisei Decol':         'googlefonts?name=Kaisei+Decol&weight=400',
+    'Reggae One':           'googlefonts?name=Reggae+One&weight=400',
+    'Rampart One':          'googlefonts?name=Rampart+One&weight=400',
+    'Stick':                'googlefonts?name=Stick&weight=400',
+    'Train One':            'googlefonts?name=Train+One&weight=400',
+    'Hachi Maru Pop':       'googlefonts?name=Hachi+Maru+Pop&weight=400',
+  };
+  // Fallback: auto-generate googlefonts URI for any unlisted font name
+  return map[name] || `googlefonts?name=${encodeURIComponent(name).replace(/%20/g,'+')}&weight=400`;
+}
+
+function v3(x,y){ return `${x.toFixed(6)},${y.toFixed(6)},0.000000`; }
+function vf(n){   return n.toFixed(6); }
+
+function buildXML(cfg){
+  const{title,artist,lines,width,height,fps,fontSize,fontFamily,textColor,bgColor,
+        textXPct,textYPct,transEnabled,translationLines,transXPct,transYPct,transFontSize,transColor,
+        endOffset}=cfg;
+
+  const totalDurationSec = lines.length ? lines[lines.length-1].time + 5 : 60;
+  const totalTimeMs      = Math.round(totalDurationSec * 1000);
+
+  const xPos = width  * (textXPct / 100);
+  const yPos = height * (textYPct / 100);
+  const wrapWidth = '9999';
+  const fontStr = cfg.customFontFile
+    ? xmlEsc(`imported?name=${cfg.customFontFile}`)
+    : xmlEsc(toAMFont(fontFamily));
+  const bgARGB       = hexToARGB(bgColor);
+  const fillColorVal = hexToARGB(textColor);  // #rrggbb → #ffrrggbb (ARGB hex — confirmed from real AM XML)
+
+  // Helper: resolve end time for line i with 3-tier priority
+  // 1. Manual tapped end time (most accurate)
+  // 2. Audio-analyzed end time
+  // 3. nextStart minus slider offset (global fallback)
+  function resolveEnd(i, startSec, nextStart) {
+    if (cfg.tappedEndTimes && cfg.tappedEndTimes[i] != null)
+      return cfg.tappedEndTimes[i];
+    if (cfg.analyzedEndTimes && cfg.analyzedEndTimes[i] != null)
+      return cfg.analyzedEndTimes[i];
+    return Math.max(startSec + 0.3, nextStart - (cfg.endOffset || 0));
+  }
+
+  // Build a startMs → endMs map from lyrics so translation can reuse exact same timing
+  const endTimeMap = new Map();
+  lines.forEach((line, i) => {
+    const startSec  = line.time;
+    const nextStart = i+1 < lines.length ? lines[i+1].time : startSec + 4;
+    const endSec    = resolveEnd(i, startSec, nextStart);
+    endTimeMap.set(Math.round(startSec * 1000), Math.round(endSec * 1000));
+  });
+
+  let layersXml = '';
+  lines.forEach((line, i) => {
+    const startMs = Math.round(line.time * 1000);
+    const endMs   = endTimeMap.get(startMs);
+
+    layersXml += `
+  <text id="${i+1}" label="${xmlEsc('Lyric '+(i+1))}" startTime="${startMs}" endTime="${endMs}" fillType="color" mediaFillMode="fill" size="${fontSize}.000000" font="${fontStr}" wrapWidth="${wrapWidth}" align="center">
+    <transform>
+      <location value="${v3(xPos,yPos)}" />
+    </transform>
+    <fillColor value="${fillColorVal}" />
+    <content>${xmlEsc(line.text)}</content>
+  </text>`;
+  });
+
+  // Translation layers
+  if (transEnabled && translationLines.length) {
+    const txPos = width  * (transXPct / 100);
+    const tyPos = height * (transYPct / 100);
+    const transFillColor = hexToARGB(transColor);
+    const transFontStr = cfg.transCustomFontFile
+      ? xmlEsc(`imported?name=${cfg.transCustomFontFile}`)
+      : xmlEsc(toAMFont(cfg.transFontFamily || fontFamily));
+    translationLines.forEach((line, i) => {
+      const startMs = Math.round(line.time * 1000);
+      // Look up the EXACT same endMs that the matching lyric line uses — guaranteed identical timing
+      const nextStart = i+1 < translationLines.length ? translationLines[i+1].time : line.time + 4;
+      const endMs   = endTimeMap.get(startMs) ?? Math.round(nextStart * 1000);
+      layersXml += `
+  <text id="${lines.length+i+1}" label="${xmlEsc('Trans '+(i+1))}" startTime="${startMs}" endTime="${endMs}" fillType="color" mediaFillMode="fill" size="${transFontSize}.000000" font="${transFontStr}" wrapWidth="${wrapWidth}" align="center">
+    <transform>
+      <location value="${v3(txPos,tyPos)}" />
+    </transform>
+    <fillColor value="${transFillColor}" />
+    <content>${xmlEsc(line.text)}</content>
+  </text>`;
+    });
+  }
+
+  return `<?xml version='1.0' encoding='UTF-8' ?>
+<scene title="${xmlEsc(title+' - '+artist)}" width="${width}" height="${height}" exportWidth="${width}" exportHeight="${height}" precompose="dynamicResolution" bgcolor="${bgARGB}" totalTime="${totalTimeMs}" fps="${fps}" retime="freeze" retimeAdaptFPS="false">${layersXml}
+</scene>`;
+}
+
+// ══════════════════════════════════════════════
+// GENERATE  →  plain .xml  (Alight Motion import)
+// ══════════════════════════════════════════════
+function generate(){
+  const status = document.getElementById('status');
+  status.className='status'; status.textContent='';
+  if(!parsedLines.length) parsedLines=parseLRC(document.getElementById('lrcText').value);
+  if(!parsedLines.length){
+    status.className='status error';
+    status.textContent='⚠ No lyrics found. Fetch or paste LRC lyrics first.';
+    return;
+  }
+  const title  = document.getElementById('songTitle').value.trim()  || 'Untitled';
+  const artist = document.getElementById('songArtist').value.trim() || 'Unknown Artist';
+  const {width,height} = getResolution();
+  const fps = parseInt(document.getElementById('fps').value,10);
+
+  const xml = buildXML({
+    title, artist, lines:parsedLines, width, height, fps,
+    fontSize:    parseInt(document.getElementById('fontSize').value,10),
+    fontFamily:  document.getElementById('fontFamily')?.value || 'Roboto',
+    textColor:   document.getElementById('textColorHex').value||'#ffffff',
+    bgColor:     document.getElementById('bgColorHex').value||'#000000',
+    customFontFile,
+    analyzedEndTimes,
+    tappedEndTimes,
+    endOffset: 0,
+    textXPct, textYPct,
+    transEnabled:      document.getElementById('enableTranslation').checked,
+    translationLines,
+    transXPct, transYPct,
+    transFontSize:      parseInt(document.getElementById('transFontSize').value, 10) || 45,
+    transColor:         document.getElementById('transColorHex').value || '#aaaaaa',
+    transFontFamily:    document.getElementById('transFontFamily')?.value || 'Roboto',
+    transCustomFontFile,
+  });
+
+  try{
+    const blob = new Blob([xml], {type:'application/xml'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href=url; a.download=`${title} - ${artist}.xml`; a.click();
+    URL.revokeObjectURL(url);
+    status.className='status success';
+    status.innerHTML=`✓ <strong>${xmlEsc(title)} - ${xmlEsc(artist)}.xml</strong> downloaded!<br>
+      In Alight Motion → tap <strong>+</strong> → <strong>Import</strong> → select the <strong>.xml</strong> file.`;
+    // store for save-to-account
+    lastXML = xml;
+    updateSaveRow();
+  }catch(err){
+    status.className='status error';
+    status.textContent='✗ Error: '+err.message;
+  }
+}
+
+// ══════════════════════════════════════════════
+// END-TIME TAP MODE
+// ══════════════════════════════════════════════
+let endTapClockRaf = null;
+
+function toggleEndTap() {
+  endTapMode = !endTapMode;
+  endTapIdx  = 0;
+
+  const btn    = document.getElementById('endTapBtn');
+  const banner = document.getElementById('endTapBanner');
+
+  if (endTapMode) {
+    if (tapSyncMode) toggleTapSync();
+    btn.classList.add('active');
+    banner.classList.add('visible');
+    document.getElementById('endTapTotalLabel').textContent = parsedLines.length;
+    if (audioEl.src && audioEl.paused) { safePlay(); setPlayIcon(true); }
+    startEndTapClock();
+    renderRows();      // show Trimming buttons
+    updateEndTapUI();
+  } else {
+    btn.classList.remove('active');
+    banner.classList.remove('visible');
+    stopEndTapClock();
+    document.querySelectorAll('.lyric-row').forEach(r => r.classList.remove('end-next'));
+    renderRows();
+  }
+}
+
+function startEndTapClock() {
+  stopEndTapClock();
+  const tick = () => {
+    const el = document.getElementById('endTapClock');
+    if (el) {
+      const t   = audioEl.currentTime;
+      const m   = Math.floor(t / 60);
+      const s   = (t % 60).toFixed(3).padStart(6, '0');
+      el.textContent = `${m}:${s}`;
+    }
+    endTapClockRaf = requestAnimationFrame(tick);
+  };
+  endTapClockRaf = requestAnimationFrame(tick);
+}
+
+function stopEndTapClock() {
+  if (endTapClockRaf) { cancelAnimationFrame(endTapClockRaf); endTapClockRaf = null; }
+}
+
+function tapEndTime() {
+  if (!endTapMode || endTapIdx >= parsedLines.length) return;
+  const idx = endTapIdx;
+  tappedEndTimes[idx] = parseFloat(audioEl.currentTime.toFixed(3));
+  const el = document.getElementById(`endtime-${idx}`);
+  if (el) {
+    el.innerHTML =
+      `→${fmtLRC(tappedEndTimes[idx])} ` +
+      `<button onclick="event.stopPropagation();removeEndTime(${idx})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:0 2px;line-height:1;vertical-align:middle;">✕</button> ` +
+      `<button onclick="event.stopPropagation();markLineNow(${idx})" style="background:none;border:1px solid var(--warn);color:var(--warn);cursor:pointer;font-size:.7rem;padding:1px 5px;border-radius:4px;line-height:1.4;vertical-align:middle;">Trimming</button>`;
+  }
+  updateSeekMarkers();
+  endTapIdx++;
+  updateEndTapUI();
+}
+
+function skipEndTap() {
+  // Skip current line — leave its end time as null (will use fallback)
+  if (!endTapMode || endTapIdx >= parsedLines.length) return;
+  endTapIdx++;
+  updateEndTapUI();
+}
+
+function goBackEndTap() {
+  if (!endTapMode || endTapIdx <= 0) return;
+  endTapIdx--;
+  updateEndTapUI();
+}
+
+function markLineNow(i) {
+  if (!endTapMode) return;
+  tappedEndTimes[i] = parseFloat(audioEl.currentTime.toFixed(3));
+  const el = document.getElementById(`endtime-${i}`);
+  if (el) {
+    el.innerHTML =
+      `→${fmtLRC(tappedEndTimes[i])} ` +
+      `<button onclick="event.stopPropagation();removeEndTime(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:0 2px;line-height:1;vertical-align:middle;">✕</button> ` +
+      `<button onclick="event.stopPropagation();markLineNow(${i})" style="background:none;border:1px solid var(--warn);color:var(--warn);cursor:pointer;font-size:.7rem;padding:1px 5px;border-radius:4px;line-height:1.4;vertical-align:middle;">Trimming</button>`;
+  }
+  updateSeekMarkers();
+  const clearBtn = document.getElementById('clearEndBtn');
+  if (clearBtn) clearBtn.style.display = 'inline-flex';
+}
+
+function updateEndTapUI() {
+  if (endTapIdx >= parsedLines.length) {
+    // Done
+    endTapMode = false;
+    stopEndTapClock();
+    document.getElementById('endTapBtn').classList.remove('active');
+    document.getElementById('endTapBanner').classList.remove('visible');
+    document.getElementById('clearEndBtn').style.display = 'inline-flex';
+    document.querySelectorAll('.lyric-row').forEach(r => r.classList.remove('end-next'));
+    renderRows();
+    return;
+  }
+
+  // Update banner content
+  document.getElementById('endTapIdxLabel').textContent  = endTapIdx + 1;
+  document.getElementById('endTapLineText').textContent  = parsedLines[endTapIdx].text;
+  const next = parsedLines[endTapIdx + 1];
+  document.getElementById('endTapNextPreview').textContent = next ? 'next: ' + next.text : 'next: (last line)';
+
+  // Highlight target row
+  document.querySelectorAll('.lyric-row').forEach((r, i) => {
+    r.classList.toggle('end-next', i === endTapIdx);
+  });
+  // Only scroll banner's target row into view when user explicitly navigates (Back/Skip/TAP),
+  // not during passive audio playback — keeps the player controls visible
+  const row = document.getElementById(`row-${endTapIdx}`);
+  if (row) row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function updateSeekMarkers() {
+  const container = document.getElementById('seekMarkers');
+  if (container) container.innerHTML = '';
+}
+
+// ── Pinch helper ──────────────────────────────────────────────────────
+function _pinchDist(e) {
+  const dx = e.touches[0].clientX - e.touches[1].clientX;
+  const dy = e.touches[0].clientY - e.touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function removeEndTime(i) {
+  tappedEndTimes[i] = null;
+  const el = document.getElementById(`endtime-${i}`);
+  if (el) {
+    // Keep Trimming button visible if Trimming mode is still active
+    el.innerHTML = endTapMode
+      ? `<button onclick="event.stopPropagation();markLineNow(${i})" title="Mark this line now" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.35);border-radius:5px;color:var(--warn);cursor:pointer;font-size:.68rem;font-weight:700;padding:1px 6px;font-family:inherit;margin-left:2px;">Trim</button>`
+      : '';
+  }
+  // If no end times left at all, hide the Reset button
+  const anyLeft = tappedEndTimes.some(t => t != null);
+  const btn = document.getElementById('clearEndBtn');
+  if (btn) btn.style.display = anyLeft ? 'inline-flex' : 'none';
+  updateSeekMarkers();
+  if (!anyLeft && !endTapMode) renderRows();
+}
+
+function clearEndTimes(silent = false) {
+  tappedEndTimes = [];
+  const btn = document.getElementById('clearEndBtn');
+  if (btn) btn.style.display = 'none';
+  updateSeekMarkers();
+  if (!silent) renderRows();
+}
+
+function updateOffsetDisplay() { /* endOffsetSlider removed */ }
+
+// ══════════════════════════════════════════════
+// SMART TIMING — AUDIO ENERGY ANALYSIS
+// ══════════════════════════════════════════════
+async function analyzeSong() {
+  if (!audioBlob) {
+    showAnalyzeStatus('err', '✗ Upload audio in Step 1 first.');
+    return;
+  }
+  if (!parsedLines.length) {
+    showAnalyzeStatus('err', '✗ Load lyrics in Step 2 first.');
+    return;
+  }
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  showAnalyzeStatus('loading', '<span class="spin"></span> Decoding audio…');
+
+  try {
+    // ── Step 1: Decode raw audio ──────────────────────────────────────────
+    const arrayBuf  = await audioBlob.arrayBuffer();
+    const tmpCtx    = new (window.AudioContext || window.webkitAudioContext)();
+    const rawBuffer = await tmpCtx.decodeAudioData(arrayBuf);
+    await tmpCtx.close();
+
+    // ── Step 2: Filter to vocal frequency band (300 Hz – 3 500 Hz) ───────
+    // This strips bass, kick drum, hi-hats and high-freq synths so the
+    // energy curve reflects mostly VOCALS, not background music.
+    showAnalyzeStatus('loading', '<span class="spin"></span> Isolating vocal frequencies…');
+
+    const SR       = rawBuffer.sampleRate;
+    const FRAMES   = rawBuffer.length;
+    // Mono offline context — downmixes stereo automatically
+    const offCtx   = new OfflineAudioContext(1, FRAMES, SR);
+    const src      = offCtx.createBufferSource();
+    src.buffer     = rawBuffer;
+
+    // High-pass at 300 Hz — removes bass / kick drum
+    const hpf      = offCtx.createBiquadFilter();
+    hpf.type       = 'highpass';
+    hpf.frequency.value = 300;
+    hpf.Q.value    = 0.7;
+
+    // Low-pass at 3 500 Hz — removes hi-hats / cymbals / high-freq effects
+    const lpf      = offCtx.createBiquadFilter();
+    lpf.type       = 'lowpass';
+    lpf.frequency.value = 3500;
+    lpf.Q.value    = 0.7;
+
+    src.connect(hpf);
+    hpf.connect(lpf);
+    lpf.connect(offCtx.destination);
+    src.start(0);
+
+    const vocalBuf  = await offCtx.startRendering();   // mono, vocal-band only
+    const vocalData = vocalBuf.getChannelData(0);      // Float32Array
+
+    // ── Step 3: RMS energy in 30 ms windows (finer grain) ────────────────
+    showAnalyzeStatus('loading', '<span class="spin"></span> Analyzing vocal energy…');
+
+    const WIN_SEC  = 0.03;                              // 30 ms windows
+    const WIN_SAMP = Math.round(WIN_SEC * SR);
+    const NUM_WIN  = Math.ceil(FRAMES / WIN_SAMP);
+    const rms      = new Float32Array(NUM_WIN);
+
+    for (let w = 0; w < NUM_WIN; w++) {
+      const s0 = w * WIN_SAMP;
+      const s1 = Math.min(s0 + WIN_SAMP, FRAMES);
+      let sumSq = 0;
+      for (let s = s0; s < s1; s++) sumSq += vocalData[s] * vocalData[s];
+      rms[w] = Math.sqrt(sumSq / (s1 - s0));
+    }
+
+    // ── Step 4: Smooth with ±4-window moving average (~240 ms) ───────────
+    const smooth = new Float32Array(NUM_WIN);
+    for (let i = 0; i < NUM_WIN; i++) {
+      let sum = 0, cnt = 0;
+      for (let j = Math.max(0, i-4); j <= Math.min(NUM_WIN-1, i+4); j++) {
+        sum += rms[j]; cnt++;
+      }
+      smooth[i] = sum / cnt;
+    }
+
+    const t2w = t => Math.max(0, Math.min(NUM_WIN - 1, Math.floor(t / WIN_SEC)));
+    const w2t = w => parseFloat((w * WIN_SEC).toFixed(3));
+
+    // 150 ms of sustained quiet = real vocal stop (not just a consonant gap)
+    const SUSTAIN_WIN = Math.round(0.15 / WIN_SEC);
+
+    // ── Step 5: For each lyric line find where vocals actually stop ───────
+    let earlyCount = 0;
+    analyzedEndTimes = parsedLines.map((line, i) => {
+      const nextStart = i + 1 < parsedLines.length ? parsedLines[i+1].time : line.time + 5;
+      const gap       = nextStart - line.time;
+
+      // Very short gap — singer definitely still going, don't touch
+      if (gap < 1.2) return nextStart;
+
+      // Peak vocal energy in first 45% of gap (singer is definitely still singing here)
+      const peakW0 = t2w(line.time + 0.15);
+      const peakW1 = t2w(line.time + gap * 0.45);
+      let peakEnergy = 0;
+      for (let w = peakW0; w <= peakW1; w++) {
+        if (smooth[w] > peakEnergy) peakEnergy = smooth[w];
+      }
+
+      if (peakEnergy === 0) return nextStart; // silence at start → skip
+
+      // Search only in second half of gap (45% → 92%)
+      // Before 45% the singer is almost certainly still going
+      const wS        = t2w(line.time + gap * 0.45);
+      const wE        = t2w(line.time + gap * 0.92);
+
+      // Threshold: vocal energy must drop to ≤35% of its singing peak
+      // (strict — avoids cutting on breath/consonant dips)
+      const threshold = peakEnergy * 0.35;
+
+      // Find first region that stays below threshold for SUSTAIN_WIN windows
+      let quietStart = -1, quietCount = 0;
+      for (let w = wS; w <= wE; w++) {
+        if (smooth[w] <= threshold) {
+          if (quietStart === -1) quietStart = w;
+          quietCount++;
+          if (quietCount >= SUSTAIN_WIN) {
+            earlyCount++;
+            return w2t(quietStart);   // genuine vocal stop found
+          }
+        } else {
+          quietStart = -1;
+          quietCount = 0;
+        }
+      }
+
+      // No confident stop found → keep text until next line starts
+      return nextStart;
+    });
+
+    showAnalyzeStatus('ok',
+      `✓ Done — vocal stop detected in ${earlyCount} / ${parsedLines.length} lines`
+    );
+    document.getElementById('clearAnalyzeBtn').style.display = 'inline-flex';
+
+  } catch (e) {
+    showAnalyzeStatus('err', '✗ Analysis failed: ' + e.message);
+    console.error('Audio analysis error:', e);
+    analyzedEndTimes = null;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function clearAnalysis(silent = false) {
+  analyzedEndTimes = null;
+  const clearBtn = document.getElementById('clearAnalyzeBtn');
+  if (clearBtn) clearBtn.style.display = 'none';
+  if (!silent) {
+    const el = document.getElementById('analyzeStatus');
+    if (el) { el.className = 'fetch-status'; el.innerHTML = ''; }
+  }
+}
+
+function showAnalyzeStatus(type, html) {
+  const el = document.getElementById('analyzeStatus');
+  if (!el) return;
+  el.className = 'fetch-status ' + type;
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+// FONT PICKER
+// ══════════════════════════════════════════════
+const MYANMAR_FONTS_API = 'https://api.github.com/repos/AungMyoKyaw/Myanmar-Unicode-Fonts/git/trees/master?recursive=1';
+const MYANMAR_FONTS_RAW = 'https://raw.githubusercontent.com/AungMyoKyaw/Myanmar-Unicode-Fonts/master/';
+const MYANMAR_FONTS_BLOCKLIST = [
+  'gantgaw', 'mm05', 'mm3 multi', 'mmr text', 'mmrtext',
+  'rosemarry', 'melanoo', 'thuria volt', 'namkhon',
+  'notoSan myanmar', 'noto san myanmar', 'noto sans myanmar',
+  'paduk', 'parabik', 'pyidaungsu',
+  'shan unicode', 'than lwin', 'thalon', 'yoeyar'
+];
+function isMyanmarFontBlocked(name) {
+  const lower = name.toLowerCase();
+  return MYANMAR_FONTS_BLOCKLIST.some(b => lower.includes(b.toLowerCase()));
+}
+
+function switchFontTab(tab) {
+  const tabs = ['japanese','upload'];
+  tabs.forEach(t => {
+    const btn   = document.getElementById(t === 'japanese' ? 'fontTab1' : 'fontTab2');
+    const panel = document.getElementById(`font-tab-${t}`);
+    if (btn)   btn.classList.toggle('active', t === tab);
+    if (panel) panel.classList.toggle('active', t === tab);
+  });
+  if (tab === 'upload') {
+    const zone = document.getElementById('uploadFontZone');
+    if (zone && window.lucide) lucide.createIcons({ nodes: [zone] });
+  }
+}
+
+async function selectJapaneseFont() {
+  const sel    = document.getElementById('japaneseFontFamily');
+  const name   = sel.value;
+  const status = document.getElementById('japaneseFontStatus');
+  const prev   = document.getElementById('japaneseFontPreview');
+
+  status.className = 'font-status';
+  status.innerHTML = `<span style="color:var(--accent);">⟳ Loading ${name}…</span>`;
+
+  // Load via Google Fonts link
+  const id  = 'gf-' + name.replace(/\s+/g, '-');
+  if (!document.getElementById(id)) {
+    const link = document.createElement('link');
+    link.id   = id;
+    link.rel  = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(name)}&display=swap`;
+    document.head.appendChild(link);
+  }
+  // Wait for font to be ready
+  try {
+    await document.fonts.load(`16px '${name}'`);
+    status.className = 'font-status ok';
+    status.textContent = `✓ ${name} loaded`;
+  } catch(e) {
+    status.className = 'font-status ok'; // still try to use it
+    status.textContent = `✓ ${name} (check preview)`;
+  }
+  // Update preview
+  if (prev) prev.style.fontFamily = `'${name}', sans-serif`;
+  // Update hidden input so export picks it up
+  document.getElementById('fontFamily').value = name;
+  clearCustomFont();
+  updatePosCanvas();
+}
+
+async function downloadJapaneseFont() {
+  const name   = document.getElementById('japaneseFontFamily').value;
+  const status = document.getElementById('japaneseFontStatus');
+
+  status.className = 'font-status';
+  status.innerHTML = `<span style="color:var(--accent);">⟳ Fetching ${name}…</span>`;
+
+  try {
+    // 1. Fetch the Google Fonts CSS to get the actual font file URL
+    const cssRes = await fetch(
+      `https://fonts.googleapis.com/css2?family=${encodeURIComponent(name)}&display=swap`,
+      { headers: { 'User-Agent': 'Mozilla/5.0' } }
+    );
+    const css = await cssRes.text();
+
+    // 2. Extract first woff2/ttf URL from CSS
+    const match = css.match(/src:\s*url\(([^)]+)\)\s*format\(['"]?woff2['"]?\)/);
+    if (!match) throw new Error('Font URL not found in CSS');
+
+    // 3. Fetch the font binary
+    const fontRes = await fetch(match[1]);
+    if (!fontRes.ok) throw new Error(`HTTP ${fontRes.status}`);
+    const blob = await fontRes.blob();
+
+    // 4. Download
+    const a      = document.createElement('a');
+    a.href       = URL.createObjectURL(blob);
+    a.download   = name.replace(/\s+/g, '_') + '.woff2';
+    a.click();
+    URL.revokeObjectURL(a.href);
+
+    status.className = 'font-status ok';
+    status.textContent = `✓ ${name}.woff2 downloaded`;
+  } catch(e) {
+    // Fallback: open Google Fonts page so user can download manually
+    status.className = 'font-status err';
+    status.innerHTML = `✗ Direct download blocked — <a href="https://fonts.google.com/specimen/${encodeURIComponent(name)}" target="_blank" style="color:var(--accent);">Open on Google Fonts ↗</a>`;
+  }
+}
+
+async function initMyanmarFonts() {
+  const statusEl = document.getElementById('myanmarFontStatus');
+  const listEl   = document.getElementById('myanmarFontList');
+  if (!listEl) return;
+  statusEl.className = 'font-status';
+  statusEl.innerHTML = '<span style="color:var(--accent);">⟳ Loading font list from GitHub…</span>';
+  try {
+    const res  = await fetch(MYANMAR_FONTS_API);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    myanmarFonts = data.tree
+      .filter(f => f.type === 'blob' && f.path.toLowerCase().endsWith('.ttf'))
+      .map(f => {
+        const parts = f.path.split('/');
+        const file  = parts[parts.length - 1];
+        const name  = file.replace(/\.ttf$/i, '').replace(/[-_]/g, ' ');
+        return { name, file, path: f.path };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+    filterMyanmarFonts();
+    statusEl.className = 'font-status ok';
+    statusEl.textContent = `✓ ${myanmarFonts.length} fonts loaded — select one to preview`;
+  } catch(e) {
+    statusEl.className = 'font-status err';
+    statusEl.textContent = '✗ Could not load font list. Check your internet connection.';
+  }
+}
+
+// ── Myanmar font download helpers ─────────────────────────────────────
+async function downloadSelectedMyanmarFont(layer) {
+  const listId = layer === 'trans' ? 'transMyanmarFontList'
+               : layer === 'guide' ? 'guideMyanmarFontList'
+               : 'myanmarFontList';
+  const listEl = document.getElementById(listId);
+  const opt    = listEl?.options[listEl.selectedIndex];
+  if (!opt || opt.disabled) {
+    alert('Please select a font from the list first.');
+    return;
+  }
+  const path     = decodeURIComponent(opt.value);
+  const filename = opt.dataset.file || path.split('/').pop();
+  const url      = MYANMAR_FONTS_RAW + path;
+  try {
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const blob = await res.blob();
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch(e) {
+    alert('Download failed: ' + e.message);
+  }
+}
+
+function downloadMyanmarFontPack() {
+  const a  = document.createElement('a');
+  a.href   = 'https://drive.google.com/uc?export=download&id=19QQBX9CLKa-cAzEiqoQz8CN3MZ3_Ga8_';
+  a.download = 'Myanmar Fonts.zip';
+  a.target = '_blank';
+  a.click();
+}
+
+function filterMyanmarFonts() {
+  const q      = (document.getElementById('myanmarFontSearch')?.value || '').toLowerCase().trim();
+  const listEl = document.getElementById('myanmarFontList');
+  if (!listEl || !myanmarFonts.length) return;
+  const filtered = q
+    ? myanmarFonts.filter(f => f.name.toLowerCase().includes(q) || f.file.toLowerCase().includes(q))
+    : myanmarFonts;
+  listEl.innerHTML = filtered.length
+    ? filtered.map(f =>
+        `<option value="${encodeURIComponent(f.path)}" data-file="${escHtml(f.file)}">${escHtml(f.name)}</option>`
+      ).join('')
+    : '<option disabled>No matches</option>';
+}
+
+function filterGuideMyanmarFonts() {
+  const q      = (document.getElementById('guideMyanmarFontSearch')?.value || '').toLowerCase().trim();
+  const listEl = document.getElementById('guideMyanmarFontList');
+  if (!listEl || !myanmarFonts.length) return;
+  const filtered = q
+    ? myanmarFonts.filter(f => f.name.toLowerCase().includes(q) || f.file.toLowerCase().includes(q))
+    : myanmarFonts;
+  listEl.innerHTML = filtered.length
+    ? filtered.map(f =>
+        `<option value="${encodeURIComponent(f.path)}" data-file="${escHtml(f.file)}">${escHtml(f.name)}</option>`
+      ).join('')
+    : '<option disabled>No matches</option>';
+}
+
+function downloadJapaneseFontPack() {
+  const a = document.createElement('a');
+  a.href = 'https://drive.google.com/uc?export=download&id=1jwtG04R1kdn94HI9UBB3w5SzPR-9Xvi-';
+  a.target = '_blank';
+  a.click();
+}
+
+function downloadGuideJapaneseFont() {
+  const select = document.getElementById('guideJapaneseFontFamily');
+  const status = document.getElementById('guideJapaneseFontStatus');
+  if (!select || !status) return;
+  const opt = select.options[select.selectedIndex];
+  const gf  = opt?.getAttribute('data-gf');
+  const a   = document.createElement('a');
+  a.target  = '_blank';
+  if (gf) {
+    a.href = `https://fonts.google.com/download?family=${encodeURIComponent(gf)}`;
+    status.className = 'font-status ok';
+    status.innerHTML = `✓ Downloading <b>${opt.text}</b> as ZIP (TTF included)`;
+  } else {
+    a.href = 'https://drive.google.com/uc?export=download&id=1jwtG04R1kdn94HI9UBB3w5SzPR-9Xvi-';
+    status.className = 'font-status ok';
+    status.innerHTML = `✓ Downloading <b>Eng/Jpn Fonts Pack</b> (contains all custom fonts)`;
+  }
+  a.click();
+}
+
+async function selectMyanmarFont() {
+  const listEl   = document.getElementById('myanmarFontList');
+  const statusEl = document.getElementById('myanmarFontStatus');
+  const opt      = listEl?.options[listEl.selectedIndex];
+  if (!opt || opt.disabled) return;
+
+  const path     = decodeURIComponent(opt.value);
+  const file     = opt.getAttribute('data-file');
+  const label    = opt.textContent;
+  const url      = MYANMAR_FONTS_RAW + path.split('/').map(encodeURIComponent).join('/');
+
+  statusEl.className   = 'font-status';
+  statusEl.innerHTML   = `<span style="color:var(--accent);">⟳ Loading ${label}…</span>`;
+
+  try {
+    await loadFontFace('MyanmarFont', url);
+    setCustomFont('MyanmarFont', file, label);
+    statusEl.className  = 'font-status ok';
+    statusEl.textContent = `✓ ${label} loaded`;
+    // Show preview
+    const prev = document.getElementById('mmFontPreview');
+    const hint = document.getElementById('mmFontPreviewHint');
+    if (prev) {
+      prev.style.fontFamily = `'MyanmarFont', sans-serif`;
+      if (!prev.textContent.trim()) prev.textContent = 'သီချင်းစာသား မြန်မာဘာသာ';
+      prev.classList.add('visible');
+      hint.classList.add('visible');
+    }
+  } catch(e) {
+    statusEl.className  = 'font-status err';
+    statusEl.textContent = `✗ Failed to load font (CORS or network error)`;
+    console.error('Font load error:', e);
+  }
+}
+
+async function handleFontUpload(e) {
+  const file     = e.target.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('uploadFontStatus');
+  statusEl.className   = 'font-status';
+  statusEl.innerHTML   = `<span style="color:var(--accent);">⟳ Loading ${escHtml(file.name)}…</span>`;
+
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    try {
+      const fontFace = new FontFace('UploadedFont', ev.target.result);
+      await fontFace.load();
+      removeFontFace('UploadedFont');
+      document.fonts.add(fontFace);
+      setCustomFont('UploadedFont', file.name, file.name.replace(/\.[^.]+$/, ''));
+      statusEl.className  = 'font-status ok';
+      statusEl.textContent = `✓ ${file.name} loaded`;
+    } catch(err) {
+      statusEl.className  = 'font-status err';
+      statusEl.textContent = '✗ Invalid font file';
+      console.error('Font upload error:', err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+async function loadFontFace(family, url) {
+  const fontFace = new FontFace(family, `url('${url}')`);
+  await fontFace.load();
+  removeFontFace(family);
+  document.fonts.add(fontFace);
+}
+
+function removeFontFace(family) {
+  const toRemove = [];
+  document.fonts.forEach(f => { if (f.family === family) toRemove.push(f); });
+  toRemove.forEach(f => document.fonts.delete(f));
+}
+
+function setCustomFont(family, filename, label) {
+  customFontFamily = family;
+  customFontFile   = filename;
+  const badge = document.getElementById('activeFontIndicator');
+  if (badge) {
+    badge.textContent     = label || filename.replace(/\.[^.]+$/, '').replace(/[-_]/g,' ');
+    badge.style.display   = 'inline-block';
+  }
+  updatePosCanvas();
+}
+
+function clearCustomFont() {
+  customFontFamily = null;
+  customFontFile   = null;
+  const badge = document.getElementById('activeFontIndicator');
+  if (badge) badge.style.display = 'none';
+  updatePosCanvas();
+}
+
+// ── TRANSLATION FONT PICKER ──
+function switchTransFontTab(tab) {
+  const tabs = ['myanmar','upload'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(t === 'myanmar' ? 'transFontTab1' : 'transFontTab2');
+    const panel = document.getElementById(`trans-font-tab-${t}`);
+    if (btn)   btn.classList.toggle('active', t === tab);
+    if (panel) panel.classList.toggle('active', t === tab);
+  });
+  if (tab === 'myanmar') {
+    // Share the same myanmarFonts list; load if not yet loaded
+    if (!myanmarFonts.length) {
+      initTransMyanmarFonts();
+    } else {
+      filterTransMyanmarFonts();
+      document.getElementById('transMyanmarFontStatus').textContent =
+        `✓ ${myanmarFonts.length} fonts — select one to preview`;
+      document.getElementById('transMyanmarFontStatus').className = 'font-status ok';
+    }
+  }
+  if (tab === 'upload') {
+    const zone = document.getElementById('transUploadFontZone');
+    if (zone && window.lucide) lucide.createIcons({ nodes: [zone] });
+  }
+}
+
+async function initTransMyanmarFonts() {
+  const statusEl = document.getElementById('transMyanmarFontStatus');
+  const listEl   = document.getElementById('transMyanmarFontList');
+  statusEl.className = 'font-status';
+  statusEl.innerHTML = '<span style="color:var(--accent);">⟳ Loading font list from GitHub…</span>';
+  try {
+    const res  = await fetch(MYANMAR_FONTS_API);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    myanmarFonts = data.tree
+      .filter(f => f.type === 'blob' && f.path.toLowerCase().endsWith('.ttf'))
+      .map(f => {
+        const parts = f.path.split('/');
+        const file  = parts[parts.length - 1];
+        const name  = file.replace(/\.ttf$/i, '').replace(/[-_]/g, ' ');
+        return { name, file, path: f.path };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+    filterTransMyanmarFonts();
+    // Also populate lyrics picker list if it's showing
+    filterMyanmarFonts();
+    statusEl.className = 'font-status ok';
+    statusEl.textContent = `✓ ${myanmarFonts.length} fonts loaded — select one to preview`;
+  } catch(e) {
+    statusEl.className = 'font-status err';
+    statusEl.textContent = '✗ Could not load font list. Check your internet connection.';
+  }
+}
+
+function filterTransMyanmarFonts() {
+  const q      = (document.getElementById('transMyanmarFontSearch')?.value || '').toLowerCase().trim();
+  const listEl = document.getElementById('transMyanmarFontList');
+  if (!listEl || !myanmarFonts.length) return;
+  const filtered = q
+    ? myanmarFonts.filter(f => f.name.toLowerCase().includes(q) || f.file.toLowerCase().includes(q))
+    : myanmarFonts;
+  listEl.innerHTML = filtered.length
+    ? filtered.map(f =>
+        `<option value="${encodeURIComponent(f.path)}" data-file="${escHtml(f.file)}">${escHtml(f.name)}</option>`
+      ).join('')
+    : '<option disabled>No matches</option>';
+}
+
+async function selectTransMyanmarFont() {
+  const listEl   = document.getElementById('transMyanmarFontList');
+  const statusEl = document.getElementById('transMyanmarFontStatus');
+  const opt      = listEl?.options[listEl.selectedIndex];
+  if (!opt || opt.disabled) return;
+
+  const path  = decodeURIComponent(opt.value);
+  const file  = opt.getAttribute('data-file');
+  const label = opt.textContent;
+  const url   = MYANMAR_FONTS_RAW + path.split('/').map(encodeURIComponent).join('/');
+
+  statusEl.className = 'font-status';
+  statusEl.innerHTML = `<span style="color:var(--accent);">⟳ Loading ${label}…</span>`;
+  try {
+    await loadFontFace('MyanmarFontTrans', url);
+    setTransCustomFont('MyanmarFontTrans', file, label);
+    statusEl.className  = 'font-status ok';
+    statusEl.textContent = `✓ ${label} loaded`;
+    // Show preview
+    const prev = document.getElementById('transMmFontPreview');
+    const hint = document.getElementById('transMmFontPreviewHint');
+    if (prev) {
+      prev.style.fontFamily = `'MyanmarFontTrans', sans-serif`;
+      if (!prev.textContent.trim()) prev.textContent = 'သီချင်းစာသား မြန်မာဘာသာ';
+      prev.classList.add('visible');
+      hint.classList.add('visible');
+    }
+  } catch(e) {
+    statusEl.className  = 'font-status err';
+    statusEl.textContent = '✗ Failed to load font';
+  }
+}
+
+async function handleTransFontUpload(e) {
+  const file     = e.target.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('transUploadFontStatus');
+  statusEl.className = 'font-status';
+  statusEl.innerHTML = `<span style="color:var(--accent);">⟳ Loading ${escHtml(file.name)}…</span>`;
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    try {
+      const fontFace = new FontFace('UploadedFontTrans', ev.target.result);
+      await fontFace.load();
+      removeFontFace('UploadedFontTrans');
+      document.fonts.add(fontFace);
+      setTransCustomFont('UploadedFontTrans', file.name, file.name.replace(/\.[^.]+$/, ''));
+      statusEl.className  = 'font-status ok';
+      statusEl.textContent = `✓ ${file.name} loaded`;
+    } catch(err) {
+      statusEl.className  = 'font-status err';
+      statusEl.textContent = '✗ Invalid font file';
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function setTransCustomFont(family, filename, label) {
+  transCustomFontFamily = family;
+  transCustomFontFile   = filename;
+  const badge = document.getElementById('transActiveFontIndicator');
+  if (badge) {
+    badge.textContent   = label || filename.replace(/\.[^.]+$/, '').replace(/[-_]/g,' ');
+    badge.style.display = 'inline-block';
+  }
+  updatePosCanvas();
+}
+
+function clearTransCustomFont() {
+  transCustomFontFamily = null;
+  transCustomFontFile   = null;
+  const badge = document.getElementById('transActiveFontIndicator');
+  if (badge) badge.style.display = 'none';
+  updatePosCanvas();
+}
+
+// ══════════════════════════════════════════════
+// USER ACCOUNT SYSTEM
+// ══════════════════════════════════════════════
+const GAS_URL    = 'https://script.google.com/macros/s/AKfycbwix1Y6BWXjZEBaKWMUaJqaVI-bkn_uuT-BVmJaQjhcHafjXt9-8RdLwKW47BpOBvlkcw/exec';
+const API_SECRET = 'lrc_7x$Kp2@mNqR9vZwT4jHbYuE8dF1oXs';
+
+let currentUser = JSON.parse(localStorage.getItem('lrc_user') || 'null');
+let lastXML = null; // stores last generated XML for saving
+
+async function callAPI(action, params) {
+  let res;
+  if (action === 'saveXML') {
+    // base64-encode XML so it's safe in POST body, then POST
+    const encoded = btoa(unescape(encodeURIComponent(params.xmlContent)));
+    res = await fetch(GAS_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, userId: params.userId, fileName: params.fileName, xmlContent: encoded, encoded: true, _secret: API_SECRET })
+    });
+  } else {
+    // GET for everything else — include secret in the data payload
+    const url = GAS_URL + '?action=' + encodeURIComponent(action) +
+                '&data=' + encodeURIComponent(JSON.stringify({ ...params, _secret: API_SECRET }));
+    res = await fetch(url, { redirect: 'follow' });
+  }
+  const text = await res.text();
+  try { return JSON.parse(text); }
+  catch(e) { return { success: false, message: 'Server error: ' + text.slice(0, 120) }; }
+}
+
+// ── Toast ──────────────────────────────────────
+function showToast(msg, type = 'ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+
+// ── Auth UI state ──────────────────────────────
+function updateAuthUI() {
+  const btn = document.getElementById('authBtn');
+  const label = document.getElementById('authBtnLabel');
+  if (currentUser) {
+    btn.classList.add('logged-in');
+    btn.onclick = openAccountModal;
+    label.textContent = currentUser.username;
+  } else {
+    btn.classList.remove('logged-in');
+    btn.onclick = () => openAuthModal('login');
+    label.textContent = 'Login / Register';
+  }
+}
+
+// ── Auth Modal ─────────────────────────────────
+function openAuthModal(tab = 'login') {
+  document.getElementById('authModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  switchAuthTab(tab);
+  if (window.lucide) lucide.createIcons();
+}
+function closeAuthModal() {
+  document.getElementById('authModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function switchAuthTab(tab) {
+  document.getElementById('authTabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('authTabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('authPanelLogin').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('authPanelRegister').style.display = tab === 'register' ? 'block' : 'none';
+}
+
+// ── Button loading helper ──────────────────────
+function btnLoading(btn, loading, originalHTML) {
+  if (loading) {
+    btn._originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="btn-spinner"></span> ${originalHTML}`;
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = btn._originalHTML || originalHTML;
+    if (window.lucide) lucide.createIcons({ nodes: [btn] });
+  }
+}
+
+async function handleLogin() {
+  const btn = document.getElementById('loginBtn');
+  const msg = document.getElementById('loginMsg');
+  const email = document.getElementById('loginUsername').value.trim().toLowerCase();
+  const password = document.getElementById('loginPassword').value;
+  if (!email || !password) { setMsg(msg, 'err', 'Please fill in all fields.'); return; }
+  if (!email.endsWith('@gmail.com')) { setMsg(msg, 'err', 'Please enter your Gmail address.'); return; }
+  btnLoading(btn, true, 'Logging in…');
+  try {
+    const res = await callAPI('login', { email, password });
+    if (res.success) {
+      currentUser = { userId: res.userId, username: res.username, avatar: res.avatar || DEFAULT_ANIMAL };
+      localStorage.setItem('lrc_user', JSON.stringify(currentUser));
+      updateAuthUI();
+      closeAuthModal();
+      showToast(`Welcome back, ${res.username}!`);
+      updateSaveRow();
+    } else {
+      setMsg(msg, 'err', res.message);
+    }
+  } catch(e) { setMsg(msg, 'err', 'Network error. Try again.'); }
+  btnLoading(btn, false, '<i data-lucide="log-in" style="width:15px;height:15px;"></i> Login');
+}
+
+async function handleRegister() {
+  const btn = document.getElementById('registerBtn');
+  const msg = document.getElementById('registerMsg');
+  const username = document.getElementById('regUsername').value.trim();
+  const email    = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  if (!username || !email || !password) { setMsg(msg, 'err', 'Please fill in all fields.'); return; }
+  if (!email.toLowerCase().endsWith('@gmail.com')) { setMsg(msg, 'err', 'Please use a Gmail address (e.g. you@gmail.com).'); return; }
+  if (password.length < 6) { setMsg(msg, 'err', 'Password must be at least 6 characters.'); return; }
+  btnLoading(btn, true, 'Creating account…');
+  try {
+    const res = await callAPI('register', { username, email, password });
+    if (res.success) {
+      msg.className = 'modal-msg ok';
+      msg.innerHTML = '<span class="btn-spinner" style="width:13px;height:13px;border-width:2px;vertical-align:middle;margin-right:6px;display:inline-block;"></span> Account created! Logging you in…';
+      btnLoading(btn, true, 'Logging in…');
+      setTimeout(async () => {  // wait 2.5s for GAS sheet write to commit
+        const login = await callAPI('login', { email, password });
+        if (login.success) {
+          currentUser = { userId: login.userId, username: login.username, avatar: login.avatar || DEFAULT_ANIMAL };
+          localStorage.setItem('lrc_user', JSON.stringify(currentUser));
+          updateAuthUI();
+          closeAuthModal();
+          showToast(`Account created! Welcome, ${login.username}!`);
+          updateSaveRow();
+        } else {
+          setMsg(msg, 'err', 'Account created but auto-login failed. Please log in manually.');
+          btnLoading(btn, false, '<i data-lucide="user-plus" style="width:15px;height:15px;"></i> Create Account');
+        }
+      }, 2500);
+    } else {
+      setMsg(msg, 'err', res.message);
+      btnLoading(btn, false, '<i data-lucide="user-plus" style="width:15px;height:15px;"></i> Create Account');
+    }
+  } catch(e) {
+    setMsg(msg, 'err', 'Network error. Try again.');
+    btnLoading(btn, false, '<i data-lucide="user-plus" style="width:15px;height:15px;"></i> Create Account');
+  }
+}
+
+function handleLogout(silent = false) {
+  currentUser = null;
+  localStorage.removeItem('lrc_user');
+  updateAuthUI();
+  closeAccountModal();
+  updateSaveRow();
+  if (!silent) showToast('Logged out.');
+}
+
+// ── Account Modal ──────────────────────────────
+function openAccountModal() {
+  document.getElementById('accountModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const username = currentUser?.username || 'Account';
+  document.getElementById('accountModalTitle').textContent = username;
+  document.getElementById('accountModalAvatar').innerHTML = '<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f472b6,#c084fc);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 12px rgba(244,114,182,.35);"><i data-lucide="user" style="width:18px;height:18px;color:#fff;"></i></div>';
+  loadMyFiles();
+  if (window.lucide) lucide.createIcons();
+}
+
+function closeAccountModal() {
+  document.getElementById('accountModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleAccountSection(section) {
+  const header = document.getElementById(section + 'DropdownHeader');
+  const body   = document.getElementById(section + 'DropdownBody');
+  const isOpen = header.classList.toggle('open');
+  body.classList.toggle('open', isOpen);
+  if (window.lucide) lucide.createIcons();
+  // clear messages when closing
+  if (!isOpen) {
+    const msg = document.getElementById(section === 'username' ? 'changeUsernameMsg' : 'changePasswordMsg');
+    if (msg) msg.textContent = '';
+  }
+}
+
+async function handleChangeUsername() {
+  const msg = document.getElementById('changeUsernameMsg');
+  const btn = document.querySelector('#usernameDropdownBody .modal-submit');
+  const newUsername = document.getElementById('newUsername').value.trim();
+  const password    = document.getElementById('changeUsernamePassword').value;
+  if (!newUsername || !password) { setMsg(msg, 'err', 'Fill in all fields.'); return; }
+  btnLoading(btn, true, 'Updating…');
+  const res = await callAPI('changeUsername', { userId: currentUser.userId, newUsername, password });
+  if (res.success) {
+    currentUser.username = newUsername;
+    localStorage.setItem('lrc_user', JSON.stringify(currentUser));
+    updateAuthUI();
+    document.getElementById('accountModalTitle').textContent = newUsername;
+    setMsg(msg, 'ok', '✓ Username updated!');
+    showToast('Username updated!');
+  } else { setMsg(msg, 'err', res.message); }
+  btnLoading(btn, false, '<i data-lucide="check" style="width:15px;height:15px;"></i> Update Username');
+}
+
+async function handleChangePassword() {
+  const msg = document.getElementById('changePasswordMsg');
+  const btn = document.querySelector('#passwordDropdownBody .modal-submit');
+  const oldPassword = document.getElementById('oldPassword').value;
+  const newPassword = document.getElementById('newPassword').value;
+  if (!oldPassword || !newPassword) { setMsg(msg, 'err', 'Fill in all fields.'); return; }
+  if (oldPassword === newPassword) { setMsg(msg, 'err', 'New password must be different from your current one.'); return; }
+  if (newPassword.length < 6) { setMsg(msg, 'err', 'New password must be at least 6 characters.'); return; }
+  btnLoading(btn, true, 'Updating…');
+  const res = await callAPI('changePassword', { userId: currentUser.userId, oldPassword, newPassword });
+  if (res.success) {
+    setMsg(msg, 'ok', '✓ Password updated!');
+    showToast('Password updated!');
+    document.getElementById('oldPassword').value = '';
+    document.getElementById('newPassword').value = '';
+  } else { setMsg(msg, 'err', res.message); }
+  btnLoading(btn, false, '<i data-lucide="check" style="width:15px;height:15px;"></i> Update Password');
+}
+
+// ── Custom confirm dialog ──────────────────────
+function showConfirm({ title, msg, okText = 'Delete', extra = '' } = {}) {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('confirmOverlay');
+    document.getElementById('confirmTitle').textContent = title || 'Are you sure?';
+    document.getElementById('confirmMsg').textContent   = msg   || '';
+    document.getElementById('confirmExtra').innerHTML   = extra;
+    document.getElementById('confirmOk').textContent    = okText;
+    const okBtn     = document.getElementById('confirmOk');
+    const cancelBtn = document.getElementById('confirmCancel');
+    overlay.classList.add('open');
+    if (window.lucide) lucide.createIcons({ nodes: [overlay] });
+
+    function cleanup(val) {
+      overlay.classList.remove('open');
+      okBtn.removeEventListener('click', onOk);
+      cancelBtn.removeEventListener('click', onCancel);
+      resolve(val);
+    }
+    function onOk()     { cleanup(true);  }
+    function onCancel() { cleanup(false); }
+    okBtn.addEventListener('click', onOk);
+    cancelBtn.addEventListener('click', onCancel);
+    overlay.onclick = e => { if (e.target === overlay) cleanup(false); };
+  });
+}
+
+async function handleDeleteAccount() {
+  const msg = document.getElementById('deleteAccountMsg');
+  const confirmed = await showConfirm({
+    title: 'Delete Account',
+    msg:   'This will permanently delete your account and all saved files. This cannot be undone.',
+    okText: 'Yes, Delete',
+    extra: `<div class="modal-field" style="margin-bottom:16px;">
+              <label>Enter your password to confirm</label>
+              <input type="password" id="deleteAccountPassword" placeholder="Your password" style="margin-top:4px;" />
+            </div>`
+  });
+  if (!confirmed) return;
+  const password = document.getElementById('deleteAccountPassword')?.value;
+  if (!password) { setMsg(msg, 'err', 'Password is required.'); return; }
+
+  const btn = document.querySelector('.danger-btn');
+  btnLoading(btn, true, 'Deleting…');
+  const res = await callAPI('deleteAccount', { userId: currentUser.userId, password });
+  btnLoading(btn, false, '<i data-lucide="trash-2" style="width:14px;height:14px;"></i> Delete Account');
+  if (res.success) {
+    showToast('Account deleted.');
+    handleLogout(true);
+  } else { setMsg(msg, 'err', res.message); }
+}
+
+// ── My Files ───────────────────────────────────
+async function loadMyFiles() {
+  const list = document.getElementById('myFilesList');
+  list.innerHTML = '<div class="files-empty">Loading...</div>';
+  try {
+    const res = await callAPI('getXMLFiles', { userId: currentUser.userId });
+    if (!res.success) { list.innerHTML = '<div class="files-empty">Failed to load files.</div>'; return; }
+    if (!res.files.length) { list.innerHTML = '<div class="files-empty">No saved files yet.</div>'; return; }
+    list.innerHTML = res.files.map(f => `
+      <div class="my-file-item">
+        <div>
+          <div class="my-file-name">${escHtml(f.fileName)}</div>
+          <div class="my-file-date">${new Date(f.createdAt).toLocaleDateString()}</div>
+        </div>
+        <div class="my-file-actions">
+          <button class="my-file-btn" onclick="downloadSavedFile('${f.fileId}','${escHtml(f.fileName)}')">
+            <i data-lucide="download" style="width:14px;height:14px;"></i>
+          </button>
+          <button class="my-file-btn del" onclick="deleteSavedFile('${f.fileId}')">
+            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+          </button>
+        </div>
+      </div>`).join('');
+    if (window.lucide) lucide.createIcons();
+  } catch(e) { list.innerHTML = '<div class="files-empty">Network error.</div>'; }
+}
+
+async function downloadSavedFile(fileId, fileName) {
+  showToast('Downloading...');
+  const res = await callAPI('getXMLContent', { fileId, userId: currentUser.userId });
+  if (!res.success) { showToast('Failed to get file.', 'err'); return; }
+  const blob = new Blob([res.xmlContent], { type: 'application/xml' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = fileName; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Downloaded!');
+}
+
+async function deleteSavedFile(fileId) {
+  const confirmed = await showConfirm({
+    title: 'Delete File',
+    msg:   'This file will be permanently removed from your account.',
+    okText: 'Delete'
+  });
+  if (!confirmed) return;
+
+  // show spinner on the delete button
+  const delBtn = document.querySelector(`.my-file-btn.del[onclick="deleteSavedFile('${fileId}')"]`);
+  if (delBtn) { delBtn.disabled = true; delBtn.innerHTML = '<span class="btn-spinner" style="width:11px;height:11px;border-width:2px;"></span>'; }
+
+  const res = await callAPI('deleteXML', { fileId, userId: currentUser.userId });
+  if (res.success) { showToast('File deleted.'); loadMyFiles(); }
+  else {
+    showToast('Failed to delete.', 'err');
+    if (delBtn) { delBtn.disabled = false; delBtn.innerHTML = '<i data-lucide="trash-2" style="width:12px;height:12px;"></i>'; if(window.lucide) lucide.createIcons({nodes:[delBtn]}); }
+  }
+}
+
+// ── Save XML to account ────────────────────────
+function updateSaveRow() {
+  const row = document.getElementById('saveToAccountRow');
+  if (!lastXML) { row.style.display = 'none'; return; }
+  row.style.display = 'block';
+  document.getElementById('saveLoggedIn').style.display    = currentUser ? 'block' : 'none';
+  document.getElementById('saveNotLoggedIn').style.display = currentUser ? 'none'  : 'block';
+  if (window.lucide) lucide.createIcons();
+}
+
+async function saveXMLToAccount() {
+  if (!currentUser || !lastXML) return;
+  const btn = document.getElementById('saveToAccountBtn');
+  const title  = document.getElementById('songTitle').value.trim()  || 'Untitled';
+  const artist = document.getElementById('songArtist').value.trim() || 'Unknown';
+  const fileName = `${title} - ${artist}.xml`;
+  btnLoading(btn, true, 'Saving…');
+  const res = await callAPI('saveXML', { userId: currentUser.userId, fileName, xmlContent: lastXML });
+  if (res.success) {
+    showToast('✓ Saved to your account!');
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="check" style="width:15px;height:15px;"></i> Saved!';
+    if (window.lucide) lucide.createIcons({ nodes: [btn] });
+    setTimeout(() => {
+      btnLoading(btn, false, '<i data-lucide="cloud-upload" style="width:15px;height:15px;"></i> Save to My Account');
+    }, 2000);
+  } else {
+    showToast('Failed to save: ' + res.message, 'err');
+    btnLoading(btn, false, '<i data-lucide="cloud-upload" style="width:15px;height:15px;"></i> Save to My Account');
+  }
+}
+
+// ── Helper ─────────────────────────────────────
+function setMsg(el, type, text) {
+  el.className = `modal-msg ${type}`;
+  el.textContent = text;
+}
+
+// ── Init ───────────────────────────────────────
+updateAuthUI();
+</script>
+</body>
+</html>
