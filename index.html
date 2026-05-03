@@ -4044,13 +4044,17 @@ async function handleChangePassword() {
 }
 
 // ── Custom confirm dialog ──────────────────────
+let exportAdInitialized = false;
 function showExportAd() {
   const overlay = document.getElementById('exportAdOverlay');
   const btn     = document.getElementById('exportAdCloseBtn');
   const timer   = document.getElementById('exportAdTimer');
   if (!overlay) return;
   overlay.style.display = 'flex';
-  (adsbygoogle = window.adsbygoogle || []).push({});
+  if (!exportAdInitialized) {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    exportAdInitialized = true;
+  }
   let secs = 5;
   btn.disabled = true;
   btn.style.opacity = '.5';
