@@ -1102,6 +1102,25 @@
   </div>
 </div>
 
+<!-- ── Export Ad Modal ── -->
+<div id="exportAdOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:3000;align-items:center;justify-content:center;">
+  <div style="background:#130820;border:1px solid rgba(244,114,182,.25);border-radius:18px;padding:20px;max-width:340px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.6);">
+    <p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;">Advertisement</p>
+    <ins class="adsbygoogle"
+         style="display:block;min-height:100px;"
+         data-ad-client="ca-pub-9941503878196676"
+         data-ad-slot="9826065928"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <button id="exportAdCloseBtn" onclick="closeExportAd()" disabled
+      style="margin-top:14px;padding:9px 28px;border-radius:999px;border:none;
+      background:linear-gradient(135deg,#f472b6,#c084fc);color:#fff;
+      font-weight:800;font-size:.85rem;cursor:not-allowed;opacity:.5;font-family:inherit;transition:opacity .3s;">
+      Close (<span id="exportAdTimer">5</span>s)
+    </button>
+  </div>
+</div>
+
 <!-- ── User Guide Modal ── -->
 <div class="guide-overlay" id="guideOverlay" onclick="if(event.target===this)closeGuide()">
   <div class="guide-sheet">
@@ -2999,6 +3018,7 @@ function generate(){
     // store for save-to-account
     lastXML = xml;
     updateSaveRow();
+    showExportAd();
   }catch(err){
     status.className='status error';
     status.textContent='✗ Error: '+err.message;
@@ -4024,6 +4044,36 @@ async function handleChangePassword() {
 }
 
 // ── Custom confirm dialog ──────────────────────
+function showExportAd() {
+  const overlay = document.getElementById('exportAdOverlay');
+  const btn     = document.getElementById('exportAdCloseBtn');
+  const timer   = document.getElementById('exportAdTimer');
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  let secs = 5;
+  btn.disabled = true;
+  btn.style.opacity = '.5';
+  btn.style.cursor  = 'not-allowed';
+  timer.textContent = secs;
+  const interval = setInterval(() => {
+    secs--;
+    timer.textContent = secs;
+    if (secs <= 0) {
+      clearInterval(interval);
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.cursor  = 'pointer';
+      btn.textContent   = 'Close';
+    }
+  }, 1000);
+}
+
+function closeExportAd() {
+  const overlay = document.getElementById('exportAdOverlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
 function showConfirm({ title, msg, okText = 'Delete', extra = '' } = {}) {
   return new Promise(resolve => {
     const overlay = document.getElementById('confirmOverlay');
