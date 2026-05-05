@@ -481,7 +481,12 @@
     ══════════════════════════════════════════ */
     @media(max-width:640px){ .kb-hint { display:none; } }
     @media(max-width:640px){
-      body { padding:16px 12px 60px; }
+      body {
+        padding-top: calc(16px + env(safe-area-inset-top));
+        padding-bottom: calc(60px + env(safe-area-inset-bottom));
+        padding-left: calc(12px + env(safe-area-inset-left));
+        padding-right: calc(12px + env(safe-area-inset-right));
+      }
       header { margin-bottom:24px; }
       header h1 { font-size:1.7rem; }
       header p  { font-size:.88rem; }
