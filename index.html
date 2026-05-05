@@ -1877,6 +1877,15 @@ function markCardDone(id) {
   if (canProceedFrom(id)) autoOpenNext(id);
 }
 
+// ── Service Worker Registration ──────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('SW registered'))
+      .catch(err => console.log('SW error:', err));
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // card1: open Lyrics once both title + artist are filled (debounced)
   let card1Timer = null;
