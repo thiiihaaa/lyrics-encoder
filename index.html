@@ -944,6 +944,151 @@
     .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
     .toast.ok  { border-color:rgba(74,222,128,.4); color:var(--success); }
     .toast.err { border-color:rgba(248,113,113,.4); color:var(--error); }
+
+    /* ── LIGHT MODE ── */
+    body.light-mode {
+      --bg:#f4f4f8; --surface:rgba(0,0,0,.04); --card:rgba(0,0,0,.04);
+      --card2:rgba(0,0,0,.02); --border:rgba(0,0,0,.09); --border2:rgba(0,0,0,.15);
+      --accent:#1a1a2e; --accent2:rgba(0,0,0,.6); --text:#1a1a2e;
+      --muted:rgba(0,0,0,.45); --success:#15803d; --error:#dc2626;
+      --warn:#b45309; --highlight:#1a1a2e;
+      background:#f4f4f8 !important;
+    }
+    body.light-mode .card {
+      background:rgba(255,255,255,.85) !important;
+      border-color:rgba(244,114,182,.2) !important;
+      box-shadow:0 2px 16px rgba(0,0,0,.07) !important;
+    }
+    body.light-mode .toast { background:rgba(255,255,255,.97); }
+    body.light-mode input[type="text"],
+    body.light-mode input[type="number"],
+    body.light-mode select,
+    body.light-mode textarea {
+      background:rgba(0,0,0,.04); border-color:rgba(0,0,0,.13); color:#1a1a2e;
+    }
+    body.light-mode select option, body.light-mode select optgroup {
+      background:#fff; color:#1a1a2e;
+    }
+    body.light-mode .lrc-hint { background:#fff; }
+    body.light-mode .upload-zone { background:rgba(255,255,255,.7); }
+
+    /* ── DARK/LIGHT TOGGLE ── */
+    .theme-toggle {
+      width:36px; height:36px; border-radius:50%; border:1.5px solid rgba(244,114,182,.3);
+      background:rgba(244,114,182,.07); cursor:pointer; display:inline-flex;
+      align-items:center; justify-content:center; transition:all .2s;
+      -webkit-tap-highlight-color:transparent; flex-shrink:0;
+    }
+    .theme-toggle:hover { background:rgba(244,114,182,.18); border-color:#f472b6; }
+    .theme-toggle svg { width:16px; height:16px; }
+
+    /* ── PRESET STYLES ── */
+    .preset-bar {
+      display:flex; gap:6px; align-items:center; flex-wrap:wrap;
+      padding:10px 12px; background:rgba(244,114,182,.04);
+      border:1px solid rgba(244,114,182,.12); border-radius:12px;
+      margin-bottom:14px;
+    }
+    .preset-chip {
+      padding:4px 12px; border-radius:999px; border:1.5px solid rgba(244,114,182,.2);
+      background:rgba(244,114,182,.06); color:var(--muted); font-size:.72rem;
+      font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s;
+      white-space:nowrap;
+    }
+    .preset-chip:hover { border-color:#f472b6; color:#f472b6; background:rgba(244,114,182,.12); }
+    .preset-chip.active { background:linear-gradient(135deg,#f472b6,#c084fc); border-color:transparent; color:#fff; }
+    .preset-chip.user-preset { border-style:dashed; }
+
+    /* ── LYRICS PREVIEW PANEL ── */
+    .lyric-preview-panel {
+      margin-top:14px; border-radius:14px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .lyric-preview-toggle {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 14px; background:rgba(244,114,182,.06); cursor:pointer;
+      border-bottom:1px solid rgba(244,114,182,.1); user-select:none;
+    }
+    .lyric-preview-toggle span { font-size:.78rem; font-weight:700; color:var(--muted); display:flex; align-items:center; gap:6px; }
+    #lyricPreviewCanvas {
+      width:100%; height:130px; display:flex; align-items:center; justify-content:center;
+      flex-direction:column; gap:6px; position:relative; overflow:hidden;
+      transition:height .3s;
+    }
+    .preview-text-main {
+      font-weight:700; text-align:center; line-height:1.4;
+      padding:0 16px; word-break:break-word; transition:all .1s;
+      pointer-events:none; max-width:100%;
+    }
+    .preview-text-trans {
+      font-weight:500; text-align:center; line-height:1.4;
+      padding:0 16px; word-break:break-word; transition:all .1s;
+      pointer-events:none; max-width:100%; opacity:.8;
+    }
+
+    /* ── BULK EDIT MODAL ── */
+    .bulk-overlay {
+      display:none; position:fixed; inset:0; z-index:1500;
+      background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
+      align-items:center; justify-content:center;
+    }
+    .bulk-overlay.open { display:flex; }
+    .bulk-box {
+      background:linear-gradient(160deg,#1a0826,#110620);
+      border:1px solid rgba(244,114,182,.25); border-radius:20px;
+      padding:22px 20px; width:92%; max-width:520px; max-height:85vh;
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .bulk-box h3 { font-size:.95rem; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; }
+
+    /* ── EXPORT ACTION BUTTONS ── */
+    .export-actions {
+      display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;
+    }
+    .export-action-btn {
+      flex:1; min-width:80px; display:flex; align-items:center; justify-content:center;
+      gap:5px; padding:9px 14px; border-radius:10px; font-size:.78rem; font-weight:700;
+      font-family:inherit; cursor:pointer; transition:all .15s; border:1.5px solid;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .export-action-btn.copy {
+      background:rgba(96,165,250,.08); border-color:rgba(96,165,250,.3); color:#60a5fa;
+    }
+    .export-action-btn.copy:hover { background:rgba(96,165,250,.18); }
+    .export-action-btn.lrc {
+      background:rgba(52,211,153,.08); border-color:rgba(52,211,153,.3); color:#34d399;
+    }
+    .export-action-btn.lrc:hover { background:rgba(52,211,153,.18); }
+    .export-action-btn.share {
+      background:rgba(244,114,182,.08); border-color:rgba(244,114,182,.3); color:#f472b6;
+    }
+    .export-action-btn.share:hover { background:rgba(244,114,182,.18); }
+
+    /* ── UNDO/REDO ── */
+    .undo-redo-bar {
+      display:flex; gap:6px; margin-bottom:8px; align-items:center;
+    }
+
+    /* ── PRESET SAVE MODAL ── */
+    .preset-save-overlay {
+      display:none; position:fixed; inset:0; z-index:1600;
+      background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
+      align-items:center; justify-content:center;
+    }
+    .preset-save-overlay.open { display:flex; }
+    .preset-save-box {
+      background:linear-gradient(160deg,#1a0826,#110620);
+      border:1px solid rgba(244,114,182,.25); border-radius:20px;
+      padding:24px 22px; width:88%; max-width:360px;
+    }
+
+    /* ── RENAME INPUT ── */
+    .rename-input {
+      width:100%; background:rgba(255,255,255,.05); border:1px solid rgba(244,114,182,.3);
+      border-radius:8px; color:var(--text); font-family:inherit; font-size:.82rem;
+      padding:7px 10px; outline:none; margin-top:4px;
+    }
+    .rename-input:focus { border-color:#f472b6; box-shadow:0 0 0 2px rgba(244,114,182,.15); }
   </style>
 </head>
 <body>
@@ -1033,6 +1178,9 @@
     <button class="auth-btn" id="authBtn" onclick="openAuthModal()">
       <i data-lucide="user" style="width:13px;height:13px;"></i>
       <span id="authBtnLabel">Login / Register</span>
+    </button>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+      <i data-lucide="sun" id="themeIcon" style="width:16px;height:16px;color:var(--muted);"></i>
     </button>
   </div>
 </header>
@@ -1165,6 +1313,44 @@
 </div>
 
 <!-- ── Export Ad Modal ── -->
+<!-- ── Bulk Edit Modal ── -->
+<div class="bulk-overlay" id="bulkOverlay" onclick="if(event.target===this)closeBulkEdit()">
+  <div class="bulk-box">
+    <h3><i data-lucide="list-ordered" style="width:16px;height:16px;color:#f472b6;"></i> Bulk Edit Lyrics</h3>
+    <p style="font-size:.75rem;color:var(--muted);">Edit lyric text only (one line per row). Timestamps are preserved.</p>
+    <textarea id="bulkEditArea" style="flex:1;min-height:260px;font-family:'JetBrains Mono',monospace;font-size:.82rem;resize:vertical;" placeholder="Line 1&#10;Line 2&#10;Line 3..."></textarea>
+    <div style="display:flex;gap:8px;">
+      <button class="modal-submit" onclick="applyBulkEdit()" style="flex:1;margin-top:0;"><i data-lucide="check" style="width:14px;height:14px;"></i> Apply</button>
+      <button onclick="closeBulkEdit()" style="flex:1;margin-top:0;padding:11px;border-radius:999px;border:1.5px solid rgba(255,255,255,.12);background:none;color:var(--muted);font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Preset Save Modal ── -->
+<div class="preset-save-overlay" id="presetSaveOverlay" onclick="if(event.target===this)closePresetSave()">
+  <div class="preset-save-box">
+    <h3 style="font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+      <i data-lucide="bookmark-plus" style="width:16px;height:16px;color:#f472b6;"></i> Save Style Preset
+    </h3>
+    <label style="margin-bottom:6px;">Preset Name</label>
+    <input type="text" id="presetNameInput" placeholder="e.g. My Pink Style" maxlength="30" style="margin-bottom:14px;" />
+    <div style="display:flex;gap:8px;">
+      <button class="modal-submit" onclick="confirmSavePreset()" style="flex:1;margin-top:0;"><i data-lucide="check" style="width:14px;height:14px;"></i> Save</button>
+      <button onclick="closePresetSave()" style="flex:1;margin-top:0;padding:11px;border-radius:999px;border:1.5px solid rgba(255,255,255,.12);background:none;color:var(--muted);font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Preset Gallery Modal ── -->
+<div class="bulk-overlay" id="galleryOverlay" onclick="if(event.target===this)closePresetGallery()">
+  <div class="bulk-box" style="max-width:480px;">
+    <h3><i data-lucide="layout-grid" style="width:16px;height:16px;color:#f472b6;"></i> Style Presets Gallery</h3>
+    <p style="font-size:.75rem;color:var(--muted);">Load a built-in preset or manage your saved presets.</p>
+    <div id="galleryList" style="flex:1;overflow-y:auto;max-height:380px;display:flex;flex-direction:column;gap:8px;"></div>
+    <button onclick="closePresetGallery()" style="margin-top:4px;padding:11px;border-radius:999px;border:1.5px solid rgba(255,255,255,.12);background:none;color:var(--muted);font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;width:100%;">Close</button>
+  </div>
+</div>
+
 <div id="exportAdOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:3000;align-items:center;justify-content:center;">
   <div style="background:#130820;border:1px solid rgba(244,114,182,.25);border-radius:18px;padding:20px;max-width:340px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.6);">
     <p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;">Advertisement</p>
@@ -1471,8 +1657,15 @@
     </div>
   </div>
 
+  <!-- Undo/Redo + Bulk Edit bar -->
+  <div class="undo-redo-bar">
+    <button class="btn btn-ghost btn-sm" id="undoBtn" onclick="undoLines()" disabled title="Undo (Ctrl+Z)"><i data-lucide="undo-2" style="width:13px;height:13px;"></i> Undo</button>
+    <button class="btn btn-ghost btn-sm" id="redoBtn" onclick="redoLines()" disabled title="Redo (Ctrl+Y)"><i data-lucide="redo-2" style="width:13px;height:13px;"></i> Redo</button>
+    <button class="btn btn-ghost btn-sm" onclick="openBulkEdit()" title="Edit all lines at once" style="margin-left:auto;"><i data-lucide="list-ordered" style="width:13px;height:13px;"></i> Bulk Edit</button>
+  </div>
+
   <!-- Tap sync controls -->
-  <div style="display:flex;gap:6px;margin-bottom:12px;margin-top:14px;flex-wrap:nowrap;overflow:hidden;" id="modeBar">
+  <div style="display:flex;gap:6px;margin-bottom:12px;margin-top:8px;flex-wrap:nowrap;overflow:hidden;" id="modeBar">
     <button class="btn btn-ghost btn-sm" id="endTapBtn" onclick="toggleEndTap()"><i data-lucide="flag" style="color:#fbbf24;"></i> Trimming</button>
     <button class="btn btn-ghost btn-sm" onclick="nudgeAll(-0.5)"><i data-lucide="rewind" style="color:#60a5fa;"></i> −0.5s</button>
     <button class="btn btn-ghost btn-sm" onclick="nudgeAll(0.5)"><i data-lucide="fast-forward" style="color:#34d399;"></i> +0.5s</button>
@@ -1562,6 +1755,33 @@
   <div class="card-body" style="margin-top:16px;">
   <input type="hidden" id="fontFamily" value="Roboto" />
   <input type="hidden" id="transFontFamily" value="Roboto" />
+
+  <!-- ── Preset Styles ── -->
+  <div style="margin-bottom:16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <span style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:5px;"><i data-lucide="bookmark" style="width:12px;height:12px;"></i> Style Presets</span>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-ghost btn-sm" onclick="saveCurrentPreset()" style="font-size:.68rem;padding:4px 10px;"><i data-lucide="plus" style="width:11px;height:11px;"></i> Save</button>
+        <button class="btn btn-ghost btn-sm" onclick="openPresetGallery()" style="font-size:.68rem;padding:4px 10px;"><i data-lucide="layout-grid" style="width:11px;height:11px;"></i> Gallery</button>
+      </div>
+    </div>
+    <div class="preset-bar" id="presetBar">
+      <!-- built-in + user presets rendered here -->
+    </div>
+  </div>
+
+  <!-- ── Lyrics Preview ── -->
+  <div class="lyric-preview-panel" id="lyricPreviewPanel">
+    <div class="lyric-preview-toggle" onclick="toggleLyricPreview()">
+      <span><i data-lucide="eye" style="width:12px;height:12px;"></i> Live Preview</span>
+      <i data-lucide="chevron-down" id="previewChevron" style="width:14px;height:14px;color:var(--muted);transition:transform .25s;"></i>
+    </div>
+    <div id="lyricPreviewCanvas" style="display:none;height:0;">
+      <div id="previewBg" style="position:absolute;inset:0;"></div>
+      <div id="previewTextMain" class="preview-text-main">Sample Lyric Line</div>
+      <div id="previewTextTrans" class="preview-text-trans" style="display:none;">Translation line</div>
+    </div>
+  </div>
 
   <!-- ── Section: Text ── -->
   <div class="style-section">
@@ -1785,6 +2005,17 @@
   </div>
   <div class="card-body" style="margin-top:16px;">
   <button class="generate-btn" onclick="generate()"><i data-lucide="download"></i> Export .xml for Alight Motion</button>
+  <div class="export-actions" id="exportActions" style="display:none;">
+    <button class="export-action-btn copy" onclick="copyXMLToClipboard()" title="Copy XML to clipboard">
+      <i data-lucide="copy" style="width:13px;height:13px;"></i> Copy XML
+    </button>
+    <button class="export-action-btn lrc" onclick="exportAsLRC()" title="Download as .lrc file">
+      <i data-lucide="file-text" style="width:13px;height:13px;"></i> Export .lrc
+    </button>
+    <button class="export-action-btn share" onclick="shareXML()" title="Share file">
+      <i data-lucide="share-2" style="width:13px;height:13px;"></i> Share
+    </button>
+  </div>
   <div id="status" class="status"></div>
   <!-- Save to account (shown after export) -->
   <div id="saveToAccountRow" style="display:none;margin-top:12px;padding:12px 14px;background:rgba(244,114,182,.06);border:1.5px solid rgba(244,114,182,.2);border-radius:12px;">
@@ -2400,11 +2631,13 @@ function rebuildLrcText() {
 // NUDGE
 // ══════════════════════════════════════════════
 function nudge(i, delta) {
+  pushHistory();
   parsedLines[i].time = Math.max(0, parseFloat((parsedLines[i].time + delta).toFixed(2)));
   updateRowTime(i);
 }
 
 function nudgeAll(delta) {
+  pushHistory();
   parsedLines.forEach((l, i) => {
     l.time = Math.max(0, parseFloat((l.time + delta).toFixed(2)));
   });
@@ -2414,6 +2647,7 @@ function nudgeAll(delta) {
 
 function resetToOriginal() {
   if (!originalTimes.length) return;
+  pushHistory();
   parsedLines.forEach((l, i) => { l.time = originalTimes[i]; });
   renderRows();
   rebuildLrcText();
@@ -2488,8 +2722,12 @@ function onLrcInput() {
   tappedEndTimes   = [];
   clearAnalysis(true);
   clearEndTimes(true);
+  // reset history when new lyrics loaded
+  linesHistory = []; linesHistoryIdx = -1;
+  pushHistory();
   renderRows();
   showPreview();
+  updateLyricPreview();
 }
 
 function parseLRC(text) {
@@ -3113,7 +3351,12 @@ function generate(){
       In Alight Motion → tap <strong>+</strong> → <strong>Import</strong> → select the <strong>.xml</strong> file.`;
     // store for save-to-account
     lastXML = xml;
+    lastExportTitle = title;
+    lastExportArtist = artist;
     updateSaveRow();
+    // show export action buttons
+    const ea = document.getElementById('exportActions');
+    if (ea) { ea.style.display = 'flex'; if(window.lucide) lucide.createIcons({nodes:[ea]}); }
     // save to local export history
     saveExportHistory(`${title} - ${artist}.xml`, xml);
     showExportAd();
@@ -4226,7 +4469,437 @@ function renderExportHistory() {
 }
 
 // Init history on page load
-window.addEventListener('DOMContentLoaded', () => { renderExportHistory(); });
+window.addEventListener('DOMContentLoaded', () => {
+  renderExportHistory();
+  initTheme();
+  renderPresetBar();
+  restoreLastSettings();
+});
+
+// ══════════════════════════════════════════════
+// LIGHT / DARK MODE
+// ══════════════════════════════════════════════
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  localStorage.setItem('lrc_theme', isLight ? 'light' : 'dark');
+  updateThemeIcon(isLight);
+}
+function initTheme() {
+  const saved = localStorage.getItem('lrc_theme');
+  const isLight = saved === 'light';
+  if (isLight) document.body.classList.add('light-mode');
+  updateThemeIcon(isLight);
+}
+function updateThemeIcon(isLight) {
+  const icon = document.getElementById('themeIcon');
+  if (!icon) return;
+  icon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+  if (window.lucide) lucide.createIcons({ nodes: [icon.parentElement] });
+}
+
+// ══════════════════════════════════════════════
+// REMEMBER LAST SETTINGS
+// ══════════════════════════════════════════════
+const SETTINGS_KEY = 'lrc_last_settings';
+
+function saveSettings() {
+  try {
+    const s = {
+      fontSize:    document.getElementById('fontSize')?.value,
+      textColor:   document.getElementById('textColorHex')?.value,
+      bgColor:     document.getElementById('bgColorHex')?.value,
+      fps:         document.getElementById('fps')?.value,
+      resolution:  document.getElementById('resolution')?.value,
+      transFontSize: document.getElementById('transFontSize')?.value,
+      transColor:  document.getElementById('transColorHex')?.value,
+    };
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+  } catch(e) {}
+}
+
+function restoreLastSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null');
+    if (!s) return;
+    const set = (id, val) => { if (!val) return; const el = document.getElementById(id); if (el) el.value = val; };
+    set('fontSize', s.fontSize);
+    set('fps', s.fps);
+    set('resolution', s.resolution);
+    set('transFontSize', s.transFontSize);
+    if (s.textColor) {
+      set('textColorHex', s.textColor);
+      set('textColor', s.textColor);
+    }
+    if (s.bgColor) {
+      set('bgColorHex', s.bgColor);
+      set('bgColor', s.bgColor);
+    }
+    if (s.transColor) {
+      set('transColorHex', s.transColor);
+      set('transColor', s.transColor);
+    }
+    if (typeof updatePosCanvas === 'function') updatePosCanvas();
+  } catch(e) {}
+}
+
+// Hook save into style inputs — call after DOM ready
+function hookSettingsSave() {
+  ['fontSize','textColorHex','bgColorHex','fps','resolution','transFontSize','transColorHex'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', saveSettings);
+    if (el) el.addEventListener('change', saveSettings);
+  });
+}
+window.addEventListener('DOMContentLoaded', hookSettingsSave);
+
+// ══════════════════════════════════════════════
+// UNDO / REDO
+// ══════════════════════════════════════════════
+let linesHistory = [];
+let linesHistoryIdx = -1;
+const HISTORY_LIMIT = 30;
+
+function pushHistory() {
+  // trim forward history
+  linesHistory = linesHistory.slice(0, linesHistoryIdx + 1);
+  linesHistory.push(JSON.parse(JSON.stringify(parsedLines)));
+  if (linesHistory.length > HISTORY_LIMIT) linesHistory.shift();
+  linesHistoryIdx = linesHistory.length - 1;
+  updateUndoRedo();
+}
+
+function undoLines() {
+  if (linesHistoryIdx <= 0) return;
+  linesHistoryIdx--;
+  parsedLines = JSON.parse(JSON.stringify(linesHistory[linesHistoryIdx]));
+  renderRows();
+  rebuildLrcText();
+  updateUndoRedo();
+}
+
+function redoLines() {
+  if (linesHistoryIdx >= linesHistory.length - 1) return;
+  linesHistoryIdx++;
+  parsedLines = JSON.parse(JSON.stringify(linesHistory[linesHistoryIdx]));
+  renderRows();
+  rebuildLrcText();
+  updateUndoRedo();
+}
+
+function updateUndoRedo() {
+  const u = document.getElementById('undoBtn');
+  const r = document.getElementById('redoBtn');
+  if (u) u.disabled = linesHistoryIdx <= 0;
+  if (r) r.disabled = linesHistoryIdx >= linesHistory.length - 1;
+}
+
+// Keyboard shortcuts for undo/redo
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+    const active = document.activeElement;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+    e.preventDefault(); undoLines();
+  }
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+    const active = document.activeElement;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+    e.preventDefault(); redoLines();
+  }
+});
+
+// ══════════════════════════════════════════════
+// BULK EDIT
+// ══════════════════════════════════════════════
+function openBulkEdit() {
+  const area = document.getElementById('bulkEditArea');
+  if (!parsedLines.length) { showToast('No lyrics loaded yet.', 'err'); return; }
+  area.value = parsedLines.map(l => l.text).join('\n');
+  document.getElementById('bulkOverlay').classList.add('open');
+  setTimeout(() => area.focus(), 100);
+}
+function closeBulkEdit() { document.getElementById('bulkOverlay').classList.remove('open'); }
+function applyBulkEdit() {
+  const lines = document.getElementById('bulkEditArea').value.split('\n');
+  if (!lines.length) return;
+  pushHistory();
+  // update text, preserve timestamps (pad or trim as needed)
+  lines.forEach((text, i) => {
+    if (i < parsedLines.length) parsedLines[i].text = text;
+    else parsedLines.push({ time: parsedLines[parsedLines.length - 1].time + 1, text });
+  });
+  // if user deleted lines, trim
+  if (lines.length < parsedLines.length) parsedLines = parsedLines.slice(0, lines.length);
+  renderRows();
+  rebuildLrcText();
+  closeBulkEdit();
+  showToast('Lyrics updated!');
+}
+
+// ══════════════════════════════════════════════
+// COPY XML / SHARE / EXPORT LRC
+// ══════════════════════════════════════════════
+let lastExportTitle  = '';
+let lastExportArtist = '';
+
+async function copyXMLToClipboard() {
+  if (!lastXML) { showToast('Export first.', 'err'); return; }
+  try {
+    await navigator.clipboard.writeText(lastXML);
+    showToast('XML copied to clipboard!', 'ok');
+  } catch(e) {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = lastXML; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('XML copied!', 'ok');
+  }
+}
+
+function exportAsLRC() {
+  if (!parsedLines.length) { showToast('No lyrics loaded.', 'err'); return; }
+  const lrc = parsedLines.map(l => `[${fmtLRC(l.time)}] ${l.text}`).join('\n');
+  const title  = document.getElementById('songTitle')?.value.trim() || 'Untitled';
+  const artist = document.getElementById('songArtist')?.value.trim() || 'Unknown';
+  const blob = new Blob([lrc], { type: 'text/plain' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `${title} - ${artist}.lrc`; a.click();
+  URL.revokeObjectURL(url);
+  showToast('LRC downloaded!', 'ok');
+}
+
+async function shareXML() {
+  if (!lastXML) { showToast('Export first.', 'err'); return; }
+  const fileName = `${lastExportTitle || 'Lyrics'} - ${lastExportArtist || 'Unknown'}.xml`;
+  if (navigator.share && navigator.canShare) {
+    try {
+      const file = new File([lastXML], fileName, { type: 'application/xml' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: fileName });
+        return;
+      }
+    } catch(e) {}
+  }
+  // fallback: copy to clipboard
+  await copyXMLToClipboard();
+  showToast('Copied! (Share not supported on this device)', 'ok');
+}
+
+// ══════════════════════════════════════════════
+// PRESET STYLES
+// ══════════════════════════════════════════════
+const PRESETS_KEY = 'lrc_style_presets';
+
+const BUILTIN_PRESETS = [
+  { name:'Classic White',  fontSize:18, textColor:'#ffffff', bgColor:'#000000', fontFamily:'Roboto', fps:'30', resolution:'1080x1920', transFontSize:45, transColor:'#aaaaaa' },
+  { name:'Soft Pink',      fontSize:20, textColor:'#f9a8d4', bgColor:'#1a0826', fontFamily:'Roboto', fps:'30', resolution:'1080x1920', transFontSize:45, transColor:'#c084fc' },
+  { name:'Golden',         fontSize:18, textColor:'#fde68a', bgColor:'#0d0d0d', fontFamily:'Roboto', fps:'30', resolution:'1080x1920', transFontSize:45, transColor:'#ffffff' },
+  { name:'Neon Green',     fontSize:18, textColor:'#4ade80', bgColor:'#000000', fontFamily:'Roboto', fps:'30', resolution:'1080x1920', transFontSize:45, transColor:'#86efac' },
+  { name:'Sky Blue',       fontSize:18, textColor:'#93c5fd', bgColor:'#0c1a2e', fontFamily:'Roboto', fps:'30', resolution:'1080x1920', transFontSize:45, transColor:'#dbeafe' },
+  { name:'Pure Black',     fontSize:18, textColor:'#ffffff', bgColor:'#000000', fontFamily:'Roboto', fps:'60', resolution:'1920x1080', transFontSize:45, transColor:'#999999' },
+];
+
+function getUserPresets() {
+  try { return JSON.parse(localStorage.getItem(PRESETS_KEY) || '[]'); } catch(e) { return []; }
+}
+function setUserPresets(arr) { localStorage.setItem(PRESETS_KEY, JSON.stringify(arr)); }
+
+function applyPreset(preset) {
+  const setVal = (id, val) => { if (!val && val !== 0) return; const el = document.getElementById(id); if (el) el.value = val; };
+  setVal('fontSize', preset.fontSize);
+  setVal('fps', preset.fps);
+  setVal('resolution', preset.resolution);
+  setVal('transFontSize', preset.transFontSize);
+  if (preset.textColor) { setVal('textColor', preset.textColor); setVal('textColorHex', preset.textColor); }
+  if (preset.bgColor)   { setVal('bgColor', preset.bgColor);     setVal('bgColorHex', preset.bgColor); }
+  if (preset.transColor){ setVal('transColor', preset.transColor); setVal('transColorHex', preset.transColor); }
+  if (typeof updatePosCanvas === 'function') updatePosCanvas();
+  updateLyricPreview();
+  saveSettings();
+  showToast(`Preset "${preset.name}" applied!`, 'ok');
+}
+
+function renderPresetBar() {
+  const bar = document.getElementById('presetBar');
+  if (!bar) return;
+  const userPresets = getUserPresets();
+  const all = [...BUILTIN_PRESETS, ...userPresets];
+  if (!all.length) { bar.innerHTML = '<span style="font-size:.72rem;color:var(--muted);">No presets yet. Click Save to create one.</span>'; return; }
+  bar.innerHTML = all.map((p, i) => {
+    const isUser = i >= BUILTIN_PRESETS.length;
+    return `<button class="preset-chip${isUser?' user-preset':''}" onclick="applyPreset(${JSON.stringify(p).replace(/"/g,'&quot;')})" title="${p.name}">${p.name}</button>`;
+  }).join('');
+}
+
+function saveCurrentPreset() {
+  document.getElementById('presetSaveOverlay').classList.add('open');
+  document.getElementById('presetNameInput').value = '';
+  setTimeout(() => document.getElementById('presetNameInput').focus(), 100);
+}
+function closePresetSave() { document.getElementById('presetSaveOverlay').classList.remove('open'); }
+function confirmSavePreset() {
+  const name = document.getElementById('presetNameInput').value.trim();
+  if (!name) { showToast('Enter a preset name.', 'err'); return; }
+  const preset = {
+    name,
+    fontSize:    parseInt(document.getElementById('fontSize')?.value) || 18,
+    textColor:   document.getElementById('textColorHex')?.value || '#ffffff',
+    bgColor:     document.getElementById('bgColorHex')?.value || '#000000',
+    fontFamily:  document.getElementById('fontFamily')?.value || 'Roboto',
+    fps:         document.getElementById('fps')?.value || '30',
+    resolution:  document.getElementById('resolution')?.value || '1080x1920',
+    transFontSize: parseInt(document.getElementById('transFontSize')?.value) || 45,
+    transColor:  document.getElementById('transColorHex')?.value || '#aaaaaa',
+  };
+  const arr = getUserPresets();
+  arr.unshift(preset);
+  setUserPresets(arr);
+  renderPresetBar();
+  closePresetSave();
+  showToast(`"${name}" saved!`, 'ok');
+}
+
+function openPresetGallery() {
+  const list = document.getElementById('galleryList');
+  const userPresets = getUserPresets();
+  const builtinHTML = BUILTIN_PRESETS.map(p => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(244,114,182,.05);border:1px solid rgba(244,114,182,.12);border-radius:10px;">
+      <div style="width:22px;height:22px;border-radius:6px;background:${p.bgColor};border:2px solid ${p.textColor};flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.8rem;font-weight:700;color:var(--text);">${p.name}</div>
+        <div style="font-size:.68rem;color:var(--muted);">${p.textColor} · ${p.fontSize}pt · ${p.fps}fps</div>
+      </div>
+      <button onclick="applyPreset(${JSON.stringify(p).replace(/"/g,'&quot;')});closePresetGallery();" class="preset-chip" style="flex-shrink:0;">Load</button>
+    </div>`).join('');
+  const userHTML = userPresets.length ? userPresets.map((p, i) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.12);border-radius:10px;">
+      <div style="width:22px;height:22px;border-radius:6px;background:${p.bgColor};border:2px solid ${p.textColor};flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.8rem;font-weight:700;color:var(--text);">${escHtml(p.name)}</div>
+        <div style="font-size:.68rem;color:var(--muted);">${p.textColor} · ${p.fontSize}pt · ${p.fps}fps</div>
+      </div>
+      <div style="display:flex;gap:5px;flex-shrink:0;">
+        <button onclick="applyPreset(${JSON.stringify(p).replace(/"/g,'&quot;')});closePresetGallery();" class="preset-chip" style="padding:3px 10px;">Load</button>
+        <button onclick="deleteUserPreset(${i})" class="preset-chip" style="padding:3px 10px;border-color:rgba(248,113,113,.3);color:#f87171;">Del</button>
+      </div>
+    </div>`).join('') : '<div style="font-size:.78rem;color:var(--muted);text-align:center;padding:8px 0;">No saved presets yet.</div>';
+
+  list.innerHTML =
+    `<div style="font-size:.7rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">Built-in Presets</div>${builtinHTML}` +
+    `<div style="font-size:.7rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin:8px 0 4px;">My Presets</div>${userHTML}`;
+  document.getElementById('galleryOverlay').classList.add('open');
+}
+function closePresetGallery() { document.getElementById('galleryOverlay').classList.remove('open'); }
+function deleteUserPreset(i) {
+  const arr = getUserPresets();
+  const name = arr[i]?.name;
+  arr.splice(i, 1);
+  setUserPresets(arr);
+  renderPresetBar();
+  openPresetGallery(); // refresh gallery
+  showToast(`"${name}" deleted.`);
+}
+
+// ══════════════════════════════════════════════
+// LYRICS PREVIEW (live)
+// ══════════════════════════════════════════════
+let previewOpen = false;
+function toggleLyricPreview() {
+  previewOpen = !previewOpen;
+  const canvas = document.getElementById('lyricPreviewCanvas');
+  const chev   = document.getElementById('previewChevron');
+  if (previewOpen) {
+    canvas.style.display = 'flex';
+    canvas.style.height  = '130px';
+    chev.style.transform = 'rotate(180deg)';
+    updateLyricPreview();
+  } else {
+    canvas.style.height  = '0';
+    canvas.style.display = 'none';
+    chev.style.transform = 'rotate(0deg)';
+  }
+}
+
+function updateLyricPreview() {
+  if (!previewOpen) return;
+  const bg    = document.getElementById('bgColorHex')?.value || '#000000';
+  const color = document.getElementById('textColorHex')?.value || '#ffffff';
+  const fs    = Math.min(parseInt(document.getElementById('fontSize')?.value || 18), 28);
+  const tc    = document.getElementById('transColorHex')?.value || '#aaaaaa';
+  const tfs   = Math.min(parseInt(document.getElementById('transFontSize')?.value || 45), 18);
+  const transOn = document.getElementById('enableTranslation')?.checked;
+
+  const bgEl   = document.getElementById('previewBg');
+  const main   = document.getElementById('previewTextMain');
+  const trans  = document.getElementById('previewTextTrans');
+  const canvas = document.getElementById('lyricPreviewCanvas');
+
+  if (bgEl) bgEl.style.background = bg;
+  if (canvas) canvas.style.background = bg;
+  if (main) {
+    main.style.color = color;
+    main.style.fontSize = fs + 'px';
+    // use custom font if loaded
+    const ff = document.getElementById('fontFamily')?.value;
+    if (ff && ff !== 'Roboto') main.style.fontFamily = `'${ff}', sans-serif`;
+    else main.style.fontFamily = "'Nunito', sans-serif";
+    // sample text from first line if available
+    main.textContent = parsedLines.length ? parsedLines[0].text : 'Sample Lyric Line';
+  }
+  if (trans) {
+    trans.style.display = transOn ? 'block' : 'none';
+    trans.style.color   = tc;
+    trans.style.fontSize = tfs + 'px';
+  }
+}
+
+// Hook preview updates to style inputs
+window.addEventListener('DOMContentLoaded', () => {
+  ['fontSize','textColorHex','bgColorHex','transColorHex','transFontSize'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateLyricPreview);
+  });
+  document.getElementById('enableTranslation')?.addEventListener('change', updateLyricPreview);
+});
+
+// ══════════════════════════════════════════════
+// RENAME CLOUD FILE
+// ══════════════════════════════════════════════
+function startRename(fileId, currentName) {
+  const item = document.getElementById(`file-item-${fileId}`);
+  if (!item) return;
+  const nameEl = document.getElementById(`fname-${fileId}`);
+  if (!nameEl) return;
+  // inline rename
+  const oldHTML = nameEl.innerHTML;
+  nameEl.innerHTML = `<input class="rename-input" id="ri-${fileId}" value="${escHtml(currentName)}" maxlength="100" />`;
+  const inp = document.getElementById(`ri-${fileId}`);
+  inp.focus(); inp.select();
+  inp.addEventListener('keydown', async e => {
+    if (e.key === 'Enter') await commitRename(fileId, currentName, inp.value.trim(), oldHTML);
+    if (e.key === 'Escape') cancelRename(fileId, oldHTML);
+  });
+  // add confirm/cancel buttons
+  const actions = item.querySelector('.my-file-actions');
+  const oldActions = actions.innerHTML;
+  actions.innerHTML = `
+    <button class="my-file-btn" onclick="commitRename('${fileId}','${escHtml(currentName)}',document.getElementById('ri-${fileId}')?.value.trim(),'${encodeURIComponent(oldHTML)}')" title="Save">✓</button>
+    <button class="my-file-btn del" onclick="cancelRename('${fileId}','${encodeURIComponent(oldHTML)}')" title="Cancel">✕</button>`;
+}
+
+function cancelRename(fileId, encodedOld) {
+  loadMyFiles(); // easiest — just reload
+}
+
+async function commitRename(fileId, oldName, newName, encodedOld) {
+  if (!newName || newName === oldName) { loadMyFiles(); return; }
+  showToast('Renaming…');
+  const res = await callAPI('renameXML', { fileId, userId: currentUser.userId, newName });
+  if (res.success) { showToast('Renamed!', 'ok'); loadMyFiles(); }
+  else { showToast(res.message || 'Failed to rename.', 'err'); loadMyFiles(); }
+}
 
 // ── Custom confirm dialog ──────────────────────
 let exportAdInitialized = false;
@@ -4323,16 +4996,19 @@ async function loadMyFiles() {
     if (!res.success) { list.innerHTML = '<div class="files-empty">Failed to load files.</div>'; return; }
     if (!res.files.length) { list.innerHTML = '<div class="files-empty">No saved files yet.</div>'; return; }
     list.innerHTML = res.files.map(f => `
-      <div class="my-file-item">
-        <div>
-          <div class="my-file-name">${escHtml(f.fileName)}</div>
+      <div class="my-file-item" id="file-item-${f.fileId}">
+        <div style="flex:1;min-width:0;">
+          <div class="my-file-name" id="fname-${f.fileId}">${escHtml(f.fileName)}</div>
           <div class="my-file-date">${new Date(f.createdAt).toLocaleDateString()}</div>
         </div>
         <div class="my-file-actions">
-          <button class="my-file-btn" onclick="downloadSavedFile('${f.fileId}','${escHtml(f.fileName)}')">
+          <button class="my-file-btn" onclick="downloadSavedFile('${f.fileId}','${escHtml(f.fileName)}')" title="Download">
             <i data-lucide="download" style="width:14px;height:14px;"></i>
           </button>
-          <button class="my-file-btn del" onclick="deleteSavedFile('${f.fileId}')">
+          <button class="my-file-btn" onclick="startRename('${f.fileId}','${escHtml(f.fileName)}')" title="Rename">
+            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+          </button>
+          <button class="my-file-btn del" onclick="deleteSavedFile('${f.fileId}')" title="Delete">
             <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
           </button>
         </div>

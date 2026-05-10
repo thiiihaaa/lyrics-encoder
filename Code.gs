@@ -238,6 +238,33 @@ function deleteXMLFile(fileId, userId) {
   }
 }
 
+// ─── Rename XML File ─────────────────────────────────────────────────────────
+
+function renameXMLFile(fileId, userId, newName) {
+  try {
+    if (!newName || newName.trim() === '')
+      return { success: false, message: 'New name cannot be empty.' };
+
+    var sheet = getXMLSheet();
+    var data  = sheet.getDataRange().getValues();
+
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0].toString() === fileId) {
+        if (data[i][1].toString() !== userId)
+          return { success: false, message: 'Access denied.' };
+        // Rename on Drive
+        try { DriveApp.getFileById(fileId).setName(newName.trim()); } catch(e) {}
+        // Update sheet
+        sheet.getRange(i + 1, 3).setValue(newName.trim());
+        return { success: true, message: 'File renamed.' };
+      }
+    }
+    return { success: false, message: 'File not found.' };
+  } catch (err) {
+    return { success: false, message: err.toString() };
+  }
+}
+
 // ─── Check Email Availability ────────────────────────────────────────────────
 
 function checkEmailAvailable(email) {
@@ -412,6 +439,9 @@ function doGet(e) {
       case 'deleteXML':
         result = deleteXMLFile(params.fileId, params.userId);
         break;
+      case 'renameXML':
+        result = renameXMLFile(params.fileId, params.userId, params.newName);
+        break;
       case 'changePassword':
         result = changePassword(params.userId, params.oldPassword, params.newPassword);
         break;
@@ -478,6 +508,10 @@ function doPost(e) {
 
       case 'deleteXML':
         result = deleteXMLFile(params.fileId, params.userId);
+        break;
+
+      case 'renameXML':
+        result = renameXMLFile(params.fileId, params.userId, params.newName);
         break;
 
       case 'changePassword':
