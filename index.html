@@ -947,6 +947,47 @@
   </style>
 </head>
 <body>
+
+<!-- ── Splash Screen ── -->
+<div id="splashScreen" style="
+  position:fixed;inset:0;z-index:9999;
+  background:#080808;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  transition:opacity .5s ease, visibility .5s ease;
+">
+  <img src="icon-192.svg" style="width:96px;height:96px;border-radius:22px;box-shadow:0 8px 40px rgba(244,114,182,.4);animation:splashPulse 1.5s ease-in-out infinite;" />
+  <div style="text-align:center;">
+    <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:.85rem;
+      background:linear-gradient(270deg,#f472b6,#c084fc,#f9a8d4,#f472b6);
+      background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      background-clip:text;letter-spacing:.15em;animation:gradientFlow 4s ease infinite;">
+      Twenty35
+    </div>
+    <div style="color:#fff;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.1rem;margin-top:4px;">
+      Lyrics Encoder
+    </div>
+    <div style="color:rgba(255,255,255,.35);font-size:.72rem;margin-top:2px;font-family:'Nunito',sans-serif;">
+      for Alight Motion
+    </div>
+  </div>
+  <div style="position:absolute;bottom:48px;display:flex;gap:6px;">
+    <span style="width:6px;height:6px;border-radius:50%;background:#f472b6;animation:splashDot 1.2s ease-in-out infinite;"></span>
+    <span style="width:6px;height:6px;border-radius:50%;background:#c084fc;animation:splashDot 1.2s ease-in-out .2s infinite;"></span>
+    <span style="width:6px;height:6px;border-radius:50%;background:#f9a8d4;animation:splashDot 1.2s ease-in-out .4s infinite;"></span>
+  </div>
+</div>
+
+<style>
+  @keyframes splashPulse {
+    0%,100% { transform:scale(1); box-shadow:0 8px 40px rgba(244,114,182,.4); }
+    50% { transform:scale(1.06); box-shadow:0 12px 50px rgba(244,114,182,.7); }
+  }
+  @keyframes splashDot {
+    0%,100% { opacity:.3; transform:translateY(0); }
+    50% { opacity:1; transform:translateY(-5px); }
+  }
+</style>
+
 <header>
   <!-- Logo (matches favicon) -->
   <div style="display:flex;justify-content:center;margin-bottom:14px;">
@@ -1769,6 +1810,19 @@
 </div>
 
 </div>
+
+<!-- ── Export History ── -->
+<div id="exportHistorySection" style="display:none;margin-top:16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    <div style="display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:rgba(255,255,255,.55);">
+      <i data-lucide="history" style="width:14px;height:14px;"></i>
+      Recent Exports
+    </div>
+    <button onclick="clearExportHistory()" style="background:none;border:none;font-size:.7rem;color:rgba(255,255,255,.3);cursor:pointer;font-family:inherit;padding:2px 6px;border-radius:6px;transition:color .15s;" onmouseenter="this.style.color='#fca5a5'" onmouseleave="this.style.color='rgba(255,255,255,.3)'">Clear all</button>
+  </div>
+  <div id="exportHistoryList" style="display:flex;flex-direction:column;gap:7px;"></div>
+</div>
+
 <div class="footer">
   Lyrics Encoder for Alight Motion<br>
   <span style="margin-top:6px;display:inline-block;">&copy; 2026 <a href="https://www.youtube.com/@twenty_35" target="_blank" rel="noopener" style="color:var(--text);font-weight:700;text-decoration:none;transition:color .15s;" onmouseenter="this.style.color='#f472b6'" onmouseleave="this.style.color='var(--text)'">Twenty35</a>. All rights reserved.</span>
@@ -1881,6 +1935,18 @@ function markCardDone(id) {
   document.getElementById(id+'Done')?.classList.add('visible');
   if (canProceedFrom(id)) autoOpenNext(id);
 }
+
+// ── Splash Screen ────────────────────────────────
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+      splash.style.opacity = '0';
+      splash.style.visibility = 'hidden';
+      setTimeout(() => splash.remove(), 500);
+    }
+  }, 1800);
+});
 
 // ── Service Worker Registration ──────────────────
 if ('serviceWorker' in navigator) {
@@ -3048,6 +3114,8 @@ function generate(){
     // store for save-to-account
     lastXML = xml;
     updateSaveRow();
+    // save to local export history
+    saveExportHistory(`${title} - ${artist}.xml`, xml);
     showExportAd();
   }catch(err){
     status.className='status error';
@@ -4072,6 +4140,93 @@ async function handleChangePassword() {
   } else { setMsg(msg, 'err', res.message); }
   btnLoading(btn, false, '<i data-lucide="check" style="width:15px;height:15px;"></i> Update Password');
 }
+
+// ══════════════════════════════════════════════
+// EXPORT HISTORY (localStorage, last 5)
+// ══════════════════════════════════════════════
+const HISTORY_KEY = 'lrc_export_history';
+const HISTORY_MAX = 5;
+
+function saveExportHistory(fileName, xmlContent) {
+  try {
+    let history = getExportHistory();
+    // Remove duplicate filename if exists
+    history = history.filter(h => h.fileName !== fileName);
+    // Prepend new entry
+    history.unshift({
+      fileName,
+      xmlContent,
+      exportedAt: new Date().toISOString()
+    });
+    // Keep only last 5
+    history = history.slice(0, HISTORY_MAX);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    renderExportHistory();
+  } catch(e) {
+    // localStorage full or unavailable — silently ignore
+  }
+}
+
+function getExportHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  } catch(e) { return []; }
+}
+
+function clearExportHistory() {
+  localStorage.removeItem(HISTORY_KEY);
+  renderExportHistory();
+}
+
+function redownloadExport(idx) {
+  const history = getExportHistory();
+  const entry = history[idx];
+  if (!entry) return;
+  try {
+    const blob = new Blob([entry.xmlContent], { type: 'application/xml' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = entry.fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) {}
+}
+
+function renderExportHistory() {
+  const section = document.getElementById('exportHistorySection');
+  const list    = document.getElementById('exportHistoryList');
+  if (!section || !list) return;
+  const history = getExportHistory();
+  if (history.length === 0) {
+    section.style.display = 'none';
+    list.innerHTML = '';
+    return;
+  }
+  section.style.display = 'block';
+  list.innerHTML = history.map((h, i) => {
+    const date = new Date(h.exportedAt);
+    const dateStr = date.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+    const timeStr = date.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+    return `
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;">
+      <i data-lucide="file-code-2" style="width:15px;height:15px;flex-shrink:0;color:rgba(244,114,182,.7);"></i>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.78rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${h.fileName.replace(/</g,'&lt;')}</div>
+        <div style="font-size:.68rem;color:var(--muted);margin-top:1px;">${dateStr} · ${timeStr}</div>
+      </div>
+      <button onclick="redownloadExport(${i})" title="Re-download"
+        style="flex-shrink:0;background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.25);border-radius:8px;padding:5px 10px;color:#f472b6;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:background .15s;"
+        onmouseenter="this.style.background='rgba(244,114,182,.22)'" onmouseleave="this.style.background='rgba(244,114,182,.1)'">
+        <i data-lucide="download" style="width:12px;height:12px;"></i> Download
+      </button>
+    </div>`;
+  }).join('');
+  if (window.lucide) lucide.createIcons({ nodes: [list] });
+}
+
+// Init history on page load
+window.addEventListener('DOMContentLoaded', () => { renderExportHistory(); });
 
 // ── Custom confirm dialog ──────────────────────
 let exportAdInitialized = false;
