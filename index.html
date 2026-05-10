@@ -999,33 +999,6 @@
     .preset-chip.active { background:linear-gradient(135deg,#f472b6,#c084fc); border-color:transparent; color:#fff; }
     .preset-chip.user-preset { border-style:dashed; }
 
-    /* ── LYRICS PREVIEW PANEL ── */
-    .lyric-preview-panel {
-      margin-top:14px; border-radius:14px; overflow:hidden;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .lyric-preview-toggle {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 14px; background:rgba(244,114,182,.06); cursor:pointer;
-      border-bottom:1px solid rgba(244,114,182,.1); user-select:none;
-    }
-    .lyric-preview-toggle span { font-size:.78rem; font-weight:700; color:var(--muted); display:flex; align-items:center; gap:6px; }
-    #lyricPreviewCanvas {
-      width:100%; height:130px; display:flex; align-items:center; justify-content:center;
-      flex-direction:column; gap:6px; position:relative; overflow:hidden;
-      transition:height .3s;
-    }
-    .preview-text-main {
-      font-weight:700; text-align:center; line-height:1.4;
-      padding:0 16px; word-break:break-word; transition:all .1s;
-      pointer-events:none; max-width:100%;
-    }
-    .preview-text-trans {
-      font-weight:500; text-align:center; line-height:1.4;
-      padding:0 16px; word-break:break-word; transition:all .1s;
-      pointer-events:none; max-width:100%; opacity:.8;
-    }
-
     /* ── BULK EDIT MODAL ── */
     .bulk-overlay {
       display:none; position:fixed; inset:0; z-index:1500;
@@ -1767,19 +1740,6 @@
     </div>
     <div class="preset-bar" id="presetBar">
       <!-- built-in + user presets rendered here -->
-    </div>
-  </div>
-
-  <!-- ── Lyrics Preview ── -->
-  <div class="lyric-preview-panel" id="lyricPreviewPanel">
-    <div class="lyric-preview-toggle" onclick="toggleLyricPreview()">
-      <span><i data-lucide="eye" style="width:12px;height:12px;"></i> Live Preview</span>
-      <i data-lucide="chevron-down" id="previewChevron" style="width:14px;height:14px;color:var(--muted);transition:transform .25s;"></i>
-    </div>
-    <div id="lyricPreviewCanvas" style="display:none;height:0;">
-      <div id="previewBg" style="position:absolute;inset:0;"></div>
-      <div id="previewTextMain" class="preview-text-main">Sample Lyric Line</div>
-      <div id="previewTextTrans" class="preview-text-trans" style="display:none;">Translation line</div>
     </div>
   </div>
 
@@ -2727,7 +2687,6 @@ function onLrcInput() {
   pushHistory();
   renderRows();
   showPreview();
-  updateLyricPreview();
 }
 
 function parseLRC(text) {
@@ -4716,7 +4675,6 @@ function applyPreset(preset) {
   if (preset.bgColor)   { setVal('bgColor', preset.bgColor);     setVal('bgColorHex', preset.bgColor); }
   if (preset.transColor){ setVal('transColor', preset.transColor); setVal('transColorHex', preset.transColor); }
   if (typeof updatePosCanvas === 'function') updatePosCanvas();
-  updateLyricPreview();
   saveSettings();
   showToast(`Preset "${preset.name}" applied!`, 'ok');
 }
@@ -4804,66 +4762,6 @@ function deleteUserPreset(i) {
 
 // ══════════════════════════════════════════════
 // LYRICS PREVIEW (live)
-// ══════════════════════════════════════════════
-let previewOpen = false;
-function toggleLyricPreview() {
-  previewOpen = !previewOpen;
-  const canvas = document.getElementById('lyricPreviewCanvas');
-  const chev   = document.getElementById('previewChevron');
-  if (previewOpen) {
-    canvas.style.display = 'flex';
-    canvas.style.height  = '130px';
-    chev.style.transform = 'rotate(180deg)';
-    updateLyricPreview();
-  } else {
-    canvas.style.height  = '0';
-    canvas.style.display = 'none';
-    chev.style.transform = 'rotate(0deg)';
-  }
-}
-
-function updateLyricPreview() {
-  if (!previewOpen) return;
-  const bg    = document.getElementById('bgColorHex')?.value || '#000000';
-  const color = document.getElementById('textColorHex')?.value || '#ffffff';
-  const fs    = Math.min(parseInt(document.getElementById('fontSize')?.value || 18), 28);
-  const tc    = document.getElementById('transColorHex')?.value || '#aaaaaa';
-  const tfs   = Math.min(parseInt(document.getElementById('transFontSize')?.value || 45), 18);
-  const transOn = document.getElementById('enableTranslation')?.checked;
-
-  const bgEl   = document.getElementById('previewBg');
-  const main   = document.getElementById('previewTextMain');
-  const trans  = document.getElementById('previewTextTrans');
-  const canvas = document.getElementById('lyricPreviewCanvas');
-
-  if (bgEl) bgEl.style.background = bg;
-  if (canvas) canvas.style.background = bg;
-  if (main) {
-    main.style.color = color;
-    main.style.fontSize = fs + 'px';
-    // use custom font if loaded
-    const ff = document.getElementById('fontFamily')?.value;
-    if (ff && ff !== 'Roboto') main.style.fontFamily = `'${ff}', sans-serif`;
-    else main.style.fontFamily = "'Nunito', sans-serif";
-    // sample text from first line if available
-    main.textContent = parsedLines.length ? parsedLines[0].text : 'Sample Lyric Line';
-  }
-  if (trans) {
-    trans.style.display = transOn ? 'block' : 'none';
-    trans.style.color   = tc;
-    trans.style.fontSize = tfs + 'px';
-  }
-}
-
-// Hook preview updates to style inputs
-window.addEventListener('DOMContentLoaded', () => {
-  ['fontSize','textColorHex','bgColorHex','transColorHex','transFontSize'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', updateLyricPreview);
-  });
-  document.getElementById('enableTranslation')?.addEventListener('change', updateLyricPreview);
-});
-
 // ══════════════════════════════════════════════
 // RENAME CLOUD FILE
 // ══════════════════════════════════════════════
