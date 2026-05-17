@@ -389,8 +389,10 @@
     .lyric-row.end-next { background:rgba(251,191,36,.1) !important; border-left:3px solid var(--warn); }
 
     .no-audio-note {
-      background:var(--surface); border:1px solid var(--border2); border-radius:var(--rs);
-      padding:14px; text-align:center; color:var(--muted); font-size:.83rem; font-weight:500;
+      background:rgba(248,113,113,.08); border:1.5px solid rgba(248,113,113,.3);
+      border-radius:var(--rs); padding:12px 14px; text-align:center;
+      color:#f87171; font-size:.83rem; font-weight:700; margin-bottom:12px;
+      display:flex; align-items:center; justify-content:center; gap:6px;
     }
 
     /* style grid */
@@ -1723,7 +1725,8 @@
 
   <!-- No audio warning -->
   <div class="no-audio-note" id="noAudioNote" style="display:none;">
-    ⚠ Upload a song in Step 1 to enable playback.
+    <i data-lucide="alert-triangle" style="width:15px;height:15px;flex-shrink:0;"></i>
+    Upload a song in Step 1 to enable playback.
   </div>
 
   <!-- Player -->
