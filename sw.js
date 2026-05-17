@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lyrics-encoder-v6';
+﻿const CACHE_NAME = 'lyrics-encoder-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -9,7 +9,7 @@ const ASSETS = [
   './styles.css'
 ];
 
-// Install — cache all assets
+// Install â€” cache all assets
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
@@ -17,7 +17,7 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
-// Activate — delete old caches
+// Activate â€” delete old caches
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -27,7 +27,7 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-// Fetch — serve from cache, fallback to network
+// Fetch â€” serve from cache, fallback to network
 self.addEventListener('fetch', e => {
   // Skip non-GET and cross-origin requests (ads, fonts, APIs)
   if (e.request.method !== 'GET') return;
