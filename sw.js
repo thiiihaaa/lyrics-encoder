@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lyrics-encoder-v4';
+const CACHE_NAME = 'lyrics-encoder-v5';
 const ASSETS = [
   './',
   './index.html',
