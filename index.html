@@ -1050,10 +1050,21 @@
     }
     body.light-mode .guide-sheet h2 { color:#1a1a2e; }
     body.light-mode .guide-step { background:rgba(244,114,182,.05); border-color:rgba(244,114,182,.15); }
-    body.light-mode .guide-step p, body.light-mode .guide-step li { color:rgba(0,0,0,.7); }
+    body.light-mode .guide-step p,
+    body.light-mode .guide-step li,
+    body.light-mode .guide-step * { color:rgba(0,0,0,.75) !important; }
+    body.light-mode .guide-step .am-text { color:#16a34a !important; }
     body.light-mode .guide-about { background:rgba(244,114,182,.06); border-color:rgba(244,114,182,.2); }
-    body.light-mode .guide-about p { color:rgba(0,0,0,.7); }
-    body.light-mode .guide-step-title { color:#1a1a2e; }
+    body.light-mode .guide-about p,
+    body.light-mode .guide-about * { color:rgba(0,0,0,.75) !important; }
+    body.light-mode .guide-about .am-text { color:#16a34a !important; }
+    body.light-mode .guide-about b { color:#be185d !important; }
+    body.light-mode .guide-step-title { color:#1a1a2e !important; }
+    body.light-mode .guide-step-title * { color:#1a1a2e !important; }
+    body.light-mode .guide-tip { color:rgba(0,0,0,.7) !important; background:rgba(244,114,182,.07); border-color:rgba(244,114,182,.2); }
+    body.light-mode .guide-tip * { color:rgba(0,0,0,.7) !important; }
+    body.light-mode .guide-tip .am-text { color:#16a34a !important; }
+    body.light-mode .guide-tip b { color:rgba(0,0,0,.85) !important; }
     /* confirm dialog */
     body.light-mode .confirm-box { background:#fff; border-color:rgba(248,113,113,.3); }
     body.light-mode .confirm-title { color:#1a1a2e; }
@@ -1239,9 +1250,6 @@
       <i data-lucide="user" style="width:13px;height:13px;"></i>
       <span id="authBtnLabel">Login / Register</span>
     </button>
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode">
-      <i data-lucide="sun" id="themeIcon" style="width:16px;height:16px;color:var(--muted);"></i>
-    </button>
   </div>
 </header>
 
@@ -1357,6 +1365,25 @@
           <i data-lucide="check" style="width:15px;height:15px;"></i> Update Password
         </button>
         <div class="modal-msg" id="changePasswordMsg"></div>
+      </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <div class="account-section">
+      <div class="account-section-static" style="padding:12px 14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="account-section-title" style="display:flex;align-items:center;gap:6px;margin-bottom:0;">
+            <i data-lucide="sun-moon" style="width:13px;height:13px;"></i> Appearance
+          </div>
+          <button id="themeToggle" onclick="toggleTheme()"
+            style="display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;
+            border:1.5px solid rgba(244,114,182,.25);background:rgba(244,114,182,.07);
+            color:var(--text);font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;
+            transition:all .18s;-webkit-tap-highlight-color:transparent;">
+            <i data-lucide="sun" id="themeIcon" style="width:14px;height:14px;"></i>
+            <span id="themeLabel">Light Mode</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -4537,10 +4564,13 @@ function initTheme() {
   updateThemeIcon(isLight);
 }
 function updateThemeIcon(isLight) {
-  const icon = document.getElementById('themeIcon');
-  if (!icon) return;
-  icon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
-  if (window.lucide) lucide.createIcons({ nodes: [icon.parentElement] });
+  const icon  = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  if (icon) {
+    icon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+    if (window.lucide) lucide.createIcons({ nodes: [icon.parentElement] });
+  }
+  if (label) label.textContent = isLight ? 'Dark Mode' : 'Light Mode';
 }
 
 // ══════════════════════════════════════════════
