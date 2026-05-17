@@ -1010,6 +1010,54 @@
     body.light-mode .export-action-btn.share{ background:rgba(244,114,182,.08); border-color:rgba(244,114,182,.3); color:#be185d; }
     /* details/summary (video settings) */
     body.light-mode details summary { color:#1a1a2e; }
+    /* ── modals ── */
+    body.light-mode .modal-box {
+      background:linear-gradient(160deg,#fff,#f8f0ff) !important;
+      border-color:rgba(244,114,182,.25) !important;
+      box-shadow:0 8px 40px rgba(0,0,0,.12);
+    }
+    body.light-mode .modal-title { color:#1a1a2e; }
+    body.light-mode .modal-close { color:#1a1a2e; border-color:rgba(244,114,182,.3); }
+    body.light-mode .modal-tab { color:rgba(0,0,0,.6); background:rgba(0,0,0,.04); border-color:rgba(0,0,0,.12); }
+    body.light-mode .modal-field label { color:rgba(0,0,0,.6); }
+    body.light-mode .modal-field input {
+      background:rgba(255,255,255,.9); border-color:rgba(0,0,0,.15); color:#1a1a2e;
+    }
+    body.light-mode .modal-field input::placeholder { color:rgba(0,0,0,.35); }
+    body.light-mode .modal-msg.ok  { background:rgba(21,128,61,.08); border-color:rgba(21,128,61,.3); }
+    body.light-mode .modal-msg.err { background:rgba(220,38,38,.08); border-color:rgba(220,38,38,.3); }
+    /* account modal sections */
+    body.light-mode .account-section { background:rgba(244,114,182,.04); border-color:rgba(244,114,182,.15); }
+    body.light-mode .account-section-title { color:#1a1a2e; }
+    body.light-mode .my-file-item { background:rgba(0,0,0,.03); border-color:rgba(0,0,0,.1); }
+    body.light-mode .my-file-name { color:#1a1a2e; }
+    body.light-mode .my-file-btn { border-color:rgba(0,0,0,.15); color:rgba(0,0,0,.6); }
+    body.light-mode .my-file-btn:hover { border-color:#f472b6; color:#be185d; }
+    body.light-mode .my-file-btn.del:hover { border-color:#dc2626; color:#dc2626; }
+    /* bulk / preset / gallery modals */
+    body.light-mode .bulk-box,
+    body.light-mode .preset-save-box {
+      background:linear-gradient(160deg,#fff,#f8f0ff) !important;
+      border-color:rgba(244,114,182,.25) !important;
+    }
+    body.light-mode .bulk-box h3,
+    body.light-mode .bulk-box p,
+    body.light-mode .preset-save-box h3 { color:#1a1a2e; }
+    /* guide sheet */
+    body.light-mode .guide-sheet {
+      background:linear-gradient(160deg,#fff,#f8f0ff) !important;
+      border-color:rgba(244,114,182,.2) !important;
+    }
+    body.light-mode .guide-sheet h2 { color:#1a1a2e; }
+    body.light-mode .guide-step { background:rgba(244,114,182,.05); border-color:rgba(244,114,182,.15); }
+    body.light-mode .guide-step p, body.light-mode .guide-step li { color:rgba(0,0,0,.7); }
+    body.light-mode .guide-about { background:rgba(244,114,182,.06); border-color:rgba(244,114,182,.2); }
+    body.light-mode .guide-about p { color:rgba(0,0,0,.7); }
+    body.light-mode .guide-step-title { color:#1a1a2e; }
+    /* confirm dialog */
+    body.light-mode .confirm-box { background:#fff; border-color:rgba(248,113,113,.3); }
+    body.light-mode .confirm-title { color:#1a1a2e; }
+    body.light-mode .confirm-msg { color:rgba(0,0,0,.6); }
 
     /* ── DARK/LIGHT TOGGLE ── */
     .theme-toggle {
